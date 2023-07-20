@@ -1,5 +1,7 @@
 package com.example.myplants.plants.data
 
-class PlantRepositoryImpl {
+import com.example.myplants.plants.domain.PlantRepository
+
+class PlantRepositoryImpl: PlantRepository {
 
 }
