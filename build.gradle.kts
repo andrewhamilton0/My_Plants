@@ -9,3 +9,11 @@ plugins {
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
+
+buildscript {
+
+    dependencies {
+        // ...
+        classpath("com.squareup.sqldelight:gradle-plugin:1.5.5")
+    }
+}

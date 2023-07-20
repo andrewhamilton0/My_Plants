@@ -1,0 +1,31 @@
+import kotlin.collections.List;
+
+CREATE TABLE plantEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    waterAmount TEXT NOT NULL,
+    waterDays TEXT AS List<String> NOT NULL ,
+    waterTime TEXT NOT NULL,
+    isWatered INTEGER AS Boolean NOT NULL,
+    plantSize TEXT NOT NULL,
+    photoKey TEXT
+);
+
+getAllPlants:
+SELECT *
+FROM plantEntity;
+
+getPlantById:
+SELECT *
+FROM plantEntity
+WHERE id = :id;
+
+insertPlant:
+INSERT OR REPLACE
+INTO plantEntity
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+deletePlantById:
+DELETE FROM plantEntity
+WHERE id = :id;
