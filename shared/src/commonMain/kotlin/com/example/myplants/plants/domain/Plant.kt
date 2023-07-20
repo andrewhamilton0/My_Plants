@@ -9,5 +9,5 @@ data class Plant(
     val waterTime: String,
     val isWatered: Boolean,
     val plantSize: String,
-    val photoKey: String
+    val photoKey: String?
 )

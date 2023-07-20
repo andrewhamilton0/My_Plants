@@ -5,9 +5,9 @@ CREATE TABLE plantEntity (
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     waterAmount TEXT NOT NULL,
-    waterDays TEXT AS List<String>,
+    waterDays TEXT AS List<String> NOT NULL ,
     waterTime TEXT NOT NULL,
-    isWatered INTEGER AS Boolean DEFAULT NULL,
+    isWatered INTEGER AS Boolean NOT NULL,
     plantSize TEXT NOT NULL,
     photoKey TEXT
 );
