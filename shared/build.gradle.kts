@@ -1,8 +1,11 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType.*
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
     id("com.squareup.sqldelight")
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -35,7 +38,6 @@ kotlin {
     val ktorVersion = "2.3.2"
     val sqlDelightVersion = "1.5.5"
     val dateTimeVersion = "0.4.0"
-
 
     sourceSets {
         val commonMain by getting {
@@ -75,6 +77,23 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 24
+    }
+}
+
+tasks.apply {
+    getByPath("preBuild").dependsOn(ktlintFormat)
+}
+
+ktlint {
+    ignoreFailures.set(false)
+    reporters {
+        reporter(CHECKSTYLE)
+        reporter(PLAIN)
+    }
+    filter {
+        exclude {
+            it.file.path.contains("generated/")
+        }
     }
 }
 

@@ -3,7 +3,7 @@ package com.example.myplants.plants.data
 import com.example.myplants.plants.domain.Plant
 import plantsdb.PlantEntity
 
-fun Plant.toPlantEntity(): PlantEntity{
+fun Plant.toPlantEntity(): PlantEntity {
     return PlantEntity(
         id = id,
         name = name,

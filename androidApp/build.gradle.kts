@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
 }
 
 android {
@@ -35,6 +36,23 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+tasks.apply {
+    getByPath("preBuild").dependsOn(ktlintFormat)
+}
+
+ktlint {
+    ignoreFailures.set(false)
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+    }
+    filter {
+        exclude {
+            it.file.path.contains("generated/")
+        }
     }
 }
 

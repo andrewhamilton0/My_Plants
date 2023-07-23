@@ -1,4 +1,3 @@
 package com.example.myplants.plants.domain
 
-interface PlantRepository {
-}
+interface PlantRepository
