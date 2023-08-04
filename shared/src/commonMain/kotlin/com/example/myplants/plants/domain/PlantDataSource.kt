@@ -1,4 +1,4 @@
-package com.example.myplants.plants.data
+package com.example.myplants.plants.domain
 
 import kotlinx.coroutines.flow.Flow
 import plantsdb.PlantEntity
