@@ -49,6 +49,10 @@ kotlin {
                 implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
                 implementation("com.squareup.sqldelight:coroutines-extensions:1.5.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+                with(Deps.Koin) {
+                    api(core)
+                    api(test)
+                }
             }
         }
         val commonTest by getting {
