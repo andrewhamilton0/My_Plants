@@ -1,6 +1,9 @@
 package com.example.myplants.plants.data
 
 import com.example.myplants.plants.domain.Plant
+import com.example.myplants.plants.domain.PlantSize
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalTime
 import plantsdb.PlantEntity
 
 fun Plant.toPlantEntity(): PlantEntity {
@@ -9,10 +12,10 @@ fun Plant.toPlantEntity(): PlantEntity {
         name = name,
         description = description,
         waterAmount = waterAmount,
-        waterDays = waterDays,
-        waterTime = waterTime,
+        waterDays = waterDays.map { it.name },
+        waterTime = waterTime.toString(),
         isWatered = isWatered,
-        plantSize = plantSize,
+        plantSize = plantSize.name,
         photoKey = photoKey
     )
 }
@@ -23,10 +26,10 @@ fun PlantEntity.toPlant(): Plant {
         name = name,
         description = description,
         waterAmount = waterAmount,
-        waterDays = waterDays,
-        waterTime = waterTime,
+        waterDays = waterDays.map { DayOfWeek.valueOf(it) }.toSet(),
+        waterTime = LocalTime.parse(waterTime),
         isWatered = isWatered,
-        plantSize = plantSize,
+        plantSize = PlantSize.valueOf(plantSize),
         photoKey = photoKey
     )
 }
