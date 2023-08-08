@@ -16,9 +16,21 @@ class PlantRepositoryImpl(
 
     override fun getPlants(): Flow<List<Plant>> {
         return plantDataSource.getAllPlants().mapLatest {
-            it.map {
-                it.toPlant()
+            it.map { plantEntity ->
+                plantEntity.toPlant()
             }
         }
+    }
+
+    override suspend fun getPlant(plantId: String): Plant? {
+        return plantDataSource.getPlantById(plantId)?.toPlant()
+    }
+
+    override suspend fun deletePlant(plantId: String) {
+        plantDataSource.deletePlant(plantId)
+    }
+
+    override suspend fun savePlant(plant: Plant) {
+        plantDataSource.insertPlant(plant.toPlantEntity())
     }
 }

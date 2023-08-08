@@ -26,6 +26,6 @@ private val commonCoreModule = module {
     singleOf(::PlantRepositoryImpl) bind PlantRepository::class
 }
 
-val coreModule: Module get() = module {
+val coreModule: Module = module {
     includes(commonCoreModule + platformCoreModule)
 }
