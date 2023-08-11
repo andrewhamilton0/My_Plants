@@ -5,20 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Badge
-import androidx.compose.material.BadgedBox
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myplants.android.R
 import com.example.myplants.android.core.theme.neutralus100
@@ -46,7 +41,7 @@ fun NotificationBellBtn(
                 tint = neutralus500
             )
         }
-        if(isNotifying){
+        if (isNotifying) {
             Badge(
                 modifier = Modifier
                     .size(12.dp),
@@ -54,6 +49,5 @@ fun NotificationBellBtn(
             ) {
             }
         }
-
     }
 }
