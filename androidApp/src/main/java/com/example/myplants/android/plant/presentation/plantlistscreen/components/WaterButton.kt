@@ -13,21 +13,27 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myplants.android.R
+import com.example.myplants.android.core.theme.Accent100
 import com.example.myplants.android.core.theme.Accent600
 import com.example.myplants.android.core.theme.Neutrals0
 
-@Preview
 @Composable
-fun WaterButton() {
+fun WaterButton(
+    isWatered: Boolean
+) {
+    val color = if(isWatered){ Accent100 } else Accent600
+    val imageVector = ImageVector.vectorResource(
+        id = if(isWatered){ R.drawable.ic_check } else R.drawable.ic_water
+    )
     IconButton(
         onClick = { /*TODO*/ },
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
-            .background(color = Accent600)
+            .background(color = color)
             .size(24.dp)
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_water),
+            imageVector = imageVector,
             tint = Neutrals0,
             modifier = Modifier.size(16.dp),
             contentDescription = null // TODO Fill this out

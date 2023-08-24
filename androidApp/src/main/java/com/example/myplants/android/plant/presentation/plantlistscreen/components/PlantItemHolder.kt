@@ -18,7 +18,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
@@ -64,7 +63,7 @@ fun ClearGreyCard() {
                 color = Neutrals0,
                 fontSize = 10.sp,
                 fontStyle = FontStyle(R.font.poppins_medium),
-                text = "I went to the mall",
+                text = "59ml",
                 fontWeight = FontWeight(500)
             )
         }
