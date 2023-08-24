@@ -9,29 +9,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myplants.android.R
-import com.example.myplants.android.core.theme.Accent500
-import com.example.myplants.android.core.theme.Neutrals100
+import com.example.myplants.android.core.theme.Accent600
+import com.example.myplants.android.core.theme.Neutrals0
 
+@Preview
 @Composable
-fun AddFab(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun WaterButton() {
     IconButton(
-        onClick = onClick,
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(color = Accent500)
-            .size(52.dp)
+        onClick = { /*TODO*/ },
+        modifier = Modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(color = Accent600)
+            .size(24.dp)
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_add),
-            contentDescription = stringResource(id = R.string.add_plant),
-            tint = Neutrals100
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_water),
+            tint = Neutrals0,
+            modifier = Modifier.size(16.dp),
+            contentDescription = null // TODO Fill this out
         )
     }
 }

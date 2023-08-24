@@ -30,6 +30,8 @@ import com.example.myplants.android.R
 import com.example.myplants.android.core.theme.GrayishBlack
 import com.example.myplants.android.core.theme.Neutrals0
 import com.example.myplants.android.core.theme.Neutrals100
+import com.example.myplants.android.core.theme.Neutrals500
+import com.example.myplants.android.core.theme.Neutrals900
 import com.example.myplants.android.core.theme.OtherG100
 
 @Preview
@@ -40,20 +42,7 @@ fun PlantItemHolder() {
             modifier = Modifier.width(167.dp)
         ) {
             PlantImageBox()
-            Box(
-                Modifier.background(
-                    color = Neutrals100
-                )
-            ) {
-                Row(
-                    modifier = Modifier.height(60.dp).fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween, // TODO FIND DIFFERENCE BETWEEN SPACE AROUND AND SPACEBETWEEN AND SPACEEVENLY
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "HI 2!", color = Color.Black)
-                    Text(text = "HI 2!", color = Color.Black)
-                }
-            }
+            PlantHolderDescriptionBox()
         }
     }
 }
@@ -98,7 +87,7 @@ fun PlantImageBox() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_single_plant),
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_single_plant), // Todo Add optional image right here
                 contentDescription = null // Todo
             )
         }
@@ -112,6 +101,49 @@ fun PlantImageBox() {
                 Spacer(modifier = Modifier.height(4.dp))
                 ClearGreyCard()
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PlantHolderDescriptionBox() {
+    Box(
+        modifier = Modifier
+            .background(color = Neutrals100)
+            .height(60.dp)
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 12.dp, end = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween, // TODO FIND DIFFERENCE BETWEEN SPACE AROUND AND SPACEBETWEEN AND SPACEEVENLY
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Monstera",
+                    color = Neutrals900,
+                    maxLines = 1,
+                    minLines = 1,
+                    fontStyle = FontStyle(R.font.poppins_semibold),
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    fontWeight = FontWeight(600)
+                )
+                Text(
+                    text = "Short Description",
+                    color = Neutrals500,
+                    maxLines = 1,
+                    minLines = 1,
+                    fontStyle = FontStyle(R.font.poppins_regular),
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight(400)
+                )
+            }
+            WaterButton()
         }
     }
 }
