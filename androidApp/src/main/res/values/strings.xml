@@ -2,4 +2,5 @@
 <resources>
     <string name="add_plant">Add plant</string>
     <string name="view_notifications">View notifications</string>
+    <string name="plant_photo">%1$s photo</string>
 </resources>

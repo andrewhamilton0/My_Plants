@@ -16,14 +16,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.myplants.android.R
-import com.example.myplants.android.core.theme.neutralus100
-import com.example.myplants.android.core.theme.neutralus500
-import com.example.myplants.android.core.theme.notificationRed
+import com.example.myplants.android.core.theme.Neutrals100
+import com.example.myplants.android.core.theme.Neutrals500
+import com.example.myplants.android.core.theme.NotificationRed
 
 @Composable
 fun NotificationBellBtn(
     onClick: () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     isNotifying: Boolean
 ) {
     Box(
@@ -33,21 +33,20 @@ fun NotificationBellBtn(
             onClick = onClick,
             modifier = modifier
                 .clip(CircleShape)
-                .background(color = neutralus100)
+                .background(color = Neutrals100)
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_notification_bell),
                 contentDescription = stringResource(id = R.string.view_notifications),
-                tint = neutralus500
+                tint = Neutrals500
             )
         }
         if (isNotifying) {
             Badge(
                 modifier = Modifier
                     .size(12.dp),
-                backgroundColor = notificationRed
-            ) {
-            }
+                backgroundColor = NotificationRed
+            )
         }
     }
 }
