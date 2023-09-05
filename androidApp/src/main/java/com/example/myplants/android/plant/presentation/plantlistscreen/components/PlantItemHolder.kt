@@ -19,10 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myplants.android.R
@@ -33,22 +33,38 @@ import com.example.myplants.android.core.theme.Neutrals500
 import com.example.myplants.android.core.theme.Neutrals900
 import com.example.myplants.android.core.theme.OtherG100
 
-@Preview
 @Composable
-fun PlantItemHolder() {
+fun PlantItemHolder(
+    nextWaterDate: String,
+    plantImageVector: ImageVector?,
+    waterAmount: String,
+    name: String,
+    description: String,
+    isWatered: Boolean
+) {
     Card {
         Column(
             modifier = Modifier.width(167.dp)
         ) {
-            PlantImageBox()
-            PlantHolderDescriptionBox()
+            PlantImageBox(
+                nextWaterDate = nextWaterDate,
+                plantImageVector = plantImageVector,
+                waterAmount = waterAmount,
+                plantName = name
+            )
+            PlantHolderDescriptionBox(
+                name = name,
+                description = description,
+                isWatered = isWatered
+            )
         }
     }
 }
 
-@Preview
 @Composable
-fun ClearGreyCard() {
+fun ClearGreyCard(
+    text: String
+) {
     Card(
         shape = RoundedCornerShape(4.dp),
         backgroundColor = GrayishBlack.copy(alpha = 0.2f),
@@ -63,16 +79,20 @@ fun ClearGreyCard() {
                 color = Neutrals0,
                 fontSize = 10.sp,
                 fontStyle = FontStyle(R.font.poppins_medium),
-                text = "59ml",
+                text = text,
                 fontWeight = FontWeight(500)
             )
         }
     }
 }
 
-@Preview
 @Composable
-fun PlantImageBox() {
+fun PlantImageBox(
+    plantImageVector: ImageVector?,
+    nextWaterDate: String,
+    waterAmount: String,
+    plantName: String
+) {
     Box(
         Modifier
             .background(
@@ -86,8 +106,10 @@ fun PlantImageBox() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_single_plant), // Todo Add optional image right here
-                contentDescription = null // Todo
+                imageVector = plantImageVector ?: ImageVector.vectorResource(
+                    id = R.drawable.ic_single_plant)
+                ,
+                contentDescription = stringResource(id = R.string.plant_photo, plantName)
             )
         }
         Box(
@@ -96,17 +118,20 @@ fun PlantImageBox() {
             contentAlignment = Alignment.TopStart
         ) {
             Column {
-                ClearGreyCard()
+                ClearGreyCard(text = waterAmount)
                 Spacer(modifier = Modifier.height(4.dp))
-                ClearGreyCard()
+                ClearGreyCard(text = nextWaterDate)
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun PlantHolderDescriptionBox() {
+fun PlantHolderDescriptionBox(
+    name: String,
+    description: String,
+    isWatered: Boolean
+) {
     Box(
         modifier = Modifier
             .background(color = Neutrals100)
@@ -117,12 +142,12 @@ fun PlantHolderDescriptionBox() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 12.dp, end = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween, // TODO FIND DIFFERENCE BETWEEN SPACE AROUND AND SPACEBETWEEN AND SPACEEVENLY
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
                 Text(
-                    text = "Monstera",
+                    text = name,
                     color = Neutrals900,
                     maxLines = 1,
                     minLines = 1,
@@ -132,7 +157,7 @@ fun PlantHolderDescriptionBox() {
                     fontWeight = FontWeight(600)
                 )
                 Text(
-                    text = "Short Description",
+                    text = description,
                     color = Neutrals500,
                     maxLines = 1,
                     minLines = 1,
@@ -142,7 +167,9 @@ fun PlantHolderDescriptionBox() {
                     fontWeight = FontWeight(400)
                 )
             }
-            WaterButton()
+            WaterButton(
+                isWatered = isWatered
+            )
         }
     }
 }
