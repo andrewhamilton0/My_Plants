@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myplants.android.R
 import com.example.myplants.android.core.presentation.theme.Neutrals100
@@ -44,9 +45,16 @@ fun NotificationBellBtn(
         if (isNotifying) {
             Badge(
                 modifier = Modifier
-                    .size(12.dp),
+                    .size(12.dp)
+                    .clip(CircleShape),
                 backgroundColor = NotificationRed
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun NotificationBellBtnPrev() {
+    NotificationBellBtn(onClick = { }, isNotifying = true)
 }

@@ -61,6 +61,7 @@ fun TextWithBarUnderneath(
 fun TextWithBarUnderneathPrev() {
     TextWithBarUnderneath(
         text = "Example Text",
-        isSelected = true
+        isSelected = true,
+        onClick = { Unit }
     )
 }
