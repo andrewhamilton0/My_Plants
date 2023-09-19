@@ -3,4 +3,9 @@
     <string name="add_plant">Add plant</string>
     <string name="view_notifications">View notifications</string>
     <string name="plant_photo">%1$s photo</string>
+    <string name="lets_care">Let\'s Care</string>
+    <string name="my_plants">My Plants!</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="forgot_to_water">Forgot to water</string>
+    <string name="history">History</string>
 </resources>

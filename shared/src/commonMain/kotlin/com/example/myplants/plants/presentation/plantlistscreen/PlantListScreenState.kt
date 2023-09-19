@@ -4,7 +4,7 @@ import com.example.myplants.plants.domain.Plant
 
 data class PlantListScreenState(
     val plants: List<Plant> = emptyList(),
-    val plantListFilter: PlantListFilter = PlantListFilter.UPCOMING
+    val selectedPlantListFilter: PlantListFilter = PlantListFilter.UPCOMING
 )
 
 enum class PlantListFilter {

@@ -1,4 +1,4 @@
-package com.example.myplants.android.core.theme
+package com.example.myplants.android.core.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
