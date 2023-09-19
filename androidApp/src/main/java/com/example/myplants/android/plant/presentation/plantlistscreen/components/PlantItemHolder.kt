@@ -26,36 +26,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myplants.android.R
-import com.example.myplants.android.core.theme.GrayishBlack
-import com.example.myplants.android.core.theme.Neutrals0
-import com.example.myplants.android.core.theme.Neutrals100
-import com.example.myplants.android.core.theme.Neutrals500
-import com.example.myplants.android.core.theme.Neutrals900
-import com.example.myplants.android.core.theme.OtherG100
+import com.example.myplants.android.core.presentation.theme.GrayishBlack
+import com.example.myplants.android.core.presentation.theme.Neutrals0
+import com.example.myplants.android.core.presentation.theme.Neutrals100
+import com.example.myplants.android.core.presentation.theme.Neutrals500
+import com.example.myplants.android.core.presentation.theme.Neutrals900
+import com.example.myplants.android.core.presentation.theme.OtherG100
+import com.example.myplants.android.plant.presentation.plantlistscreen.UiPlantItem
 
 @Composable
 fun PlantItemHolder(
-    nextWaterDate: String,
-    plantImageVector: ImageVector?,
-    waterAmount: String,
-    name: String,
-    description: String,
-    isWatered: Boolean
+    plant: UiPlantItem
 ) {
     Card {
         Column(
             modifier = Modifier.width(167.dp)
         ) {
             PlantImageBox(
-                nextWaterDate = nextWaterDate,
-                plantImageVector = plantImageVector,
-                waterAmount = waterAmount,
-                plantName = name
+                nextWaterDate = plant.nextWaterDate,
+                plantImageVector = plant.imageVector,
+                waterAmount = plant.waterAmount,
+                plantName = plant.name
             )
             PlantHolderDescriptionBox(
-                name = name,
-                description = description,
-                isWatered = isWatered
+                name = plant.name,
+                description = plant.description,
+                isWatered = plant.isWatered
             )
         }
     }
@@ -107,8 +103,8 @@ fun PlantImageBox(
         ) {
             Image(
                 imageVector = plantImageVector ?: ImageVector.vectorResource(
-                    id = R.drawable.ic_single_plant)
-                ,
+                    id = R.drawable.ic_single_plant
+                ),
                 contentDescription = stringResource(id = R.string.plant_photo, plantName)
             )
         }

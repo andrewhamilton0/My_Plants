@@ -41,7 +41,7 @@ class PlantListScreenViewModel(
             is PlantListScreenEvent.OpenPlant -> TODO()
             is PlantListScreenEvent.TogglePlantListFilter -> {
                 _state.update { state ->
-                    state.copy(plantListFilter = event.plantListFilter)
+                    state.copy(selectedPlantListFilter = event.plantListFilter)
                 }
             }
             is PlantListScreenEvent.WaterPlant -> {

@@ -16,9 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.myplants.android.R
-import com.example.myplants.android.core.theme.Neutrals100
-import com.example.myplants.android.core.theme.Neutrals500
-import com.example.myplants.android.core.theme.NotificationRed
+import com.example.myplants.android.core.presentation.theme.Neutrals100
+import com.example.myplants.android.core.presentation.theme.Neutrals500
+import com.example.myplants.android.core.presentation.theme.NotificationRed
 
 @Composable
 fun NotificationBellBtn(

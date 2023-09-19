@@ -10,20 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myplants.android.R
-import com.example.myplants.android.core.theme.Accent100
-import com.example.myplants.android.core.theme.Accent600
-import com.example.myplants.android.core.theme.Neutrals0
+import com.example.myplants.android.core.presentation.theme.Accent100
+import com.example.myplants.android.core.presentation.theme.Accent600
+import com.example.myplants.android.core.presentation.theme.Neutrals0
 
 @Composable
 fun WaterButton(
     isWatered: Boolean
 ) {
-    val color = if(isWatered){ Accent100 } else Accent600
+    val color = if (isWatered) { Accent100 } else Accent600
     val imageVector = ImageVector.vectorResource(
-        id = if(isWatered){ R.drawable.ic_check } else R.drawable.ic_water
+        id = if (isWatered) { R.drawable.ic_check } else R.drawable.ic_water
     )
     IconButton(
         onClick = { /*TODO*/ },
