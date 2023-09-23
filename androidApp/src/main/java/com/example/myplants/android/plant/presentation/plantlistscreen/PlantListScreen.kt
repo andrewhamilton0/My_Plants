@@ -4,10 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -31,7 +35,11 @@ fun PlantListScreen(
         floatingActionButton = { AddFab(onClick = { /*TODO*/ }) },
         backgroundColor = Neutrals0
     ) { innerPadding ->
-        Box(Modifier.padding(innerPadding)) {
+        Box(
+            Modifier
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(innerPadding)
+        ) {
             Column(Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
                 PlantListScreenTopBar(
@@ -49,8 +57,8 @@ fun PlantListScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(plantList.size) { index ->
-                        PlantItemHolder(plant = plantList[index])
+                    items(plantList) { plant ->
+                        PlantItemHolder(plant = plant)
                     }
                 }
             }
