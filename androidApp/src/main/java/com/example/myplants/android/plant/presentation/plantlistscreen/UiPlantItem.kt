@@ -3,6 +3,7 @@ package com.example.myplants.android.plant.presentation.plantlistscreen
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class UiPlantItem(
+    val id: String,
     val nextWaterDate: String,
     val imageVector: ImageVector?,
     val waterAmount: String,

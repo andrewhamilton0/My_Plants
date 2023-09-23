@@ -2,6 +2,7 @@ package com.example.myplants.android.plant.presentation.plantlistscreen.componen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,9 +37,14 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.UiPlantIt
 
 @Composable
 fun PlantItemHolder(
-    plant: UiPlantItem
+    plant: UiPlantItem,
+    onWaterButtonClick: () -> Unit,
+    onCardClick: () -> Unit
 ) {
-    Card {
+    Card(
+        modifier = Modifier
+            .clickable { onCardClick() }
+    ) {
         Column(
             modifier = Modifier.width(167.dp)
         ) {
@@ -51,7 +57,8 @@ fun PlantItemHolder(
             PlantHolderDescriptionBox(
                 name = plant.name,
                 description = plant.description,
-                isWatered = plant.isWatered
+                isWatered = plant.isWatered,
+                onWaterButtonClick = onWaterButtonClick
             )
         }
     }
@@ -126,7 +133,8 @@ fun PlantImageBox(
 fun PlantHolderDescriptionBox(
     name: String,
     description: String,
-    isWatered: Boolean
+    isWatered: Boolean,
+    onWaterButtonClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -164,7 +172,8 @@ fun PlantHolderDescriptionBox(
                 )
             }
             WaterButton(
-                isWatered = isWatered
+                isWatered = isWatered,
+                onClick = onWaterButtonClick
             )
         }
     }

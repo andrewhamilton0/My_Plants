@@ -24,15 +24,17 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListScreenTopBar
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListFilter
+import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
+import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenState
 
 @Composable
 fun PlantListScreen(
-    plantList: List<UiPlantItem>,
-    isNotificationBellNotifying: Boolean,
-    onNotificationBellClick: () -> Unit
+    state: PlantListScreenState,
+    onEvent: (PlantListScreenEvent) -> Unit,
+    currentlySelectedPlantListFilter: PlantListFilter
 ) {
     Scaffold(
-        floatingActionButton = { AddFab(onClick = { /*TODO*/ }) },
+        floatingActionButton = { AddFab(onClick = { onEvent(PlantListScreenEvent.AddPlant) }) },
         backgroundColor = Neutrals0
     ) { innerPadding ->
         Box(
@@ -43,13 +45,15 @@ fun PlantListScreen(
             Column(Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
                 PlantListScreenTopBar(
-                    isNotificationBellNotifying = isNotificationBellNotifying,
-                    onNotificationBellClick = onNotificationBellClick
+                    isNotificationBellNotifying = true, //TODO FIX THIS
+                    onNotificationBellClick = {
+                        onEvent(PlantListScreenEvent.OpenNotificationScreen)
+                    }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 PlantListFilterBar(
-                    onClick = { Unit }, // TODO
-                    currentlySelected = PlantListFilter.UPCOMING // TODO
+                    onClick = { onEvent(PlantListScreenEvent.TogglePlantListFilter(it)) },
+                    currentlySelected = currentlySelectedPlantListFilter
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 LazyVerticalGrid(
@@ -57,8 +61,14 @@ fun PlantListScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(plantList) { plant ->
-                        PlantItemHolder(plant = plant)
+                    items(state.plants) { plant ->
+                        PlantItemHolder(
+                            plant = plant,
+                            onCardClick = { onEvent(PlantListScreenEvent.OpenPlant(plant.id)) },
+                            onWaterButtonClick = {
+                                onEvent(PlantListScreenEvent.WaterPlant(plant.id))
+                            }
+                        )
                     }
                 }
             }
@@ -78,7 +88,8 @@ fun PreviewPlantListScreen() {
                     waterAmount = "500ml",
                     name = "Arbol",
                     description = "Small tree",
-                    isWatered = true
+                    isWatered = true,
+                    id = "fake_id"
                 ),
                 UiPlantItem(
                     nextWaterDate = "Today",
@@ -86,7 +97,8 @@ fun PreviewPlantListScreen() {
                     waterAmount = "500ml",
                     name = "Arbol",
                     description = "Small tree",
-                    isWatered = true
+                    isWatered = true,
+                    id = "fake_id"
                 ),
                 UiPlantItem(
                     nextWaterDate = "Tomorrow",
@@ -94,7 +106,8 @@ fun PreviewPlantListScreen() {
                     waterAmount = "50ml",
                     name = "Mostero",
                     description = "Some Description",
-                    isWatered = false
+                    isWatered = false,
+                    id = "fake_id"
                 ),
                 UiPlantItem(
                     nextWaterDate = "Tomorrow",
@@ -102,11 +115,15 @@ fun PreviewPlantListScreen() {
                     waterAmount = "50ml",
                     name = "Mostero",
                     description = "Some Description",
-                    isWatered = false
+                    isWatered = false,
+                    id = "fake_id"
                 )
             )
         },
         onNotificationBellClick = { Unit },
-        isNotificationBellNotifying = true
+        isNotificationBellNotifying = true,
+        onFabClick = { Unit },
+        onWaterButtonClick = { Unit },
+        onPlantCardClick = { Unit }
     )
 }
