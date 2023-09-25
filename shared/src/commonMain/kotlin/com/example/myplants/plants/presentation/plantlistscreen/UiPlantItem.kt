@@ -1,11 +1,11 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen
+package com.example.myplants.plants.presentation.plantlistscreen
 
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.myplants.plants.domain.Photo
 
 data class UiPlantItem(
     val id: String,
     val nextWaterDate: String,
-    val imageVector: ImageVector?,
+    val photo: Photo?,
     val waterAmount: String,
     val name: String,
     val description: String,

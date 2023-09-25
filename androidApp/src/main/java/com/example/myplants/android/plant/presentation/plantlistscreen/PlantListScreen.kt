@@ -26,12 +26,12 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListFilter
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenState
+import com.example.myplants.plants.presentation.plantlistscreen.UiPlantItem
 
 @Composable
 fun PlantListScreen(
     state: PlantListScreenState,
-    onEvent: (PlantListScreenEvent) -> Unit,
-    currentlySelectedPlantListFilter: PlantListFilter
+    onEvent: (PlantListScreenEvent) -> Unit
 ) {
     Scaffold(
         floatingActionButton = { AddFab(onClick = { onEvent(PlantListScreenEvent.AddPlant) }) },
@@ -45,7 +45,7 @@ fun PlantListScreen(
             Column(Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
                 PlantListScreenTopBar(
-                    isNotificationBellNotifying = true, //TODO FIX THIS
+                    isNotificationBellNotifying = state.isNotificationBellNotifying,
                     onNotificationBellClick = {
                         onEvent(PlantListScreenEvent.OpenNotificationScreen)
                     }
@@ -53,7 +53,7 @@ fun PlantListScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 PlantListFilterBar(
                     onClick = { onEvent(PlantListScreenEvent.TogglePlantListFilter(it)) },
-                    currentlySelected = currentlySelectedPlantListFilter
+                    currentlySelected = state.selectedPlantListFilter
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 LazyVerticalGrid(
@@ -80,50 +80,50 @@ fun PlantListScreen(
 @Preview(showBackground = true)
 fun PreviewPlantListScreen() {
     PlantListScreen(
-        plantList = remember {
-            listOf<UiPlantItem>(
-                UiPlantItem(
-                    nextWaterDate = "Today",
-                    imageVector = null,
-                    waterAmount = "500ml",
-                    name = "Arbol",
-                    description = "Small tree",
-                    isWatered = true,
-                    id = "fake_id"
-                ),
-                UiPlantItem(
-                    nextWaterDate = "Today",
-                    imageVector = null,
-                    waterAmount = "500ml",
-                    name = "Arbol",
-                    description = "Small tree",
-                    isWatered = true,
-                    id = "fake_id"
-                ),
-                UiPlantItem(
-                    nextWaterDate = "Tomorrow",
-                    imageVector = null,
-                    waterAmount = "50ml",
-                    name = "Mostero",
-                    description = "Some Description",
-                    isWatered = false,
-                    id = "fake_id"
-                ),
-                UiPlantItem(
-                    nextWaterDate = "Tomorrow",
-                    imageVector = null,
-                    waterAmount = "50ml",
-                    name = "Mostero",
-                    description = "Some Description",
-                    isWatered = false,
-                    id = "fake_id"
+        onEvent = { Unit },
+        state = PlantListScreenState(
+            selectedPlantListFilter = PlantListFilter.UPCOMING,
+            isNotificationBellNotifying = true,
+            plants = remember {
+                listOf<UiPlantItem>(
+                    UiPlantItem(
+                        nextWaterDate = "Today",
+                        photo = null,
+                        waterAmount = "500ml",
+                        name = "Arbol",
+                        description = "Small tree",
+                        isWatered = true,
+                        id = "fake_id"
+                    ),
+                    UiPlantItem(
+                        nextWaterDate = "Today",
+                        photo = null,
+                        waterAmount = "500ml",
+                        name = "Arbol",
+                        description = "Small tree",
+                        isWatered = true,
+                        id = "fake_id"
+                    ),
+                    UiPlantItem(
+                        nextWaterDate = "Tomorrow",
+                        photo = null,
+                        waterAmount = "50ml",
+                        name = "Mostero",
+                        description = "Some Description",
+                        isWatered = false,
+                        id = "fake_id"
+                    ),
+                    UiPlantItem(
+                        nextWaterDate = "Tomorrow",
+                        photo = null,
+                        waterAmount = "50ml",
+                        name = "Mostero",
+                        description = "Some Description",
+                        isWatered = false,
+                        id = "fake_id"
+                    )
                 )
-            )
-        },
-        onNotificationBellClick = { Unit },
-        isNotificationBellNotifying = true,
-        onFabClick = { Unit },
-        onWaterButtonClick = { Unit },
-        onPlantCardClick = { Unit }
+            }
+        ),
     )
 }

@@ -3,8 +3,9 @@ package com.example.myplants.plants.presentation.plantlistscreen
 import com.example.myplants.plants.domain.Plant
 
 data class PlantListScreenState(
-    val plants: List<UiPlant> = emptyList(),
-    val selectedPlantListFilter: PlantListFilter = PlantListFilter.UPCOMING
+    val plants: List<UiPlantItem> = emptyList(),
+    val selectedPlantListFilter: PlantListFilter,
+    val isNotificationBellNotifying: Boolean
 )
 
 enum class PlantListFilter {
