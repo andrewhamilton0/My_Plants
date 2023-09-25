@@ -18,14 +18,15 @@ import com.example.myplants.android.core.presentation.theme.Neutrals0
 
 @Composable
 fun WaterButton(
-    isWatered: Boolean
+    isWatered: Boolean,
+    onClick: () -> Unit
 ) {
-    val color = if (isWatered) { Accent100 } else Accent600
+    val color = if (isWatered) Accent100 else Accent600
     val imageVector = ImageVector.vectorResource(
-        id = if (isWatered) { R.drawable.ic_check } else R.drawable.ic_water
+        id = if (isWatered) R.drawable.ic_check else R.drawable.ic_water
     )
     IconButton(
-        onClick = { /*TODO*/ },
+        onClick = { onClick() },
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
             .background(color = color)

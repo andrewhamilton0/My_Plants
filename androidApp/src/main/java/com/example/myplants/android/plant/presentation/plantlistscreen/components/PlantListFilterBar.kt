@@ -14,7 +14,7 @@ import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenE
 
 @Composable
 fun PlantListFilterBar(
-    onClick: (PlantListScreenEvent.TogglePlantListFilter) -> Unit,
+    onClick: (PlantListFilter) -> Unit,
     currentlySelected: PlantListFilter
 ) {
     Row {
@@ -22,7 +22,7 @@ fun PlantListFilterBar(
             text = stringResource(id = R.string.upcoming),
             isSelected = currentlySelected == PlantListFilter.UPCOMING,
             onClick = {
-                onClick(PlantListScreenEvent.TogglePlantListFilter(PlantListFilter.UPCOMING))
+                onClick(PlantListFilter.UPCOMING)
             }
         )
         Spacer(modifier = Modifier.width(24.dp))
@@ -30,7 +30,7 @@ fun PlantListFilterBar(
             text = stringResource(id = R.string.forgot_to_water),
             isSelected = currentlySelected == PlantListFilter.FORGOT_TO_WATER,
             onClick = {
-                onClick(PlantListScreenEvent.TogglePlantListFilter(PlantListFilter.FORGOT_TO_WATER))
+                onClick(PlantListFilter.FORGOT_TO_WATER)
             }
         )
         Spacer(modifier = Modifier.width(24.dp))
@@ -38,7 +38,7 @@ fun PlantListFilterBar(
             text = stringResource(id = R.string.history),
             isSelected = currentlySelected == PlantListFilter.HISTORY,
             onClick = {
-                onClick(PlantListScreenEvent.TogglePlantListFilter(PlantListFilter.HISTORY))
+                onClick(PlantListFilter.HISTORY)
             }
         )
     }

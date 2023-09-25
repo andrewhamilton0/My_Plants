@@ -28,13 +28,9 @@ fun TextWithBarUnderneath(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    var fontWeightInt = 500
-    var color = Neutrals300
+    val fontWeightInt = if (isSelected) 600 else 500
+    val color = if (isSelected) Accent500 else Neutrals300
 
-    if (isSelected) {
-        fontWeightInt = 600
-        color = Accent500
-    }
     Column(modifier = Modifier.width(IntrinsicSize.Max)) {
         Text(
             modifier = Modifier.clickable { onClick() },
