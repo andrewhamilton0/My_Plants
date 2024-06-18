@@ -2,6 +2,7 @@ package com.example.myplants.android.plant.presentation.plantlistscreen.componen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,32 +27,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myplants.android.R
+import com.example.myplants.android.core.presentation.rememberBitmapFromBytes
 import com.example.myplants.android.core.presentation.theme.GrayishBlack
 import com.example.myplants.android.core.presentation.theme.Neutrals0
 import com.example.myplants.android.core.presentation.theme.Neutrals100
 import com.example.myplants.android.core.presentation.theme.Neutrals500
 import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
-import com.example.myplants.android.plant.presentation.plantlistscreen.UiPlantItem
+import com.example.myplants.plants.presentation.plantlistscreen.UiPlantItem
 
 @Composable
 fun PlantItemHolder(
-    plant: UiPlantItem
+    plant: UiPlantItem,
+    onWaterButtonClick: () -> Unit,
+    onCardClick: () -> Unit
 ) {
-    Card {
+    Card(
+        modifier = Modifier
+            .clickable { onCardClick() }
+    ) {
         Column(
             modifier = Modifier.width(167.dp)
         ) {
             PlantImageBox(
                 nextWaterDate = plant.nextWaterDate,
-                plantImageVector = plant.imageVector,
                 waterAmount = plant.waterAmount,
-                plantName = plant.name
+                plantName = plant.name,
+                byteArray = plant.photo?.byteArray
             )
             PlantHolderDescriptionBox(
                 name = plant.name,
                 description = plant.description,
-                isWatered = plant.isWatered
+                isWatered = plant.isWatered,
+                onWaterButtonClick = onWaterButtonClick
             )
         }
     }
@@ -84,11 +92,14 @@ fun ClearGreyCard(
 
 @Composable
 fun PlantImageBox(
-    plantImageVector: ImageVector?,
     nextWaterDate: String,
     waterAmount: String,
-    plantName: String
+    plantName: String,
+    byteArray: ByteArray?
 ) {
+    val imageBitmap = rememberBitmapFromBytes(byteArray = byteArray)
+    val imageContentDescription = stringResource(id = R.string.plant_photo, plantName)
+
     Box(
         Modifier
             .background(
@@ -101,12 +112,18 @@ fun PlantImageBox(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                imageVector = plantImageVector ?: ImageVector.vectorResource(
-                    id = R.drawable.ic_single_plant
-                ),
-                contentDescription = stringResource(id = R.string.plant_photo, plantName)
-            )
+            if(imageBitmap != null){
+                Image(
+                    bitmap = imageBitmap,
+                    contentDescription = imageContentDescription
+                )
+            } else {
+                Image(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_single_plant),
+                    contentDescription = imageContentDescription
+                )
+            }
+
         }
         Box(
             modifier = Modifier
@@ -126,7 +143,8 @@ fun PlantImageBox(
 fun PlantHolderDescriptionBox(
     name: String,
     description: String,
-    isWatered: Boolean
+    isWatered: Boolean,
+    onWaterButtonClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -164,7 +182,8 @@ fun PlantHolderDescriptionBox(
                 )
             }
             WaterButton(
-                isWatered = isWatered
+                isWatered = isWatered,
+                onClick = onWaterButtonClick
             )
         }
     }
