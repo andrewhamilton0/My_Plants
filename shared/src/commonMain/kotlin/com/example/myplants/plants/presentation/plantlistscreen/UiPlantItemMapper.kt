@@ -7,7 +7,7 @@ import kotlinx.datetime.LocalDate
 fun Plant.toUiPlant(
     currentDate: LocalDate
 ): UiPlantItem {
-    val nextWaterDate = DateUtils.getNextWaterDate(this.waterDays, currentDate)
+    val nextWaterDate = DateUtils.nextOccurrenceOfDay(currentDate, this.waterDays) ?: currentDate
     val nextWaterDateDescriptor = DateUtils.getDateDescriptor(currentDate, nextWaterDate)
 
     return UiPlantItem(
