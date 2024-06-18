@@ -1,6 +1,6 @@
 package com.example.myplants.plants.domain
 
-data class Photo (
+data class Photo(
     val key: String,
     val byteArray: ByteArray
 ) {

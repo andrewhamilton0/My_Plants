@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 @Composable
 fun rememberBitmapFromBytes(byteArray: ByteArray?): ImageBitmap? {
     return remember(byteArray) {
-        if(byteArray != null) {
+        if (byteArray != null) {
             BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size).asImageBitmap()
         } else {
             null

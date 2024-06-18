@@ -8,9 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myplants.android.R
+import com.example.myplants.SharedRes
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListFilter
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
 
 @Composable
 fun PlantListFilterBar(
@@ -19,7 +18,7 @@ fun PlantListFilterBar(
 ) {
     Row {
         TextWithBarUnderneath(
-            text = stringResource(id = R.string.upcoming),
+            text = stringResource(id = SharedRes.strings.upcoming.resourceId),
             isSelected = currentlySelected == PlantListFilter.UPCOMING,
             onClick = {
                 onClick(PlantListFilter.UPCOMING)
@@ -27,7 +26,7 @@ fun PlantListFilterBar(
         )
         Spacer(modifier = Modifier.width(24.dp))
         TextWithBarUnderneath(
-            text = stringResource(id = R.string.forgot_to_water),
+            text = stringResource(id = SharedRes.strings.forgot_to_water.resourceId),
             isSelected = currentlySelected == PlantListFilter.FORGOT_TO_WATER,
             onClick = {
                 onClick(PlantListFilter.FORGOT_TO_WATER)
@@ -35,7 +34,7 @@ fun PlantListFilterBar(
         )
         Spacer(modifier = Modifier.width(24.dp))
         TextWithBarUnderneath(
-            text = stringResource(id = R.string.history),
+            text = stringResource(id = SharedRes.strings.history.resourceId),
             isSelected = currentlySelected == PlantListFilter.HISTORY,
             onClick = {
                 onClick(PlantListFilter.HISTORY)

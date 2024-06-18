@@ -1,5 +1,7 @@
 package com.example.myplants.android.plant.presentation.plantlistscreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,11 +25,14 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantItemHolder
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListScreenTopBar
+import com.example.myplants.core.presentation.util.DateDescriptor
+import com.example.myplants.plants.domain.PlantSize
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListFilter
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenState
 import com.example.myplants.plants.presentation.plantlistscreen.UiPlantItem
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PlantListScreen(
     state: PlantListScreenState,
@@ -76,6 +81,7 @@ fun PlantListScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview(showBackground = true)
 fun PreviewPlantListScreen() {
@@ -87,43 +93,47 @@ fun PreviewPlantListScreen() {
             plants = remember {
                 listOf<UiPlantItem>(
                     UiPlantItem(
-                        nextWaterDate = "Today",
-                        photo = null,
+                        id = "99",
                         waterAmount = "500ml",
                         name = "Arbol",
                         description = "Small tree",
                         isWatered = true,
-                        id = "fake_id"
+                        nextWaterDateDescriptor = DateDescriptor.Today,
+                        plantSize = PlantSize.MEDIUM,
+                        photo = null
                     ),
                     UiPlantItem(
-                        nextWaterDate = "Today",
-                        photo = null,
+                        id = "99",
                         waterAmount = "500ml",
                         name = "Arbol",
                         description = "Small tree",
                         isWatered = true,
-                        id = "fake_id"
+                        nextWaterDateDescriptor = DateDescriptor.Today,
+                        plantSize = PlantSize.MEDIUM,
+                        photo = null
                     ),
                     UiPlantItem(
-                        nextWaterDate = "Tomorrow",
-                        photo = null,
-                        waterAmount = "50ml",
-                        name = "Mostero",
-                        description = "Some Description",
-                        isWatered = false,
-                        id = "fake_id"
+                        id = "99",
+                        waterAmount = "500ml",
+                        name = "Arbol",
+                        description = "Small tree",
+                        isWatered = true,
+                        nextWaterDateDescriptor = DateDescriptor.Today,
+                        plantSize = PlantSize.MEDIUM,
+                        photo = null
                     ),
                     UiPlantItem(
-                        nextWaterDate = "Tomorrow",
-                        photo = null,
-                        waterAmount = "50ml",
-                        name = "Mostero",
-                        description = "Some Description",
-                        isWatered = false,
-                        id = "fake_id"
+                        id = "99",
+                        waterAmount = "500ml",
+                        name = "Arbol",
+                        description = "Small tree",
+                        isWatered = true,
+                        nextWaterDateDescriptor = DateDescriptor.Today,
+                        plantSize = PlantSize.MEDIUM,
+                        photo = null
                     )
                 )
             }
-        ),
+        )
     )
 }

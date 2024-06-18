@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="today">Hoy</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="add_plant">Agregar planta</string>
+    <string name="view_notifications">Ver notificaciones</string>
+    <string name="plant_photo">%1$s foto</string>
+    <string name="lets_care">Cuidemos</string>
+    <string name="my_plants">¡Mis Plantas!</string>
+    <string name="upcoming">Próximas</string>
+    <string name="forgot_to_water">Olvidado regar</string>
+    <string name="history">Historia</string>
+</resources>
