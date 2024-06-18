@@ -2,7 +2,6 @@ package com.example.myplants.di
 
 import com.example.myplants.PlantDatabase
 import com.example.myplants.core.data.listOfStringsAdapter
-import com.example.myplants.core.presentation.util.LocaleProvider
 import com.example.myplants.plants.data.PlantDataSourceImpl
 import com.example.myplants.plants.data.PlantRepositoryImpl
 import com.example.myplants.plants.domain.PlantDataSource
@@ -25,7 +24,6 @@ private val commonCoreModule = module {
         )
     }
     singleOf(::PlantRepositoryImpl) bind PlantRepository::class
-    single<LocaleProvider> { get() }
 }
 
 val coreModule: Module = module {
