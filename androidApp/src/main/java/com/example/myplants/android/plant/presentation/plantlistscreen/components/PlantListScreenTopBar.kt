@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.example.myplants.SharedRes
 import com.example.myplants.android.R
 import com.example.myplants.android.core.presentation.theme.Neutrals900
 
@@ -28,14 +29,14 @@ fun PlantListScreenTopBar(
     ) {
         Column {
             Text(
-                text = stringResource(id = R.string.lets_care),
+                text = stringResource(id = SharedRes.strings.lets_care.resourceId),
                 color = Neutrals900,
                 fontWeight = FontWeight(600),
                 fontSize = 24.sp,
                 fontStyle = FontStyle(R.font.poppins_semibold)
             )
             Text(
-                text = stringResource(id = R.string.my_plants),
+                text = stringResource(id = SharedRes.strings.my_plants.resourceId),
                 color = Neutrals900,
                 fontWeight = FontWeight(600),
                 fontSize = 24.sp,

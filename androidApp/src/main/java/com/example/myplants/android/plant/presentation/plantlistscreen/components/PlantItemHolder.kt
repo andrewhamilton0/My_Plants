@@ -1,5 +1,7 @@
 package com.example.myplants.android.plant.presentation.plantlistscreen.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +28,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myplants.SharedRes
 import com.example.myplants.android.R
 import com.example.myplants.android.core.presentation.rememberBitmapFromBytes
 import com.example.myplants.android.core.presentation.theme.GrayishBlack
@@ -34,14 +37,28 @@ import com.example.myplants.android.core.presentation.theme.Neutrals100
 import com.example.myplants.android.core.presentation.theme.Neutrals500
 import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
+import com.example.myplants.core.presentation.util.DateDescriptor
 import com.example.myplants.plants.presentation.plantlistscreen.UiPlantItem
+import kotlinx.datetime.toJavaLocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PlantItemHolder(
     plant: UiPlantItem,
     onWaterButtonClick: () -> Unit,
     onCardClick: () -> Unit
 ) {
+    val locale = Locale.getDefault()
+    val nextWaterDate = when (val dateDescriptor = plant.nextWaterDateDescriptor) {
+        is DateDescriptor.Date -> {
+            val formatter = DateTimeFormatter.ofPattern("MMM dd").withLocale(locale)
+            dateDescriptor.date.toJavaLocalDate().format(formatter)
+        }
+        DateDescriptor.Today -> stringResource(id = SharedRes.strings.today.resourceId)
+        DateDescriptor.Tomorrow -> stringResource(id = SharedRes.strings.tomorrow.resourceId)
+    }
     Card(
         modifier = Modifier
             .clickable { onCardClick() }
@@ -50,7 +67,7 @@ fun PlantItemHolder(
             modifier = Modifier.width(167.dp)
         ) {
             PlantImageBox(
-                nextWaterDate = plant.nextWaterDate,
+                nextWaterDate = nextWaterDate,
                 waterAmount = plant.waterAmount,
                 plantName = plant.name,
                 byteArray = plant.photo?.byteArray
@@ -98,7 +115,10 @@ fun PlantImageBox(
     byteArray: ByteArray?
 ) {
     val imageBitmap = rememberBitmapFromBytes(byteArray = byteArray)
-    val imageContentDescription = stringResource(id = R.string.plant_photo, plantName)
+    val imageContentDescription = stringResource(
+        id = SharedRes.strings.plant_photo.resourceId,
+        plantName
+    )
 
     Box(
         Modifier
@@ -112,7 +132,7 @@ fun PlantImageBox(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            if(imageBitmap != null){
+            if (imageBitmap != null) {
                 Image(
                     bitmap = imageBitmap,
                     contentDescription = imageContentDescription
@@ -123,7 +143,6 @@ fun PlantImageBox(
                     contentDescription = imageContentDescription
                 )
             }
-
         }
         Box(
             modifier = Modifier

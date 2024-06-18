@@ -16,7 +16,7 @@ fun Plant.toPlantEntity(): PlantEntity {
         waterTime = waterTime.toString(),
         isWatered = isWatered,
         plantSize = plantSize.name,
-        photoKey = photoKey
+        photoKey = null // TODO() LATER ADD PHOTO TO PLANT
     )
 }
 
@@ -30,6 +30,6 @@ fun PlantEntity.toPlant(): Plant {
         waterTime = LocalTime.parse(waterTime),
         isWatered = isWatered,
         plantSize = PlantSize.valueOf(plantSize),
-        photoKey = photoKey
+        photo = null // TODO LATER ADD PHOTO TO PLANT
     )
 }

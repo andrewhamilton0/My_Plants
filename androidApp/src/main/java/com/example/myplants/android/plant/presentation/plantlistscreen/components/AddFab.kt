@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.example.myplants.SharedRes
 import com.example.myplants.android.R
 import com.example.myplants.android.core.presentation.theme.Accent500
 import com.example.myplants.android.core.presentation.theme.Neutrals100
@@ -30,7 +31,7 @@ fun AddFab(
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_add),
-            contentDescription = stringResource(id = R.string.add_plant),
+            contentDescription = stringResource(id = SharedRes.strings.add_plant.resourceId),
             tint = Neutrals100
         )
     }

@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myplants.SharedRes
 import com.example.myplants.android.R
 import com.example.myplants.android.core.presentation.theme.Neutrals100
 import com.example.myplants.android.core.presentation.theme.Neutrals500
@@ -38,7 +39,7 @@ fun NotificationBellBtn(
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_notification_bell),
-                contentDescription = stringResource(id = R.string.view_notifications),
+                contentDescription = stringResource(SharedRes.strings.view_notifications.resourceId),
                 tint = Neutrals500
             )
         }
