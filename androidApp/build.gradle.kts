@@ -68,6 +68,7 @@ dependencies {
     with(Deps.Koin) {
         implementation(core)
         implementation(android)
+        implementation(androidXCompose)
     }
     with(Deps) {
         implementation(kotlinDateTime)

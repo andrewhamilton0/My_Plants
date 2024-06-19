@@ -34,6 +34,8 @@ kotlin {
             baseName = "shared"
             export("dev.icerock.moko:resources:0.23.0")
             export("dev.icerock.moko:graphics:0.9.0")
+            export("dev.icerock.moko:mvvm-core:0.16.1")
+            export("dev.icerock.moko:mvvm-flow:0.16.1")
         }
     }
 
@@ -53,6 +55,8 @@ kotlin {
                 implementation("com.squareup.sqldelight:coroutines-extensions:1.5.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
                 api("dev.icerock.moko:resources:0.23.0")
+                api("dev.icerock.moko:mvvm-core:0.16.1")
+                api("dev.icerock.moko:mvvm-flow:0.16.1")
                 with(Deps.Koin) {
                     api(core)
                     api(test)
@@ -69,6 +73,9 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
                 implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
+                with(Deps.Koin) {
+                    implementation(androidXCompose)
+                }
             }
         }
         val iosMain by getting {
@@ -133,6 +140,4 @@ sqldelight {
 multiplatformResources {
     multiplatformResourcesPackage = "com.example.myplants"
     multiplatformResourcesClassName = "SharedRes"
-    // resourcesPackage.set("com.example.myplants") // required
-    // resourcesClassName.set("SharedRes") // optional, default MR
 }

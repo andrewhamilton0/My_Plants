@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,21 +24,25 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantItemHolder
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListScreenTopBar
-import com.example.myplants.core.presentation.util.DateDescriptor
-import com.example.myplants.plants.domain.PlantSize
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListFilter
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenState
-import com.example.myplants.plants.presentation.plantlistscreen.UiPlantItem
+import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenViewModel
+import org.koin.androidx.compose.getViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PlantListScreen(
-    state: PlantListScreenState,
-    onEvent: (PlantListScreenEvent) -> Unit
+    viewModel: PlantListScreenViewModel = getViewModel()
 ) {
+    val state = viewModel.state.value
+
     Scaffold(
-        floatingActionButton = { AddFab(onClick = { onEvent(PlantListScreenEvent.AddPlant) }) },
+        floatingActionButton = {
+            AddFab(
+                onClick = {
+                    // TODO("ADD plant screen navigation")
+                }
+            )
+        },
         backgroundColor = Neutrals0
     ) { innerPadding ->
         Box(
@@ -52,12 +55,12 @@ fun PlantListScreen(
                 PlantListScreenTopBar(
                     isNotificationBellNotifying = state.isNotificationBellNotifying,
                     onNotificationBellClick = {
-                        onEvent(PlantListScreenEvent.OpenNotificationScreen)
+                        // TODO ADD Notification Navigation
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 PlantListFilterBar(
-                    onClick = { onEvent(PlantListScreenEvent.TogglePlantListFilter(it)) },
+                    onClick = { viewModel.onEvent(PlantListScreenEvent.TogglePlantListFilter(it)) },
                     currentlySelected = state.selectedPlantListFilter
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -69,9 +72,9 @@ fun PlantListScreen(
                     items(state.plants) { plant ->
                         PlantItemHolder(
                             plant = plant,
-                            onCardClick = { onEvent(PlantListScreenEvent.OpenPlant(plant.id)) },
+                            onCardClick = { TODO("Add Plant Screen Navigation") },
                             onWaterButtonClick = {
-                                onEvent(PlantListScreenEvent.WaterPlant(plant.id))
+                                viewModel.onEvent(PlantListScreenEvent.WaterPlant(plant.id))
                             }
                         )
                     }
@@ -85,55 +88,5 @@ fun PlantListScreen(
 @Composable
 @Preview(showBackground = true)
 fun PreviewPlantListScreen() {
-    PlantListScreen(
-        onEvent = { Unit },
-        state = PlantListScreenState(
-            selectedPlantListFilter = PlantListFilter.UPCOMING,
-            isNotificationBellNotifying = true,
-            plants = remember {
-                listOf<UiPlantItem>(
-                    UiPlantItem(
-                        id = "99",
-                        waterAmount = "500ml",
-                        name = "Arbol",
-                        description = "Small tree",
-                        isWatered = true,
-                        nextWaterDateDescriptor = DateDescriptor.Today,
-                        plantSize = PlantSize.MEDIUM,
-                        photo = null
-                    ),
-                    UiPlantItem(
-                        id = "99",
-                        waterAmount = "500ml",
-                        name = "Arbol",
-                        description = "Small tree",
-                        isWatered = true,
-                        nextWaterDateDescriptor = DateDescriptor.Today,
-                        plantSize = PlantSize.MEDIUM,
-                        photo = null
-                    ),
-                    UiPlantItem(
-                        id = "99",
-                        waterAmount = "500ml",
-                        name = "Arbol",
-                        description = "Small tree",
-                        isWatered = true,
-                        nextWaterDateDescriptor = DateDescriptor.Today,
-                        plantSize = PlantSize.MEDIUM,
-                        photo = null
-                    ),
-                    UiPlantItem(
-                        id = "99",
-                        waterAmount = "500ml",
-                        name = "Arbol",
-                        description = "Small tree",
-                        isWatered = true,
-                        nextWaterDateDescriptor = DateDescriptor.Today,
-                        plantSize = PlantSize.MEDIUM,
-                        photo = null
-                    )
-                )
-            }
-        )
-    )
+    PlantListScreen()
 }
