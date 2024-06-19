@@ -7,7 +7,7 @@ import kotlinx.datetime.plus
 
 object DateUtils {
     fun nextOccurrenceOfDay(currentDate: LocalDate, targetDays: Set<DayOfWeek>): LocalDate? {
-        if(targetDays.isEmpty()) return null
+        if (targetDays.isEmpty()) return null
         var date = currentDate
         while (true) {
             if (date.dayOfWeek in targetDays) return date
