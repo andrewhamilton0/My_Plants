@@ -13,4 +13,9 @@ sealed interface Screens {
 
     @Serializable
     object Notification
+
+    @Serializable
+    data class EditPlant(
+        val plantId: String? = null
+    )
 }
