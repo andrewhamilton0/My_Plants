@@ -7,7 +7,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.myplants.android.plant.presentation.EditPlantScreen.EditPlantScreen
+import com.example.myplants.android.plant.presentation.NotificationScreen.NotificationScreen
+import com.example.myplants.android.plant.presentation.plantdetailscreen.PlantDetailScreen
 import com.example.myplants.android.plant.presentation.plantlistscreen.PlantListScreen
+import com.example.myplants.android.plant.presentation.util.Screens
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -20,7 +27,13 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             MyApplicationTheme {
-                PlantListScreen()
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = Screens.PlantList) {
+                    composable<Screens.PlantList> { PlantListScreen(navController = navController) }
+                    composable<Screens.PlantDetail> { PlantDetailScreen(navController = navController) }
+                    composable<Screens.Notification> { NotificationScreen() }
+                    composable<Screens.EditPlant> { EditPlantScreen() }
+                }
             }
         }
     }
