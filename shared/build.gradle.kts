@@ -54,6 +54,7 @@ kotlin {
                 implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
                 implementation("com.squareup.sqldelight:coroutines-extensions:1.5.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
                 api("dev.icerock.moko:resources:0.23.0")
                 api("dev.icerock.moko:mvvm-core:0.16.1")
                 api("dev.icerock.moko:mvvm-flow:0.16.1")

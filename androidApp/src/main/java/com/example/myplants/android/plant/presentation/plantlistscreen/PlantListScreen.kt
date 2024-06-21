@@ -17,13 +17,14 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.myplants.android.core.presentation.theme.Neutrals0
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.AddFab
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantItemHolder
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListScreenTopBar
+import com.example.myplants.android.plant.presentation.util.Screens
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
 import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenViewModel
 import org.koin.androidx.compose.getViewModel
@@ -31,7 +32,8 @@ import org.koin.androidx.compose.getViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PlantListScreen(
-    viewModel: PlantListScreenViewModel = getViewModel()
+    viewModel: PlantListScreenViewModel = getViewModel(),
+    navController: NavController
 ) {
     val state = viewModel.state.value
 
@@ -39,7 +41,7 @@ fun PlantListScreen(
         floatingActionButton = {
             AddFab(
                 onClick = {
-                    // TODO("ADD plant screen navigation")
+                    navController.navigate(Screens.PlantDetail())
                 }
             )
         },
@@ -55,7 +57,7 @@ fun PlantListScreen(
                 PlantListScreenTopBar(
                     isNotificationBellNotifying = state.isNotificationBellNotifying,
                     onNotificationBellClick = {
-                        // TODO ADD Notification Navigation
+                        navController.navigate(Screens.Notification)
                     }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -72,7 +74,9 @@ fun PlantListScreen(
                     items(state.plants) { plant ->
                         PlantItemHolder(
                             plant = plant,
-                            onCardClick = { TODO("Add Plant Screen Navigation") },
+                            onCardClick = {
+                                navController.navigate(Screens.PlantDetail(plant.id))
+                            },
                             onWaterButtonClick = {
                                 viewModel.onEvent(PlantListScreenEvent.WaterPlant(plant.id))
                             }
@@ -82,11 +86,4 @@ fun PlantListScreen(
             }
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-@Preview(showBackground = true)
-fun PreviewPlantListScreen() {
-    PlantListScreen()
 }
