@@ -41,7 +41,7 @@ fun PlantListScreen(
         floatingActionButton = {
             AddFab(
                 onClick = {
-                    navController.navigate(Screens.PlantDetail())
+                    navController.navigate(Screens.EditPlant())
                 }
             )
         },
