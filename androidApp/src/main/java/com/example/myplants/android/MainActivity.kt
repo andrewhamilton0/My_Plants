@@ -10,8 +10,8 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myplants.android.plant.presentation.EditPlantScreen.EditPlantScreen
-import com.example.myplants.android.plant.presentation.NotificationScreen.NotificationScreen
+import com.example.myplants.android.plant.presentation.editplantscreen.EditPlantScreen
+import com.example.myplants.android.plant.presentation.notificationscreen.NotificationScreen
 import com.example.myplants.android.plant.presentation.plantdetailscreen.PlantDetailScreen
 import com.example.myplants.android.plant.presentation.plantlistscreen.PlantListScreen
 import com.example.myplants.android.plant.presentation.util.Screens

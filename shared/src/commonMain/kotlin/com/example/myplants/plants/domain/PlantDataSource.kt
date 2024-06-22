@@ -5,7 +5,7 @@ import plantsdb.PlantEntity
 
 interface PlantDataSource {
 
-    suspend fun getPlantById(id: String): PlantEntity?
+    suspend fun getPlantById(id: String): Flow<PlantEntity?>
 
     fun getAllPlants(): Flow<List<PlantEntity>>
 

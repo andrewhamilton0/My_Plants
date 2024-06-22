@@ -1,4 +1,4 @@
-package com.example.myplants.android.plant.presentation.NotificationScreen
+package com.example.myplants.android.plant.presentation.notificationscreen
 
 import androidx.compose.runtime.Composable
 

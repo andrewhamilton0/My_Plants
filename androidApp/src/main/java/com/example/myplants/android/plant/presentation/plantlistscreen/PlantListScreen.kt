@@ -78,7 +78,7 @@ fun PlantListScreen(
                                 navController.navigate(Screens.PlantDetail(plant.id))
                             },
                             onWaterButtonClick = {
-                                viewModel.onEvent(PlantListScreenEvent.WaterPlant(plant.id))
+                                viewModel.onEvent(PlantListScreenEvent.ToggleWater(plant.id))
                             }
                         )
                     }

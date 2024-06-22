@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -56,12 +57,13 @@ class PlantListScreenViewModel(
                     state.copy(selectedPlantListFilter = event.plantListFilter)
                 }
             }
-            is PlantListScreenEvent.WaterPlant -> {
+            is PlantListScreenEvent.ToggleWater -> {
                 viewModelScope.launch(NonCancellable) {
-                    val wateredPlant = plantRepository.getPlant(event.plantId)?.copy(
-                        isWatered = true
-                    )
-                    wateredPlant?.let { plantRepository.upsertPlant(it) }
+                    plantRepository.getPlant(event.plantId).firstOrNull().also {
+                        it?.let { plant ->
+                            plantRepository.upsertPlant(plant.copy(isWatered = !plant.isWatered))
+                        }
+                    }
                 }
             }
         }

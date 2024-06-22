@@ -1,4 +1,4 @@
-package com.example.myplants.android.plant.presentation.EditPlantScreen
+package com.example.myplants.android.plant.presentation.editplantscreen
 
 import androidx.compose.runtime.Composable
 

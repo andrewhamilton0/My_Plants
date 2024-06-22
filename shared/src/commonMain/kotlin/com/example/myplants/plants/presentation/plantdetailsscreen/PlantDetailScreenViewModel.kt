@@ -6,13 +6,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class PlantDetailScreenViewModel(
-    coroutineScope: CoroutineScope?
+    coroutineScope: CoroutineScope?,
+    plantId: String
 ) : KoinComponent {
 
     private val plantRepository: PlantRepository by inject()
@@ -23,48 +25,20 @@ class PlantDetailScreenViewModel(
 
     fun onEvent(event: PlantDetailScreenEvent) {
         when (event) {
-            is PlantDetailScreenEvent.BackButtonPressed -> TODO()
-            is PlantDetailScreenEvent.ChangeImageButtonPressed -> TODO()
-            is PlantDetailScreenEvent.EditButtonPressed -> TODO()
-            is PlantDetailScreenEvent.SavePlant -> {
+            PlantDetailScreenEvent.ToggleWaterButton -> {
                 viewModelScope.launch(NonCancellable) {
-                    plantRepository.savePlant(event.plant)
-                }
-                TODO("EXIT PLANT DETAIL SCREEN")
-            }
-            is PlantDetailScreenEvent.WaterDaysEdited -> {
-                _state.update { state ->
-                    state.copy(waterDays = event.waterDays)
+                    plantRepository.upsertPlant()
                 }
             }
-            is PlantDetailScreenEvent.DescriptionEdited -> {
-                _state.update { state ->
-                    state.copy(description = event.description)
-                }
-            }
-            is PlantDetailScreenEvent.NameEdited -> {
-                _state.update { state ->
-                    state.copy(name = event.name)
-                }
-            }
-            is PlantDetailScreenEvent.PlantSizeEdited -> {
-                _state.update { state ->
-                    state.copy(plantSize = event.plantSize)
-                }
-            }
-            is PlantDetailScreenEvent.TimeEdited -> {
-                _state.update { state ->
-                    state.copy(waterTime = event.time)
-                }
-            }
-            is PlantDetailScreenEvent.ToggleWaterButton -> {
-                _state.update { state ->
-                    state.copy(isWatered = !state.isWatered)
-                }
-            }
-            is PlantDetailScreenEvent.WaterAmountEdited -> {
-                _state.update { state ->
-                    state.copy(waterAmount = event.waterAmount)
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            plantRepository.getPlant(plantId).firstOrNull().also {
+                it?.let { plant ->
+                    _state.update {state ->
+                        state.copy(plant = plant)
                 }
             }
         }

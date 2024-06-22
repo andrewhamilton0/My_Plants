@@ -4,6 +4,7 @@ import com.example.myplants.PlantDatabase
 import com.example.myplants.plants.domain.PlantDataSource
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -14,10 +15,10 @@ class PlantDataSourceImpl(
     db: PlantDatabase
 ) : PlantDataSource {
 
-    val queries = db.plantEntityQueries
-    override suspend fun getPlantById(id: String): PlantEntity? {
+    private val queries = db.plantEntityQueries
+    override suspend fun getPlantById(id: String): Flow<PlantEntity?> {
         return withContext(Dispatchers.IO) {
-            queries.getPlantById(id).executeAsOneOrNull()
+            queries.getPlantById(id).asFlow().mapToOneOrNull()
         }
     }
 
