@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -23,7 +24,7 @@ class PlantListScreenViewModel(
 
     private val currentDateTime = flow<LocalDateTime> {
         while (true) {
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            emit(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
             delay(60 * 1000L)
         }
     }
@@ -55,13 +56,15 @@ class PlantListScreenViewModel(
                 _state.update { state ->
                     state.copy(selectedPlantListFilter = event.plantListFilter)
                 }
+                println(event.plantListFilter.name)
             }
-            is PlantListScreenEvent.WaterPlant -> {
+            is PlantListScreenEvent.ToggleWater -> {
                 viewModelScope.launch(NonCancellable) {
-                    val wateredPlant = plantRepository.getPlant(event.plantId)?.copy(
-                        isWatered = true
-                    )
-                    wateredPlant?.let { plantRepository.upsertPlant(it) }
+                    plantRepository.getPlant(event.plantId).firstOrNull().also {
+                        it?.let { plant ->
+                            plantRepository.upsertPlant(plant.copy(isWatered = !plant.isWatered))
+                        }
+                    }
                 }
             }
         }

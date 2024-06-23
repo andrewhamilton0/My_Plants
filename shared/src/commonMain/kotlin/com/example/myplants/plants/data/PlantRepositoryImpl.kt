@@ -4,7 +4,6 @@ import com.example.myplants.plants.domain.Plant
 import com.example.myplants.plants.domain.PlantDataSource
 import com.example.myplants.plants.domain.PlantRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
 class PlantRepositoryImpl(
@@ -22,8 +21,10 @@ class PlantRepositoryImpl(
         }
     }
 
-    override suspend fun getPlant(plantId: String): Plant? {
-        return plantDataSource.getPlantById(plantId)?.toPlant()
+    override fun getPlant(plantId: String): Flow<Plant?> {
+        return plantDataSource.getPlantById(plantId).mapLatest {
+            it?.toPlant()
+        }
     }
 
     override suspend fun deletePlant(plantId: String) {

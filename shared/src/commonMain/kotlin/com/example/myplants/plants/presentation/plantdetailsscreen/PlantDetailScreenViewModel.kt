@@ -1,70 +1,57 @@
 package com.example.myplants.plants.presentation.plantdetailsscreen
 
+import com.example.myplants.plants.domain.Plant
 import com.example.myplants.plants.domain.PlantRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.example.myplants.plants.domain.PlantSize
+import dev.icerock.moko.mvvm.flow.cStateFlow
+import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import kotlinx.datetime.LocalTime
 
 class PlantDetailScreenViewModel(
-    coroutineScope: CoroutineScope?
-) : KoinComponent {
+    private val plantRepository: PlantRepository,
+    private val plantId: String
+) : ViewModel() {
 
-    private val plantRepository: PlantRepository by inject()
-    private val viewModelScope = coroutineScope ?: CoroutineScope(Dispatchers.Main)
+    private val plant = plantRepository.getPlant(plantId)
 
-    private val _state = MutableStateFlow(PlantDetailScreenState())
-    val state = _state.asStateFlow()
+    private val _state = MutableStateFlow(
+        PlantDetailScreenState(
+            plant = Plant(
+                name = "",
+                description = "",
+                waterAmount = "",
+                waterDays = emptySet(),
+                waterTime = LocalTime(12, 0),
+                isWatered = false,
+                plantSize = PlantSize.SMALL,
+                photo = null
+            )
+        )
+    )
+    val state = combine(_state, plant) { state, plant ->
+        if (state.plant != plant && plant != null) {
+            state.copy(plant = plant)
+        } else {
+            state
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = _state.value
+    ).cStateFlow()
 
     fun onEvent(event: PlantDetailScreenEvent) {
         when (event) {
-            is PlantDetailScreenEvent.BackButtonPressed -> TODO()
-            is PlantDetailScreenEvent.ChangeImageButtonPressed -> TODO()
-            is PlantDetailScreenEvent.EditButtonPressed -> TODO()
-            is PlantDetailScreenEvent.SavePlant -> {
+            PlantDetailScreenEvent.ToggleWaterButton -> {
                 viewModelScope.launch(NonCancellable) {
-                    plantRepository.savePlant(event.plant)
-                }
-                TODO("EXIT PLANT DETAIL SCREEN")
-            }
-            is PlantDetailScreenEvent.WaterDaysEdited -> {
-                _state.update { state ->
-                    state.copy(waterDays = event.waterDays)
-                }
-            }
-            is PlantDetailScreenEvent.DescriptionEdited -> {
-                _state.update { state ->
-                    state.copy(description = event.description)
-                }
-            }
-            is PlantDetailScreenEvent.NameEdited -> {
-                _state.update { state ->
-                    state.copy(name = event.name)
-                }
-            }
-            is PlantDetailScreenEvent.PlantSizeEdited -> {
-                _state.update { state ->
-                    state.copy(plantSize = event.plantSize)
-                }
-            }
-            is PlantDetailScreenEvent.TimeEdited -> {
-                _state.update { state ->
-                    state.copy(waterTime = event.time)
-                }
-            }
-            is PlantDetailScreenEvent.ToggleWaterButton -> {
-                _state.update { state ->
-                    state.copy(isWatered = !state.isWatered)
-                }
-            }
-            is PlantDetailScreenEvent.WaterAmountEdited -> {
-                _state.update { state ->
-                    state.copy(waterAmount = event.waterAmount)
+                    val plant = state.value.plant
+                    plantRepository.upsertPlant(plant.copy(isWatered = !plant.isWatered))
                 }
             }
         }

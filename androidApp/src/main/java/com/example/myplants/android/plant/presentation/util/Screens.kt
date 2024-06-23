@@ -8,7 +8,7 @@ sealed interface Screens {
 
     @Serializable
     data class PlantDetail(
-        val plantId: String? = null
+        val plantId: String
     )
 
     @Serializable
