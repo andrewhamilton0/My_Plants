@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,7 +36,7 @@ fun PlantListScreen(
     viewModel: PlantListScreenViewModel = getViewModel(),
     navController: NavController
 ) {
-    val state = viewModel.state.value
+    val state = viewModel.state.collectAsState().value
 
     Scaffold(
         floatingActionButton = {

@@ -24,7 +24,7 @@ class PlantListScreenViewModel(
 
     private val currentDateTime = flow<LocalDateTime> {
         while (true) {
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            emit(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
             delay(60 * 1000L)
         }
     }
@@ -56,6 +56,7 @@ class PlantListScreenViewModel(
                 _state.update { state ->
                     state.copy(selectedPlantListFilter = event.plantListFilter)
                 }
+                println(event.plantListFilter.name)
             }
             is PlantListScreenEvent.ToggleWater -> {
                 viewModelScope.launch(NonCancellable) {

@@ -9,19 +9,22 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.myplants.plants.presentation.editplantscreen.EditPlantScreenEvent
 import com.example.myplants.plants.presentation.editplantscreen.EditPlantScreenViewModel
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun EditPlantScreen(
     navController: NavController,
-    viewModel: EditPlantScreenViewModel = getViewModel()
+    plantId: String?,
+    viewModel: EditPlantScreenViewModel = getViewModel { parametersOf(plantId) }
 ) {
-    val plant = viewModel.state.value.plant
+    val plant = viewModel.state.collectAsState().value.plant
 
     Scaffold() { innerPadding ->
         Box(

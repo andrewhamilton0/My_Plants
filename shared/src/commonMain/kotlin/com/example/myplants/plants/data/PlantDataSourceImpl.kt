@@ -16,10 +16,8 @@ class PlantDataSourceImpl(
 ) : PlantDataSource {
 
     private val queries = db.plantEntityQueries
-    override suspend fun getPlantById(id: String): Flow<PlantEntity?> {
-        return withContext(Dispatchers.IO) {
-            queries.getPlantById(id).asFlow().mapToOneOrNull()
-        }
+    override fun getPlantById(id: String): Flow<PlantEntity?> {
+        return queries.getPlantById(id).asFlow().mapToOneOrNull()
     }
 
     override fun getAllPlants(): Flow<List<PlantEntity>> {

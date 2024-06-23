@@ -15,7 +15,7 @@ import kotlinx.datetime.LocalTime
 
 class EditPlantScreenViewModel(
     private val repository: PlantRepository,
-    private val plantId: String
+    private val plantId: String?
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -100,7 +100,7 @@ class EditPlantScreenViewModel(
 
     init {
         viewModelScope.launch {
-            val plant = repository.getPlant(plantId).first()
+            val plant = plantId?.let { repository.getPlant(it).first() }
             plant?.let {
                 _state.update { state ->
                     state.copy(

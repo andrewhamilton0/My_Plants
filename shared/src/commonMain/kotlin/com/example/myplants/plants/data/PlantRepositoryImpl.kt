@@ -21,7 +21,7 @@ class PlantRepositoryImpl(
         }
     }
 
-    override suspend fun getPlant(plantId: String): Flow<Plant?> {
+    override fun getPlant(plantId: String): Flow<Plant?> {
         return plantDataSource.getPlantById(plantId).mapLatest {
             it?.toPlant()
         }
