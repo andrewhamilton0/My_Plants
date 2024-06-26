@@ -2,6 +2,7 @@ package com.example.myplants.plants.domain
 
 import com.example.myplants.core.data.UuidProvider
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 data class Plant(
@@ -13,5 +14,7 @@ data class Plant(
     val waterTime: LocalTime,
     val isWatered: Boolean,
     val plantSize: PlantSize,
-    val photo: Photo?
+    val photo: Photo?,
+    val creationDate: LocalDate,
+    val daysWatered: Set<LocalDate>
 )

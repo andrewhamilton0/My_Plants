@@ -1,7 +1,8 @@
 package com.example.myplants.di
 
 import com.example.myplants.PlantDatabase
-import com.example.myplants.core.data.listOfStringsAdapter
+import com.example.myplants.core.data.setOfDaysOfWeekAdapter
+import com.example.myplants.core.data.setOfLocalDatesAdapter
 import com.example.myplants.plants.data.PlantDataSourceImpl
 import com.example.myplants.plants.data.PlantRepositoryImpl
 import com.example.myplants.plants.domain.PlantDataSource
@@ -18,7 +19,8 @@ private val commonCoreModule = module {
             PlantDatabase(
                 driver = get(),
                 plantEntityAdapter = PlantEntity.Adapter(
-                    waterDaysAdapter = listOfStringsAdapter
+                    waterDaysAdapter = setOfDaysOfWeekAdapter,
+                    daysWateredAdapter = setOfLocalDatesAdapter
                 )
             )
         )

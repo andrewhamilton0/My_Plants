@@ -2,7 +2,7 @@ package com.example.myplants.plants.data
 
 import com.example.myplants.plants.domain.Plant
 import com.example.myplants.plants.domain.PlantSize
-import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import plantsdb.PlantEntity
 
@@ -12,11 +12,13 @@ fun Plant.toPlantEntity(): PlantEntity {
         name = name,
         description = description,
         waterAmount = waterAmount,
-        waterDays = waterDays.map { it.name },
-        waterTime = waterTime.toString(),
+        waterDays = waterDays,
+        waterTime = waterTime.toNanosecondOfDay(),
         isWatered = isWatered,
         plantSize = plantSize.name,
-        photoKey = null // TODO() LATER ADD PHOTO TO PLANT
+        photoKey = null, // TODO() LATER ADD PHOTO TO PLANT
+        creationDate = creationDate.toEpochDays().toLong(),
+        daysWatered = daysWatered
     )
 }
 
@@ -26,10 +28,12 @@ fun PlantEntity.toPlant(): Plant {
         name = name,
         description = description,
         waterAmount = waterAmount,
-        waterDays = waterDays.map { DayOfWeek.valueOf(it) }.toSet(),
-        waterTime = LocalTime.parse(waterTime),
+        waterDays = waterDays,
+        waterTime = LocalTime.fromNanosecondOfDay(waterTime),
         isWatered = isWatered,
         plantSize = PlantSize.valueOf(plantSize),
-        photo = null // TODO LATER ADD PHOTO TO PLANT
+        photo = null, // TODO LATER ADD PHOTO TO PLANT
+        creationDate = LocalDate.fromEpochDays(creationDate.toInt()),
+        daysWatered = daysWatered
     )
 }
