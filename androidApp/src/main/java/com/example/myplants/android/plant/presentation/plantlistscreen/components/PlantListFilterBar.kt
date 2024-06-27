@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myplants.SharedRes
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListFilter
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListFilter
 
 @Composable
 fun PlantListFilterBar(
@@ -35,9 +35,9 @@ fun PlantListFilterBar(
         Spacer(modifier = Modifier.width(24.dp))
         TextWithBarUnderneath(
             text = stringResource(id = SharedRes.strings.history.resourceId),
-            isSelected = currentlySelected == PlantListFilter.HISTORY,
+            isSelected = currentlySelected == PlantListFilter.ALL,
             onClick = {
-                onClick(PlantListFilter.HISTORY)
+                onClick(PlantListFilter.ALL)
             }
         )
     }

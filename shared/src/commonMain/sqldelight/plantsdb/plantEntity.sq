@@ -15,7 +15,7 @@ CREATE TABLE plantEntity (
     plantSize TEXT NOT NULL,
     photoKey TEXT,
     creationDate INTEGER NOT NULL,
-    daysWatered TEXT AS Set<LocalDate> NOT NULL
+    waterHistory TEXT AS Set<LocalDate> NOT NULL
 );
 
 getAllPlants:

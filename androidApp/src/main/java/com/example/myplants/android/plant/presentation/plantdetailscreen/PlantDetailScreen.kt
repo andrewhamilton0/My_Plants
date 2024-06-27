@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.myplants.android.plant.presentation.util.Screens
-import com.example.myplants.plants.presentation.plantdetailsscreen.PlantDetailScreenEvent
-import com.example.myplants.plants.presentation.plantdetailsscreen.PlantDetailScreenViewModel
+import com.example.myplants.featureplant.presentation.plant.plantdetailsscreen.PlantDetailScreenEvent
+import com.example.myplants.featureplant.presentation.plant.plantdetailsscreen.PlantDetailScreenViewModel
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 

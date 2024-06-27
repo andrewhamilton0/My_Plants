@@ -64,6 +64,7 @@ kotlin {
                 }
             }
         }
+        task("testClasses")
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))

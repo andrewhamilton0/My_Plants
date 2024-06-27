@@ -26,8 +26,8 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListScreenTopBar
 import com.example.myplants.android.plant.presentation.util.Screens
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenViewModel
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListScreenEvent
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListScreenViewModel
 import org.koin.androidx.compose.getViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)

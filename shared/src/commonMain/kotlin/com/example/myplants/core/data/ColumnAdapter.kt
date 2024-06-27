@@ -24,7 +24,6 @@ val setOfDaysOfWeekAdapter = object : ColumnAdapter<Set<DayOfWeek>, String> {
             databaseValue.split(",").map { DayOfWeek(it.toInt()) }.toSet()
         }
     }
-
     override fun encode(value: Set<DayOfWeek>): String {
         return value.map { it.isoDayNumber }.joinToString(separator = ",")
     }

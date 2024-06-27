@@ -1,0 +1,39 @@
+package com.example.myplants.featureplant.data.plant
+
+import com.example.myplants.featureplant.domain.plant.Plant
+import com.example.myplants.featureplant.domain.plant.PlantSize
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import plantsdb.PlantEntity
+
+fun Plant.toPlantEntity(): PlantEntity {
+    return PlantEntity(
+        id = id,
+        name = name,
+        description = description,
+        waterAmount = waterAmount,
+        waterDays = waterDays,
+        waterTime = waterTime.toNanosecondOfDay(),
+        isWatered = isWatered,
+        plantSize = plantSize.name,
+        photoKey = null, // TODO() LATER ADD PHOTO TO PLANT
+        creationDate = creationDate.toEpochDays().toLong(),
+        waterHistory = waterHistory
+    )
+}
+
+fun PlantEntity.toPlant(): Plant {
+    return Plant(
+        id = id,
+        name = name,
+        description = description,
+        waterAmount = waterAmount,
+        waterDays = waterDays,
+        waterTime = LocalTime.fromNanosecondOfDay(waterTime),
+        isWatered = isWatered,
+        plantSize = PlantSize.valueOf(plantSize),
+        photo = null, // TODO LATER ADD PHOTO TO PLANT
+        creationDate = LocalDate.fromEpochDays(creationDate.toInt()),
+        waterHistory = waterHistory
+    )
+}
