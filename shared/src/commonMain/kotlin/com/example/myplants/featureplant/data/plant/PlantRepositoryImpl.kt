@@ -36,13 +36,4 @@ class PlantRepositoryImpl(
     override suspend fun savePlant(plant: Plant) {
         plantDataSource.insertPlant(plant.toPlantEntity())
     }
-
-    override suspend fun toggleWater(plantId: String, dayWatered: LocalDate) {
-        val plant = getPlant(plantId).first() ?: return
-        if (plant.waterHistory.contains(dayWatered)) {
-            upsertPlant(plant.copy(waterHistory = plant.waterHistory - dayWatered))
-        } else {
-            upsertPlant(plant.copy(waterHistory = plant.waterHistory + dayWatered))
-        }
-    }
 }

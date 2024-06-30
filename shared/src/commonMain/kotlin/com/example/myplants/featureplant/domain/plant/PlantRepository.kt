@@ -10,6 +10,4 @@ interface PlantRepository {
     fun getPlant(plantId: String): Flow<Plant?>
     suspend fun deletePlant(plantId: String)
     suspend fun savePlant(plant: Plant)
-    suspend fun toggleWater(plantId: String, dayWatered: LocalDate)
-
 }

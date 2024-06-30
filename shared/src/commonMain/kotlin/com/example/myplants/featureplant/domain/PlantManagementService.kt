@@ -3,7 +3,6 @@ package com.example.myplants.featureplant.domain
 import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.waterlog.WaterLog
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.LocalDate
 
 interface PlantManagementService {
     fun getUpcomingPlants(): Flow<List<PlantWaterLogPair>>

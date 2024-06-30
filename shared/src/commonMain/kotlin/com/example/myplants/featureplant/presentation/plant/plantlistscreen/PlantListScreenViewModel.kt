@@ -25,20 +25,16 @@ class PlantListScreenViewModel(
     private val plantManagementService: PlantManagementService
 ) : ViewModel() {
 
-    private val currentDateTime = flow<LocalDateTime> {
-        while (true) {
-            emit(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
-            delay(60 * 1000L)
-        }
-    }
+    private val upcomingPlants = plantManagementService.getUpcomingPlants()
+    private val forgottenPlants = plantManagementService.getForgottenPlants()
+    private val plantHistory = plantManagementService.getHistory()
 
     private val _state = MutableStateFlow(PlantListScreenState())
-    val state = combine(_state, plants) { state, plantList ->
+    val state = combine(_state, upcomingPlants, forgottenPlants, plantHistory)
+    { state, upcomingPlants, forgottenPlants, plantHistory ->
         val filteredPlants = when (state.selectedPlantListFilter) {
             PlantListFilter.UPCOMING -> {
-                plantList.filter { it.waterStatus is WaterStatus.Upcoming }.sortedBy {
-                    it.waterStatus.localDateTime
-                }
+                state.
             }
             PlantListFilter.FORGOT_TO_WATER -> {
                 plantList.filter { it.waterStatus is WaterStatus.Forgotten }.sortedBy {
@@ -73,8 +69,7 @@ class PlantListScreenViewModel(
             }
             is PlantListScreenEvent.ToggleWater -> {
                 viewModelScope.launch(NonCancellable) {
-                    val currentDate = currentDateTime.first().date
-                    plantRepository.toggleWater(event.plantId, currentDate)
+
                 }
             }
         }
