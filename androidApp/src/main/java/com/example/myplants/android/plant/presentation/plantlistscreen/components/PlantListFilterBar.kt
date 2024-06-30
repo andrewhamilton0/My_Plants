@@ -35,9 +35,9 @@ fun PlantListFilterBar(
         Spacer(modifier = Modifier.width(24.dp))
         TextWithBarUnderneath(
             text = stringResource(id = SharedRes.strings.history.resourceId),
-            isSelected = currentlySelected == PlantListFilter.ALL,
+            isSelected = currentlySelected == PlantListFilter.HISTORY,
             onClick = {
-                onClick(PlantListFilter.ALL)
+                onClick(PlantListFilter.HISTORY)
             }
         )
     }

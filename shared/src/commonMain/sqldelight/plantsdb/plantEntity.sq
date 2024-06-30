@@ -13,9 +13,7 @@ CREATE TABLE plantEntity (
     waterTime INTEGER NOT NULL,
     isWatered INTEGER AS Boolean NOT NULL,
     plantSize TEXT NOT NULL,
-    photoKey TEXT,
-    creationDate INTEGER NOT NULL,
-    waterHistory TEXT AS Set<LocalDate> NOT NULL
+    photoKey TEXT
 );
 
 getAllPlants:
@@ -30,7 +28,7 @@ WHERE id = ?;
 insertPlant:
 INSERT OR REPLACE
 INTO plantEntity
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 deletePlantById:
 DELETE FROM plantEntity

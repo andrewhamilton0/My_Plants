@@ -1,6 +1,5 @@
 package com.example.myplants.featureplant.presentation.plant.editplantscreen
 
-import com.example.myplants.core.domain.DateUtil
 import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantRepository
 import com.example.myplants.featureplant.domain.plant.PlantSize
@@ -29,9 +28,7 @@ class EditPlantScreenViewModel(
                 waterTime = LocalTime(12, 0),
                 isWatered = false,
                 plantSize = PlantSize.SMALL,
-                photo = null,
-                creationDate = DateUtil.getCurrentDate(),
-                waterHistory = emptySet()
+                photo = null
             )
         )
     )

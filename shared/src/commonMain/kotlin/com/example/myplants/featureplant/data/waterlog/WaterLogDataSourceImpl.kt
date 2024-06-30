@@ -4,6 +4,7 @@ import com.example.myplants.PlantDatabase
 import com.example.myplants.featureplant.domain.waterlog.WaterLogDataSource
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.flow.Flow
 import plantsdb.WaterLogEntity
 
@@ -15,6 +16,10 @@ class WaterLogDataSourceImpl(
 
     override fun getAllWaterLogs(): Flow<List<WaterLogEntity>> {
         return queries.getAllWaterLogs().asFlow().mapToList()
+    }
+
+    override fun getWaterLogByLogId(logId: String): Flow<WaterLogEntity?> {
+        return queries.getWaterLogById(logId).asFlow().mapToOneOrNull()
     }
 
     override suspend fun insertWaterLog(waterLog: WaterLogEntity) {

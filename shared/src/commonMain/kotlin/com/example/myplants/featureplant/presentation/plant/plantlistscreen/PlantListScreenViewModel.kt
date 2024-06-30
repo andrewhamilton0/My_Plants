@@ -1,25 +1,17 @@
 package com.example.myplants.featureplant.presentation.plant.plantlistscreen
 
+import com.example.myplants.core.domain.DateUtil
 import com.example.myplants.featureplant.domain.PlantManagementService
-import com.example.myplants.featureplant.domain.plant.PlantRepository
-import com.example.myplants.featureplant.presentation.plant.plantlistscreen.util.WaterStatus
 import com.example.myplants.featureplant.presentation.plant.plantlistscreen.util.toUiPlant
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class PlantListScreenViewModel(
     private val plantManagementService: PlantManagementService
@@ -28,20 +20,22 @@ class PlantListScreenViewModel(
     private val upcomingPlants = plantManagementService.getUpcomingPlants()
     private val forgottenPlants = plantManagementService.getForgottenPlants()
     private val plantHistory = plantManagementService.getHistory()
+    private val currentDateTime = DateUtil.getCurrentDateTime()
 
+    //TODO FIX DATES SHOWN
     private val _state = MutableStateFlow(PlantListScreenState())
-    val state = combine(_state, upcomingPlants, forgottenPlants, plantHistory)
-    { state, upcomingPlants, forgottenPlants, plantHistory ->
+    val state = combine(_state, upcomingPlants, forgottenPlants, plantHistory, currentDateTime) { state, upcomingPlants, forgottenPlants, plantHistory, currentDateTime ->
+        val currentDate = currentDateTime.date
         val filteredPlants = when (state.selectedPlantListFilter) {
             PlantListFilter.UPCOMING -> {
-                state.
+                upcomingPlants.map { it.toUiPlant(currentDate) }
             }
             PlantListFilter.FORGOT_TO_WATER -> {
-                plantList.filter { it.waterStatus is WaterStatus.Forgotten }.sortedBy {
-                    it.waterStatus.localDateTime
-                }
+                forgottenPlants.map { it.toUiPlant(currentDate) }
             }
-            PlantListFilter.ALL -> plantList
+            PlantListFilter.HISTORY -> {
+                plantHistory.map { it.toUiPlant(currentDate) }
+            }
         }
         if (filteredPlants != state.plants) {
             state.copy(plants = filteredPlants)
@@ -58,7 +52,7 @@ class PlantListScreenViewModel(
         when (event) {
             is PlantListScreenEvent.DeletePlant -> {
                 viewModelScope.launch(NonCancellable) {
-                    plantRepository.deletePlant(event.plantId)
+                    plantManagementService.deletePlant(event.plantId)
                 }
             }
             is PlantListScreenEvent.TogglePlantListFilter -> {
@@ -69,7 +63,7 @@ class PlantListScreenViewModel(
             }
             is PlantListScreenEvent.ToggleWater -> {
                 viewModelScope.launch(NonCancellable) {
-
+                    plantManagementService.toggleWater(event.waterLogId)
                 }
             }
         }

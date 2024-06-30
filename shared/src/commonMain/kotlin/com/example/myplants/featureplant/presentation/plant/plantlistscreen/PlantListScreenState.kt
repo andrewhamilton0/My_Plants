@@ -9,5 +9,5 @@ data class PlantListScreenState(
 enum class PlantListFilter {
     UPCOMING,
     FORGOT_TO_WATER,
-    ALL
+    HISTORY
 }

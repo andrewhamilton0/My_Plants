@@ -1,7 +1,6 @@
 package com.example.myplants.featureplant.domain
 
 import com.example.myplants.featureplant.domain.plant.Plant
-import com.example.myplants.featureplant.domain.waterlog.WaterLog
 import kotlinx.coroutines.flow.Flow
 
 interface PlantManagementService {
@@ -11,6 +10,5 @@ interface PlantManagementService {
     suspend fun generateUpcomingWaterLogs()
     suspend fun upsertPlant(plant: Plant)
     suspend fun deletePlant(plantId: String)
-    suspend fun toggleWater(waterLog: WaterLog)
-
+    suspend fun toggleWater(logId: String)
 }

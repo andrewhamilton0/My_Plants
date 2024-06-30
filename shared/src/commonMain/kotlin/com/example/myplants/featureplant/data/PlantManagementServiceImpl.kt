@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 
-
 class PlantManagementServiceImpl(
     private val plantRepository: PlantRepository,
     private val waterLogRepository: WaterLogRepository
@@ -34,7 +33,7 @@ class PlantManagementServiceImpl(
     }
 
     override fun getHistory(): Flow<List<PlantWaterLogPair>> {
-        return combine(waterLogs, plants){ logs, plants ->
+        return combine(waterLogs, plants) { logs, plants ->
             plants.flatMap { plant ->
                 logs.filter { it.plantId == plant.id }.map {
                     PlantWaterLogPair(plant, it)
@@ -44,9 +43,9 @@ class PlantManagementServiceImpl(
     }
 
     override fun getForgottenPlants(): Flow<List<PlantWaterLogPair>> {
-        return combine(waterLogs, plants){ logs, plants ->
+        return combine(waterLogs, plants) { logs, plants ->
             plants.flatMap { plant ->
-                logs.filter { it.plantId == plant.id && !it.watered }.map {
+                logs.filter { it.plantId == plant.id && !it.isWatered }.map {
                     PlantWaterLogPair(plant, it)
                 }
             }
@@ -65,7 +64,7 @@ class PlantManagementServiceImpl(
                         WaterLog(
                             plantId = plant.id,
                             date = waterDate,
-                            watered = false
+                            isWatered = false
                         )
                     )
                 }
@@ -86,8 +85,8 @@ class PlantManagementServiceImpl(
         plantRepository.deletePlant(plantId)
     }
 
-    override suspend fun toggleWater(waterLog: WaterLog) {
-        waterLogRepository.toggleWater(waterLog)
+    override suspend fun toggleWater(logId: String) {
+        waterLogRepository.toggleWater(logId)
     }
 
     private suspend fun deleteUpcomingWaterLog(plantId: String) {

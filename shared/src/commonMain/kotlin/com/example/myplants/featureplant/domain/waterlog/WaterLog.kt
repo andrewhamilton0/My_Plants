@@ -7,5 +7,5 @@ data class WaterLog(
     val id: String = UuidProvider.getUuid(),
     val plantId: String,
     val date: LocalDate,
-    val watered: Boolean
+    val isWatered: Boolean
 )

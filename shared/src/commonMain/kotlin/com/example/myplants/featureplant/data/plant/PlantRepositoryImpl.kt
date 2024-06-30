@@ -4,9 +4,7 @@ import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantDataSource
 import com.example.myplants.featureplant.domain.plant.PlantRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.datetime.LocalDate
 
 class PlantRepositoryImpl(
     private val plantDataSource: PlantDataSource

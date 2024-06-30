@@ -51,7 +51,7 @@ fun PlantItemHolder(
     onCardClick: () -> Unit
 ) {
     val locale = Locale.getDefault()
-    val nextWaterDate = when (val dateDescriptor = plant.waterStatus.dateDescriptor) {
+    val nextWaterDate = when (val dateDescriptor = plant.dateDescriptor) {
         is DateDescriptor.Date -> {
             val formatter = DateTimeFormatter.ofPattern("MMM dd").withLocale(locale)
             dateDescriptor.date.toJavaLocalDate().format(formatter)

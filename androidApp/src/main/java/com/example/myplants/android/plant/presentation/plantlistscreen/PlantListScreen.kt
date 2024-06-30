@@ -76,10 +76,10 @@ fun PlantListScreen(
                         PlantItemHolder(
                             plant = plant,
                             onCardClick = {
-                                navController.navigate(Screens.PlantDetail(plant.id))
+                                navController.navigate(Screens.PlantDetail(plant.plantId))
                             },
                             onWaterButtonClick = {
-                                viewModel.onEvent(PlantListScreenEvent.ToggleWater(plant.id))
+                                viewModel.onEvent(PlantListScreenEvent.ToggleWater(plant.logId))
                             }
                         )
                     }

@@ -2,7 +2,6 @@ package com.example.myplants.featureplant.domain.plant
 
 import com.example.myplants.core.data.UuidProvider
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 data class Plant(

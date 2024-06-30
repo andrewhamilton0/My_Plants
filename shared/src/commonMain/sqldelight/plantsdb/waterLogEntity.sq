@@ -12,6 +12,11 @@ getAllWaterLogs:
 SELECT *
 FROM waterLogEntity;
 
+getWaterLogById:
+SELECT *
+FROM waterLogEntity
+WHERE id = ?;
+
 insertWaterLog:
 INSERT OR REPLACE
 INTO waterLogEntity

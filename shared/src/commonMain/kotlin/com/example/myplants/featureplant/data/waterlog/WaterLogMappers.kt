@@ -9,7 +9,7 @@ fun WaterLog.toWaterLogEntity(): WaterLogEntity {
         id = id,
         plantId = plantId,
         date = date.toEpochDays().toLong(),
-        watered = watered
+        watered = isWatered
     )
 }
 
@@ -18,6 +18,6 @@ fun WaterLogEntity.toWaterLog(): WaterLog {
         id = id,
         plantId = plantId,
         date = LocalDate.fromEpochDays(date.toInt()),
-        watered = watered
+        isWatered = watered
     )
 }
