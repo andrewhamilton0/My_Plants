@@ -11,7 +11,6 @@ CREATE TABLE plantEntity (
     waterAmount TEXT NOT NULL,
     waterDays TEXT AS Set<DayOfWeek> NOT NULL ,
     waterTime INTEGER NOT NULL,
-    isWatered INTEGER AS Boolean NOT NULL,
     plantSize TEXT NOT NULL,
     photoKey TEXT
 );
@@ -28,7 +27,7 @@ WHERE id = ?;
 insertPlant:
 INSERT OR REPLACE
 INTO plantEntity
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 deletePlantById:
 DELETE FROM plantEntity

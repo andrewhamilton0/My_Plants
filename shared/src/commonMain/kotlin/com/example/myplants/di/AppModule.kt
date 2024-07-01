@@ -39,5 +39,5 @@ private val commonCoreModule = module {
 }
 
 val coreModule: Module = module {
-    includes(commonCoreModule + platformCoreModule)
+    includes(platformCoreModule + commonCoreModule)
 }

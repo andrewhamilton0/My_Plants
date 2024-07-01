@@ -52,6 +52,22 @@ class PlantManagementServiceImpl(
         }
     }
 
+    override fun getPlant(plantId: String): Flow<Plant?> {
+        return plantRepository.getPlant(plantId)
+    }
+
+    override fun getPlantWaterLogPair(plantId: String, logId: String): Flow<PlantWaterLogPair?> {
+        val plant = getPlant(plantId)
+        val waterLog = waterLogRepository.getWaterLog(logId)
+        return combine(plant, waterLog) { _plant, _waterLog ->
+            if (_plant != null && _waterLog != null) {
+                PlantWaterLogPair(_plant, _waterLog)
+            } else {
+                null
+            }
+        }
+    }
+
     // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
     override suspend fun generateUpcomingWaterLogs() {
         val plants = plantRepository.getPlants().first()

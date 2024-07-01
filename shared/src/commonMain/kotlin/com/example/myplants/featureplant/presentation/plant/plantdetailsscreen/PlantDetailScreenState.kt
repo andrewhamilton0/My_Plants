@@ -1,7 +1,7 @@
 package com.example.myplants.featureplant.presentation.plant.plantdetailsscreen
 
-import com.example.myplants.featureplant.domain.plant.Plant
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantItem
 
 data class PlantDetailScreenState(
-    val plant: Plant
+    val plant: UiPlantItem?
 )

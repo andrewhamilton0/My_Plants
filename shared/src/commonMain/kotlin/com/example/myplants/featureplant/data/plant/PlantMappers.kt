@@ -13,7 +13,6 @@ fun Plant.toPlantEntity(): PlantEntity {
         waterAmount = waterAmount,
         waterDays = waterDays,
         waterTime = waterTime.toNanosecondOfDay(),
-        isWatered = isWatered,
         plantSize = plantSize.name,
         photoKey = null // TODO() LATER ADD PHOTO TO PLANT
     )
@@ -27,7 +26,6 @@ fun PlantEntity.toPlant(): Plant {
         waterAmount = waterAmount,
         waterDays = waterDays,
         waterTime = LocalTime.fromNanosecondOfDay(waterTime),
-        isWatered = isWatered,
         plantSize = PlantSize.valueOf(plantSize),
         photo = null // TODO LATER ADD PHOTO TO PLANT
     )

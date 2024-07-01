@@ -19,6 +19,10 @@ class WaterLogRepositoryImpl(
         }
     }
 
+    override fun getWaterLog(waterLogId: String): Flow<WaterLog?> {
+        return waterLogDataSource.getWaterLogByLogId(waterLogId).mapLatest { it?.toWaterLog() }
+    }
+
     override suspend fun upsertWaterLog(waterLog: WaterLog) {
         waterLogDataSource.insertWaterLog(waterLog.toWaterLogEntity())
     }
@@ -28,13 +32,9 @@ class WaterLogRepositoryImpl(
     }
 
     override suspend fun toggleWater(waterLogId: String) {
-        val log = getWaterLogById(waterLogId)
+        val log = getWaterLog(waterLogId).first()
         log?.let {
             upsertWaterLog(it.copy(isWatered = !it.isWatered))
         }
-    }
-
-    private suspend fun getWaterLogById(waterLogId: String): WaterLog? {
-        return waterLogDataSource.getWaterLogByLogId(waterLogId).first()?.toWaterLog()
     }
 }

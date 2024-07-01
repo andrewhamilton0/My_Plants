@@ -39,7 +39,6 @@ class PlantDataSourceImpl(
                 waterAmount = plantEntity.waterAmount,
                 waterDays = plantEntity.waterDays,
                 waterTime = plantEntity.waterTime,
-                isWatered = plantEntity.isWatered,
                 plantSize = plantEntity.plantSize,
                 photoKey = plantEntity.photoKey
             )

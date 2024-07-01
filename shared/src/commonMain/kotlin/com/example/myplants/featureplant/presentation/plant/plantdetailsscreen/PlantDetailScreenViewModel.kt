@@ -1,39 +1,31 @@
 package com.example.myplants.featureplant.presentation.plant.plantdetailsscreen
 
-import com.example.myplants.featureplant.domain.plant.Plant
-import com.example.myplants.featureplant.domain.plant.PlantRepository
-import com.example.myplants.featureplant.domain.plant.PlantSize
+import com.example.myplants.core.domain.DateUtil
+import com.example.myplants.featureplant.domain.PlantManagementService
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.util.toUiPlant
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalTime
 
 class PlantDetailScreenViewModel(
-    private val plantRepository: PlantRepository,
-    private val plantId: String
+    private val plantManagementService: PlantManagementService,
+    private val plantId: String,
+    private val waterLogId: String
 ) : ViewModel() {
 
-    private val plant = plantRepository.getPlant(plantId)
+    // TODO CHANGE plant repo to service
+    private val currentDate = DateUtil.getCurrentDateTime().map { it.date }
+    private val plant = combine(plantManagementService.getPlantWaterLogPair(plantId, waterLogId), currentDate) { plant, date ->
+        plant?.toUiPlant(date)
+    }
 
-    private val _state = MutableStateFlow(
-        PlantDetailScreenState(
-            plant = Plant(
-                name = "",
-                description = "",
-                waterAmount = "",
-                waterDays = emptySet(),
-                waterTime = LocalTime(12, 0),
-                isWatered = false,
-                plantSize = PlantSize.SMALL,
-                photo = null
-            )
-        )
-    )
+    private val _state = MutableStateFlow(PlantDetailScreenState(null))
     val state = combine(_state, plant) { state, plant ->
         if (state.plant != plant && plant != null) {
             state.copy(plant = plant)
@@ -51,7 +43,7 @@ class PlantDetailScreenViewModel(
             PlantDetailScreenEvent.ToggleWaterButton -> {
                 viewModelScope.launch(NonCancellable) {
                     val plant = state.value.plant
-                    plantRepository.upsertPlant(plant.copy(isWatered = !plant.isWatered))
+                    plant?.logId?.let { plantManagementService.toggleWater(it) }
                 }
             }
         }

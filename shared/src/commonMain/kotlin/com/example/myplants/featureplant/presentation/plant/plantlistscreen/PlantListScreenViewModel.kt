@@ -22,7 +22,7 @@ class PlantListScreenViewModel(
     private val plantHistory = plantManagementService.getHistory()
     private val currentDateTime = DateUtil.getCurrentDateTime()
 
-    //TODO FIX DATES SHOWN
+    // TODO FIX DATES SHOWN
     private val _state = MutableStateFlow(PlantListScreenState())
     val state = combine(_state, upcomingPlants, forgottenPlants, plantHistory, currentDateTime) { state, upcomingPlants, forgottenPlants, plantHistory, currentDateTime ->
         val currentDate = currentDateTime.date

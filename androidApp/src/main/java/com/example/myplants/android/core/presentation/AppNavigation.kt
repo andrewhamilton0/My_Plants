@@ -19,7 +19,7 @@ fun AppNavigation() {
         composable<Screens.Notification> { NotificationScreen() }
         composable<Screens.PlantDetail> {
             val args = it.toRoute<Screens.PlantDetail>()
-            PlantDetailScreen(navController = navController, plantId = args.plantId)
+            PlantDetailScreen(navController = navController, plantId = args.plantId, logId = args.logId)
         }
         composable<Screens.EditPlant> {
             val args = it.toRoute<Screens.EditPlant>()

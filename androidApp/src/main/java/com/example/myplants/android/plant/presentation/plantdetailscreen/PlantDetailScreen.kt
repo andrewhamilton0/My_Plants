@@ -22,7 +22,8 @@ import org.koin.core.parameter.parametersOf
 fun PlantDetailScreen(
     navController: NavController,
     plantId: String,
-    viewModel: PlantDetailScreenViewModel = getViewModel { parametersOf(plantId) }
+    logId: String,
+    viewModel: PlantDetailScreenViewModel = getViewModel { parametersOf(plantId, logId) }
 ) {
     val plant = viewModel.state.collectAsState().value.plant
 
@@ -38,16 +39,18 @@ fun PlantDetailScreen(
                 Button(onClick = { navController.popBackStack() }) {
                     Text(text = "Go to previous page")
                 }
-                Button(onClick = { navController.navigate(Screens.EditPlant(plant.id)) }) {
-                    Text(text = "Edit")
+                if (plant != null) {
+                    Button(onClick = { navController.navigate(Screens.EditPlant(plant.plantId)) }) {
+                        Text(text = "Edit")
+                    }
+                    Button(onClick = { viewModel.onEvent(PlantDetailScreenEvent.ToggleWaterButton) }) {
+                        Text(text = "Water Plant")
+                    }
+                    Text(text = "Name: ${plant.name}")
+                    Text(text = "Description: ${plant.description}")
+                    Text(text = "Is watered: ${plant.isWatered}")
+                    Text(text = "Water amount: ${plant.waterAmount}")
                 }
-                Button(onClick = { viewModel.onEvent(PlantDetailScreenEvent.ToggleWaterButton) }) {
-                    Text(text = "Water Plant")
-                }
-                Text(text = "Name: ${plant.name}")
-                Text(text = "Description: ${plant.description}")
-                Text(text = "Is watered: ${plant.isWatered}")
-                Text(text = "Water amount: ${plant.waterAmount}")
             }
         }
     }

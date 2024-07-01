@@ -31,10 +31,6 @@ class WaterLogDataSourceImpl(
         )
     }
 
-    override suspend fun deleteWaterLogsByPlantId(plantId: String) {
-        queries.deleteWaterLogByPlantId(plantId)
-    }
-
     override suspend fun deleteWaterLog(waterLogId: String) {
         queries.deleteWaterLogById(waterLogId)
     }

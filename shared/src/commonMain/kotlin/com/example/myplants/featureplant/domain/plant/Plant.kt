@@ -11,7 +11,6 @@ data class Plant(
     val waterAmount: String,
     val waterDays: Set<DayOfWeek>,
     val waterTime: LocalTime,
-    val isWatered: Boolean,
     val plantSize: PlantSize,
     val photo: Photo?
 )

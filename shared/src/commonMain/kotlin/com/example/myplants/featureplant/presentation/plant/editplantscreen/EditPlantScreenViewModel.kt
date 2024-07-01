@@ -1,7 +1,7 @@
 package com.example.myplants.featureplant.presentation.plant.editplantscreen
 
+import com.example.myplants.featureplant.domain.PlantManagementService
 import com.example.myplants.featureplant.domain.plant.Plant
-import com.example.myplants.featureplant.domain.plant.PlantRepository
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 
 class EditPlantScreenViewModel(
-    private val repository: PlantRepository,
+    private val plantManagementService: PlantManagementService,
     private val plantId: String?
 ) : ViewModel() {
 
@@ -26,7 +26,6 @@ class EditPlantScreenViewModel(
                 waterAmount = "",
                 waterDays = emptySet(),
                 waterTime = LocalTime(12, 0),
-                isWatered = false,
                 plantSize = PlantSize.SMALL,
                 photo = null
             )
@@ -86,7 +85,7 @@ class EditPlantScreenViewModel(
                     // TODO: Tell user to add at least one water day
                 } else {
                     viewModelScope.launch(NonCancellable) {
-                        repository.savePlant(state.value.plant)
+                        plantManagementService.upsertPlant(state.value.plant)
                     }
                 }
             }
@@ -113,7 +112,7 @@ class EditPlantScreenViewModel(
 
     init {
         viewModelScope.launch {
-            val plant = plantId?.let { repository.getPlant(it).first() }
+            val plant = plantId?.let { plantManagementService.getPlant(it).first() }
             plant?.let {
                 _state.update { state ->
                     state.copy(
