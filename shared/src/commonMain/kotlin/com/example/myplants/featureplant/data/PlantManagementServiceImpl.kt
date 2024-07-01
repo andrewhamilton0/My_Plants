@@ -11,13 +11,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.datetime.LocalDate
 
 class PlantManagementServiceImpl(
     private val plantRepository: PlantRepository,
-    private val waterLogRepository: WaterLogRepository
+    private val waterLogRepository: WaterLogRepository,
+    private val currentDate: Flow<LocalDate> = DateUtil.getCurrentDateTime().mapLatest { it.date }
 ) : PlantManagementService {
 
-    private val currentDate = DateUtil.getCurrentDateTime().mapLatest { it.date }
     private val waterLogs = waterLogRepository.getAllWaterLogs()
     private val plants = plantRepository.getPlants()
 
