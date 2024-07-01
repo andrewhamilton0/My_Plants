@@ -1,6 +1,6 @@
 package com.example.myplants.di
 
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenViewModel
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListScreenViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 

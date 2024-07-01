@@ -37,8 +37,8 @@ import com.example.myplants.android.core.presentation.theme.Neutrals100
 import com.example.myplants.android.core.presentation.theme.Neutrals500
 import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
-import com.example.myplants.core.presentation.util.DateDescriptor
-import com.example.myplants.plants.presentation.plantlistscreen.UiPlantItem
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantItem
+import com.example.myplants.featureplant.presentation.plant.util.DateDescriptor
 import kotlinx.datetime.toJavaLocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -51,7 +51,7 @@ fun PlantItemHolder(
     onCardClick: () -> Unit
 ) {
     val locale = Locale.getDefault()
-    val nextWaterDate = when (val dateDescriptor = plant.nextWaterDateDescriptor) {
+    val nextWaterDate = when (val dateDescriptor = plant.dateDescriptor) {
         is DateDescriptor.Date -> {
             val formatter = DateTimeFormatter.ofPattern("MMM dd").withLocale(locale)
             dateDescriptor.date.toJavaLocalDate().format(formatter)

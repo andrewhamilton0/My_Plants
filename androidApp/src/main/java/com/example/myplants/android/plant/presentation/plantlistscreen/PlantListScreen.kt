@@ -26,8 +26,8 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListScreenTopBar
 import com.example.myplants.android.plant.presentation.util.Screens
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenEvent
-import com.example.myplants.plants.presentation.plantlistscreen.PlantListScreenViewModel
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListScreenEvent
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListScreenViewModel
 import org.koin.androidx.compose.getViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -76,10 +76,10 @@ fun PlantListScreen(
                         PlantItemHolder(
                             plant = plant,
                             onCardClick = {
-                                navController.navigate(Screens.PlantDetail(plant.id))
+                                navController.navigate(Screens.PlantDetail(plant.plantId, plant.logId))
                             },
                             onWaterButtonClick = {
-                                viewModel.onEvent(PlantListScreenEvent.ToggleWater(plant.id))
+                                viewModel.onEvent(PlantListScreenEvent.ToggleWater(plant.logId))
                             }
                         )
                     }

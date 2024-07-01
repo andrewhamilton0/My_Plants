@@ -1,0 +1,27 @@
+import kotlin.Boolean;
+
+CREATE TABLE waterLogEntity(
+    id TEXT PRIMARY KEY NOT NULL,
+    plantId TEXT NOT NULL,
+    date INTEGER NOT NULL,
+    watered INTEGER AS Boolean NOT NULL,
+    FOREIGN KEY (plantId) REFERENCES plantEntity(id) ON DELETE CASCADE
+);
+
+getAllWaterLogs:
+SELECT *
+FROM waterLogEntity;
+
+getWaterLogById:
+SELECT *
+FROM waterLogEntity
+WHERE id = ?;
+
+insertWaterLog:
+INSERT OR REPLACE
+INTO waterLogEntity
+VALUES (?,?,?,?);
+
+deleteWaterLogById:
+DELETE FROM waterLogEntity
+WHERE id = ?;

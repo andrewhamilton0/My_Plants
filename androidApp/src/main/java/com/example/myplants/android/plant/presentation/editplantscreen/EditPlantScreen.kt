@@ -2,9 +2,11 @@ package com.example.myplants.android.plant.presentation.editplantscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -13,8 +15,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.myplants.plants.presentation.editplantscreen.EditPlantScreenEvent
-import com.example.myplants.plants.presentation.editplantscreen.EditPlantScreenViewModel
+import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenEvent
+import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenViewModel
+import kotlinx.datetime.DayOfWeek
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -25,6 +28,23 @@ fun EditPlantScreen(
     viewModel: EditPlantScreenViewModel = getViewModel { parametersOf(plantId) }
 ) {
     val plant = viewModel.state.collectAsState().value.plant
+
+    @Composable
+    fun DayOfWeekSelector(dayOfWeek: DayOfWeek) {
+        Row() {
+            Text(text = dayOfWeek.name.uppercase())
+            Checkbox(
+                checked = plant.waterDays.contains(dayOfWeek),
+                onCheckedChange = { isChecked ->
+                    if (isChecked) {
+                        viewModel.onEvent(EditPlantScreenEvent.AddWaterDay(dayOfWeek))
+                    } else {
+                        viewModel.onEvent(EditPlantScreenEvent.RemoveWaterDay(dayOfWeek))
+                    }
+                }
+            )
+        }
+    }
 
     Scaffold() { innerPadding ->
         Box(
@@ -68,6 +88,13 @@ fun EditPlantScreen(
                     label = { Text("Water Amount") },
                     placeholder = { Text("Enter water amount") }
                 )
+                DayOfWeekSelector(DayOfWeek.MONDAY)
+                DayOfWeekSelector(DayOfWeek.TUESDAY)
+                DayOfWeekSelector(DayOfWeek.WEDNESDAY)
+                DayOfWeekSelector(DayOfWeek.THURSDAY)
+                DayOfWeekSelector(DayOfWeek.FRIDAY)
+                DayOfWeekSelector(DayOfWeek.SATURDAY)
+                DayOfWeekSelector(DayOfWeek.SUNDAY)
             }
         }
     }

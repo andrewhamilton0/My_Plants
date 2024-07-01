@@ -1,13 +1,18 @@
 package com.example.myplants.core.data
 
 import com.squareup.sqldelight.ColumnAdapter
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.isoDayNumber
 
-val listOfStringsAdapter = object : ColumnAdapter<List<String>, String> {
-    override fun decode(databaseValue: String) =
-        if (databaseValue.isEmpty()) {
-            listOf()
+val setOfDaysOfWeekAdapter = object : ColumnAdapter<Set<DayOfWeek>, String> {
+    override fun decode(databaseValue: String): Set<DayOfWeek> {
+        return if (databaseValue.isEmpty()) {
+            setOf()
         } else {
-            databaseValue.split(",")
+            databaseValue.split(",").map { DayOfWeek(it.toInt()) }.toSet()
         }
-    override fun encode(value: List<String>) = value.joinToString(separator = ",")
+    }
+    override fun encode(value: Set<DayOfWeek>): String {
+        return value.map { it.isoDayNumber }.joinToString(separator = ",")
+    }
 }
