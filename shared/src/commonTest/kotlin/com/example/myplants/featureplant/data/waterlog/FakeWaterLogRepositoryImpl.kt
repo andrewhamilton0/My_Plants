@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 
-class FakeWaterLogRepositoryImpl: WaterLogRepository {
+class FakeWaterLogRepositoryImpl : WaterLogRepository {
 
     private val _waterLogs = MutableStateFlow<List<WaterLog>>(emptyList())
     private val waterLogs = _waterLogs.asStateFlow()

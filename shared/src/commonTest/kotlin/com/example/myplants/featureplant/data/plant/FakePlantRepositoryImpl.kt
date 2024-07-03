@@ -4,11 +4,10 @@ import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 
-class FakePlantRepositoryImpl: PlantRepository {
+class FakePlantRepositoryImpl : PlantRepository {
 
     private val _plants = MutableStateFlow<List<Plant>>(emptyList())
     private val plants = _plants.asStateFlow()
@@ -29,7 +28,6 @@ class FakePlantRepositoryImpl: PlantRepository {
             plants.find { it.id == plantId }
         }
     }
-
 
     override suspend fun deletePlant(plantId: String) {
         val currentList = _plants.value.toMutableList()
