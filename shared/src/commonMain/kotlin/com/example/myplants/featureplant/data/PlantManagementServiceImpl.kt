@@ -10,7 +10,6 @@ import com.example.myplants.featureplant.domain.waterlog.WaterLogRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEach
 import kotlinx.datetime.LocalDate
 
 class PlantManagementServiceImpl(
@@ -24,30 +23,30 @@ class PlantManagementServiceImpl(
 
     override fun getUpcomingPlants(): Flow<List<PlantWaterLogPair>> {
         return combine(plants, waterLogs, currentDate) { plants, waterLogs, currentDate ->
-            plants.flatMap { plant ->
-                val nextWaterDate = DateUtil.nextOccurrenceOfDay(currentDate, plant.waterDays)
-                waterLogs.filter { it.plantId == plant.id && it.date == nextWaterDate }
-                    .map { PlantWaterLogPair(plant, it) }
-            }
-        }.onEach { generateUpcomingWaterLogs() }
+            generateUpcomingWaterLogs()
+            waterLogs.filter { it.date >= currentDate }
+                .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
+                .sortedWith(compareBy({ it.waterLog.date }, { it.plant.name }))
+        }
     }
 
     override fun getHistory(): Flow<List<PlantWaterLogPair>> {
         return combine(waterLogs, plants, currentDate) { logs, plants, currentDate ->
-            plants.flatMap { plant ->
-                logs.filter { it.date < currentDate && it.plantId == plant.id }
-                    .map { PlantWaterLogPair(plant, it) }
-            }
-        }.onEach { generateUpcomingWaterLogs() }
+            generateUpcomingWaterLogs()
+            logs.filter { it.date < currentDate }
+                .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
+                .sortedWith(compareByDescending<PlantWaterLogPair> { it.waterLog.date }.thenBy { it.plant.name })
+        }
     }
 
     override fun getForgottenPlants(): Flow<List<PlantWaterLogPair>> {
         return combine(waterLogs, plants, currentDate) { logs, plants, _ ->
+            generateUpcomingWaterLogs()
             plants.flatMap { plant ->
                 logs.filter { it.plantId == plant.id && !it.isWatered }
                     .map { PlantWaterLogPair(plant, it) }
             }
-        }.onEach { generateUpcomingWaterLogs() }
+        }
     }
 
     override fun getPlant(plantId: String): Flow<Plant?> {

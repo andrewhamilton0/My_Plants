@@ -11,6 +11,7 @@ import com.example.myplants.featureplant.domain.waterlog.WaterLogRepository
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -36,24 +37,31 @@ class PlantManagementServiceImplTest() {
 
         val tomato = createPlant("1A", "Tomato", setOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY))
         val grape = createPlant("2B", "Grape", setOf(DayOfWeek.THURSDAY))
+        val cactus = createPlant("3C", "Cactus", setOf(DayOfWeek.TUESDAY))
+        val watermelon = createPlant("4D", "Watermelon", setOf(DayOfWeek.TUESDAY))
         service.upsertPlant(tomato)
-        simulateDateChange(date, LocalDate(2024, 1, 8))
+        simulateDateChange(date, LocalDate(2024, 1, 9))
         service.upsertPlant(grape)
-        simulateDateChange(date, LocalDate(2024, 1, 15))
-        upcoming.first().forEach { if (it.plant.id == "1A") service.toggleWater(it.waterLog.id) }
         simulateDateChange(date, LocalDate(2024, 1, 16))
+        delay(100)
+        service.upsertPlant(watermelon)
+        service.upsertPlant(cactus)
+        val upcomingPlants = upcoming.first()
+        upcomingPlants.forEach { if (it.waterLog.plantId == "1A") service.toggleWater(it.waterLog.id) }
+        upcomingPlants.forEach { if (it.waterLog.plantId == "3C") service.toggleWater(it.waterLog.id) }
+        upcomingPlants.forEach { if (it.waterLog.plantId == "3C") service.toggleWater(it.waterLog.id) }
 
         val expectedPairs = listOf(
+            PlantWaterLogPair(cactus, WaterLog("1", "3C", LocalDate(2024, 1, 16), false)),
             PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 16), true)),
-            PlantWaterLogPair(tomato, WaterLog("1", "2B", LocalDate(2024, 1, 18), false)),
-            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 22), false))
+            PlantWaterLogPair(watermelon, WaterLog("1", "4D", LocalDate(2024, 1, 16), false)),
+            PlantWaterLogPair(grape, WaterLog("1", "2B", LocalDate(2024, 1, 18), false))
         )
-        val finalUpcoming = upcoming.first().sortedBy { it.waterLog.date }
-            .map { PlantWaterLogPair(it.plant, it.waterLog.copy(id = "1")) }
+        val actualUpcoming = upcoming.first().map { PlantWaterLogPair(it.plant, it.waterLog.copy(id = "1")) }
 
-        assertEquals(expectedPairs.size, finalUpcoming.size)
+        assertEquals(expectedPairs.size, actualUpcoming.size)
         expectedPairs.forEachIndexed { index, expected ->
-            val actual = finalUpcoming[index]
+            val actual = actualUpcoming[index]
             assertEquals(expected, actual)
         }
 
@@ -71,23 +79,28 @@ class PlantManagementServiceImplTest() {
 
         val tomato = createPlant("1A", "Tomato", setOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY))
         val grape = createPlant("2B", "Grape", setOf(DayOfWeek.THURSDAY))
+        val cactus = createPlant("3C", "Cactus", setOf(DayOfWeek.TUESDAY))
+        val watermelon = createPlant("4D", "Watermelon", setOf(DayOfWeek.TUESDAY))
         service.upsertPlant(tomato)
         simulateDateChange(date, LocalDate(2024, 1, 2))
         history.first().forEach { if (it.plant.id == "1A") service.toggleWater(it.waterLog.id) }
         simulateDateChange(date, LocalDate(2024, 1, 8))
         service.upsertPlant(grape)
+        service.upsertPlant(cactus)
+        service.upsertPlant(watermelon)
         simulateDateChange(date, LocalDate(2024, 1, 16))
 
         val expectedPairs = listOf(
-            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 1), true)),
-            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 2), false)),
-            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 8), false)),
-            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 9), false)),
+            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 15), false)),
             PlantWaterLogPair(grape, WaterLog("1", "2B", LocalDate(2024, 1, 11), false)),
-            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 15), false))
+            PlantWaterLogPair(cactus, WaterLog("1", "3C", LocalDate(2024, 1, 9), false)),
+            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 9), false)),
+            PlantWaterLogPair(watermelon, WaterLog("1", "4D", LocalDate(2024, 1, 9), false)),
+            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 8), false)),
+            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 2), false)),
+            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 1), true))
         )
-        val finalHistory = history.first().sortedBy { it.waterLog.date }
-            .map { PlantWaterLogPair(it.plant, it.waterLog.copy(id = "1")) }
+        val finalHistory = history.first().map { PlantWaterLogPair(it.plant, it.waterLog.copy(id = "1")) }
 
         assertEquals(expectedPairs.size, finalHistory.size)
         expectedPairs.forEachIndexed { index, expected ->
@@ -100,9 +113,10 @@ class PlantManagementServiceImplTest() {
 
     private suspend fun simulateDateChange(start: MutableStateFlow<LocalDate>, endDate: LocalDate) {
         while (start.value < endDate) {
-            delay(10)
+            delay(100)
             start.update { start.value.plus(1, DateTimeUnit.DAY) }
         }
+        delay(100)
     }
 
     private fun createPlant(id: String, name: String, waterDays: Set<DayOfWeek>): Plant {
