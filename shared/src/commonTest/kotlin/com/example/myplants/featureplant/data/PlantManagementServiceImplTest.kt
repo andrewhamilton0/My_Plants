@@ -111,6 +111,52 @@ class PlantManagementServiceImplTest() {
         job.cancelAndJoin()
     }
 
+    @Test
+    fun `test get forgotten plants`() = runBlocking {
+        val plantRepository: PlantRepository = FakePlantRepositoryImpl()
+        val waterLogRepository: WaterLogRepository = FakeWaterLogRepositoryImpl()
+        val date = MutableStateFlow(LocalDate(2024, 1, 1))
+        val service = PlantManagementServiceImpl(plantRepository, waterLogRepository, date)
+        val forgotten = service.getForgottenPlants()
+        val history = service.getHistory()
+        val job = launch { forgotten.collect { } }
+
+        val tomato = createPlant("1A", "Tomato", setOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY))
+        val grape = createPlant("2B", "Grape", setOf(DayOfWeek.THURSDAY))
+        val cactus = createPlant("3C", "Cactus", setOf(DayOfWeek.MONDAY))
+        val watermelon = createPlant("4D", "Watermelon", setOf(DayOfWeek.TUESDAY))
+        service.upsertPlant(tomato)
+        simulateDateChange(date, LocalDate(2024, 1, 9))
+        service.upsertPlant(grape)
+        service.upsertPlant(watermelon)
+        service.upsertPlant(cactus)
+        simulateDateChange(date, LocalDate(2024, 1, 16))
+        delay(100)
+
+        val forgottenPlants = forgotten.first()
+        val historyPlants = history.first()
+        forgottenPlants.forEach { if (it.waterLog.plantId == "2B") service.toggleWater(it.waterLog.id) }
+        forgottenPlants.forEach { if (it.waterLog.plantId == "3C") service.toggleWater(it.waterLog.id) }
+        historyPlants.forEach { if (it.waterLog.plantId == "3C") service.toggleWater(it.waterLog.id) }
+
+        val expectedPairs = listOf(
+            PlantWaterLogPair(cactus, WaterLog("1", "3C", LocalDate(2024, 1, 15), false)),
+            PlantWaterLogPair(tomato, WaterLog("1", "1A", LocalDate(2024, 1, 15), false)),
+            PlantWaterLogPair(watermelon, WaterLog("1", "4D", LocalDate(2024, 1, 9), false))
+        )
+        val actualUpcoming = forgotten.first().map { PlantWaterLogPair(it.plant, it.waterLog.copy(id = "1")) }
+
+        println(actualUpcoming)
+
+        assertEquals(expectedPairs.size, actualUpcoming.size)
+        expectedPairs.forEachIndexed { index, expected ->
+            val actual = actualUpcoming[index]
+            assertEquals(expected, actual)
+        }
+
+        job.cancelAndJoin()
+    }
+
     private suspend fun simulateDateChange(start: MutableStateFlow<LocalDate>, endDate: LocalDate) {
         while (start.value < endDate) {
             delay(100)

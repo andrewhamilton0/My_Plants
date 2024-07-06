@@ -26,7 +26,7 @@ class PlantManagementServiceImpl(
             generateUpcomingWaterLogs()
             waterLogs.filter { it.date >= currentDate }
                 .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
-                .sortedWith(compareBy({ it.waterLog.date }, { it.plant.name }))
+                .sortedWith(compareBy({ it.waterLog.date }, { it.plant.name.lowercase() }))
         }
     }
 
@@ -35,17 +35,21 @@ class PlantManagementServiceImpl(
             generateUpcomingWaterLogs()
             logs.filter { it.date < currentDate }
                 .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
-                .sortedWith(compareByDescending<PlantWaterLogPair> { it.waterLog.date }.thenBy { it.plant.name })
+                .sortedWith(compareByDescending<PlantWaterLogPair> { it.waterLog.date }.thenBy { it.plant.name.lowercase() })
         }
     }
 
     override fun getForgottenPlants(): Flow<List<PlantWaterLogPair>> {
-        return combine(waterLogs, plants, currentDate) { logs, plants, _ ->
+        return combine(waterLogs, plants, currentDate) { logs, plants, currentDate ->
             generateUpcomingWaterLogs()
             plants.flatMap { plant ->
-                logs.filter { it.plantId == plant.id && !it.isWatered }
+                val lastWaterDate = DateUtil.previousOccurrenceOfDay(currentDate, plant.waterDays)
+                logs.filter { it.plantId == plant.id && !it.isWatered && it.date == lastWaterDate }
                     .map { PlantWaterLogPair(plant, it) }
-            }
+            }.sortedWith(
+                compareByDescending<PlantWaterLogPair> { it.waterLog.date }
+                    .thenBy { it.plant.name.lowercase() }
+            )
         }
     }
 
