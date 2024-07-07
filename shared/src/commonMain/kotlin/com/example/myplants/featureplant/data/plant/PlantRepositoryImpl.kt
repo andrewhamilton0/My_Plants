@@ -30,8 +30,4 @@ class PlantRepositoryImpl(
     override suspend fun deletePlant(plantId: String) {
         plantDataSource.deletePlant(plantId)
     }
-
-    override suspend fun savePlant(plant: Plant) {
-        plantDataSource.insertPlant(plant.toPlantEntity())
-    }
 }

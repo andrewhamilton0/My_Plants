@@ -10,44 +10,41 @@ import com.example.myplants.featureplant.domain.waterlog.WaterLogRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.datetime.LocalDate
 
 class PlantManagementServiceImpl(
     private val plantRepository: PlantRepository,
-    private val waterLogRepository: WaterLogRepository
+    private val waterLogRepository: WaterLogRepository,
+    private val currentDate: Flow<LocalDate>
 ) : PlantManagementService {
 
-    private val currentDate = DateUtil.getCurrentDateTime().mapLatest { it.date }
     private val waterLogs = waterLogRepository.getAllWaterLogs()
     private val plants = plantRepository.getPlants()
 
     override fun getUpcomingPlants(): Flow<List<PlantWaterLogPair>> {
-        return combine(plants, waterLogs, currentDate) { _plants, _waterLogs, _currentDate ->
-            _plants.flatMap { plant ->
-                val nextWaterDate = DateUtil.nextOccurrenceOfDay(_currentDate, plant.waterDays)
-                _waterLogs.filter { it.plantId == plant.id && it.date == nextWaterDate }.map {
-                    PlantWaterLogPair(plant, it)
-                }
-            }
+        return combine(plants, waterLogs, currentDate) { plants, waterLogs, currentDate ->
+            generateUpcomingWaterLogs()
+            waterLogs.filter { it.date >= currentDate }
+                .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
+                .sortedWith(compareBy({ it.waterLog.date }, { it.plant.name }))
         }
     }
 
     override fun getHistory(): Flow<List<PlantWaterLogPair>> {
-        return combine(waterLogs, plants) { logs, plants ->
-            plants.flatMap { plant ->
-                logs.filter { it.plantId == plant.id }.map {
-                    PlantWaterLogPair(plant, it)
-                }
-            }
+        return combine(waterLogs, plants, currentDate) { logs, plants, currentDate ->
+            generateUpcomingWaterLogs()
+            logs.filter { it.date < currentDate }
+                .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
+                .sortedWith(compareByDescending<PlantWaterLogPair> { it.waterLog.date }.thenBy { it.plant.name })
         }
     }
 
     override fun getForgottenPlants(): Flow<List<PlantWaterLogPair>> {
-        return combine(waterLogs, plants) { logs, plants ->
+        return combine(waterLogs, plants, currentDate) { logs, plants, _ ->
+            generateUpcomingWaterLogs()
             plants.flatMap { plant ->
-                logs.filter { it.plantId == plant.id && !it.isWatered }.map {
-                    PlantWaterLogPair(plant, it)
-                }
+                logs.filter { it.plantId == plant.id && !it.isWatered }
+                    .map { PlantWaterLogPair(plant, it) }
             }
         }
     }
@@ -60,14 +57,11 @@ class PlantManagementServiceImpl(
         val plant = getPlant(plantId)
         val waterLog = waterLogRepository.getWaterLog(logId)
         return combine(plant, waterLog) { _plant, _waterLog ->
-            if (_plant != null && _waterLog != null) {
-                PlantWaterLogPair(_plant, _waterLog)
-            } else {
-                null
-            }
+            _plant?.takeIf { _waterLog != null }?.let { PlantWaterLogPair(it, _waterLog!!) }
         }
     }
 
+    // TODO Make private maybe
     // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
     override suspend fun generateUpcomingWaterLogs() {
         val plants = plantRepository.getPlants().first()
