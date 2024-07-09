@@ -12,7 +12,7 @@ import platform.Foundation.dataWithContentsOfFile
 import platform.Foundation.writeToFile
 
 actual class PhotoStorageManager(private val dispatcher: CoroutineDispatcher) {
-    //TODO CHECK ON THIS
+    // TODO CHECK ON THIS
     actual suspend fun saveByteArrayToInternalStorage(
         fileName: String,
         byteArray: ByteArray
@@ -26,7 +26,7 @@ actual class PhotoStorageManager(private val dispatcher: CoroutineDispatcher) {
             ).firstOrNull() as? String
 
             if (documentsDirectory != null) {
-                val filePath = documentsDirectory + "/${fileName}"
+                val filePath = documentsDirectory + "/$fileName"
                 data.writeToFile(filePath, true)
             } else {
                 throw IllegalStateException("Unable to access documents directory")
@@ -42,12 +42,10 @@ actual class PhotoStorageManager(private val dispatcher: CoroutineDispatcher) {
         ).firstOrNull() as? String
 
         return if (documentsDirectory != null) {
-            val filePath = documentsDirectory + "/${fileName}"
+            val filePath = documentsDirectory + "/$fileName"
             NSData.dataWithContentsOfFile(filePath)?.toByteArray()
         } else {
             null
         }
     }
-
-
 }

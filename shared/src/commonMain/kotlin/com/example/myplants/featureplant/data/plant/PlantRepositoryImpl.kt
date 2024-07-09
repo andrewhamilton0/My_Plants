@@ -42,10 +42,10 @@ class PlantRepositoryImpl(
     }
 
     private suspend fun getPhoto(photoKey: String): ByteArray? {
-        return photoStorageManager.retrieveByteArrayFromInternalStorage("${photoKey}.jpg")
+        return photoStorageManager.retrieveByteArrayFromInternalStorage("$photoKey.jpg")
     }
 
     private suspend fun savePhoto(photoKey: String, byteArray: ByteArray) {
-        photoStorageManager.saveByteArrayToInternalStorage("${photoKey}.jpg", byteArray)
+        photoStorageManager.saveByteArrayToInternalStorage("$photoKey.jpg", byteArray)
     }
 }

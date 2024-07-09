@@ -2,7 +2,6 @@ package com.example.myplants.core.data.db
 
 import android.content.Context
 import com.example.myplants.PlantDatabase
-import com.example.myplants.core.data.db.DatabaseDriverFactory
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 

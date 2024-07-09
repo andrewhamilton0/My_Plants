@@ -1,7 +1,6 @@
 package com.example.myplants.core.data.db
 
 import com.example.myplants.PlantDatabase
-import com.example.myplants.core.data.db.DatabaseDriverFactory
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 
