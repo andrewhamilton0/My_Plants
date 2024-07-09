@@ -10,12 +10,15 @@ import com.example.myplants.featureplant.domain.waterlog.WaterLogRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.LocalDate
 
 class PlantManagementServiceImpl(
     private val plantRepository: PlantRepository,
     private val waterLogRepository: WaterLogRepository,
-    private val currentDate: Flow<LocalDate>
+    private val currentDate: Flow<LocalDate> = DateUtil.getCurrentDateTime().map { it.date }
 ) : PlantManagementService {
 
     private val waterLogs = waterLogRepository.getAllWaterLogs()
@@ -65,30 +68,6 @@ class PlantManagementServiceImpl(
         }
     }
 
-    // TODO Make private maybe
-    // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
-    override suspend fun generateUpcomingWaterLogs() {
-        val plants = plantRepository.getPlants().first()
-        val logs = waterLogRepository.getAllWaterLogs().first()
-        plants.forEach { plant ->
-            val nextWaterDate = DateUtil.nextOccurrenceOfDay(currentDate.first(), plant.waterDays)
-            nextWaterDate?.let { waterDate ->
-                if (logs.none { it.plantId == plant.id && it.date == waterDate }) {
-                    waterLogRepository.upsertWaterLog(
-                        WaterLog(
-                            plantId = plant.id,
-                            date = waterDate,
-                            isWatered = false
-                        )
-                    )
-                }
-            } ?: run {
-                println("Error generating water logs in Plant Management Service")
-                println("No water days for ${plant.name}")
-            }
-        }
-    }
-
     override suspend fun upsertPlant(plant: Plant) {
         plantRepository.upsertPlant(plant)
         deleteUpcomingWaterLog(plant.id)
@@ -107,5 +86,33 @@ class PlantManagementServiceImpl(
         getUpcomingPlants().first().filter {
             it.plant.id == plantId && it.waterLog.date >= currentDate.first()
         }.forEach { waterLogRepository.deleteWaterLog(it.waterLog.id) }
+    }
+
+    // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
+    private val mutex = Mutex()
+    private suspend fun generateUpcomingWaterLogs() {
+        mutex.withLock {
+            val plants = plantRepository.getPlants().first()
+            val logs = waterLogRepository.getAllWaterLogs().first()
+            val currentDate = currentDate.first()
+
+            plants.forEach { plant ->
+                val nextWaterDate = DateUtil.nextOccurrenceOfDay(currentDate, plant.waterDays)
+                nextWaterDate?.let { waterDate ->
+                    if (logs.none { it.plantId == plant.id && it.date == waterDate }) {
+                        waterLogRepository.upsertWaterLog(
+                            WaterLog(
+                                plantId = plant.id,
+                                date = waterDate,
+                                isWatered = false
+                            )
+                        )
+                    }
+                } ?: run {
+                    println("Error generating water logs in Plant Management Service")
+                    println("No water days for ${plant.name}")
+                }
+            }
+        }
     }
 }

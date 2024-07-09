@@ -1,6 +1,6 @@
 package com.example.myplants.featureplant.domain.plant
 
-import com.example.myplants.core.data.UuidProvider
+import com.example.myplants.core.data.util.UuidProvider
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
 

@@ -9,7 +9,6 @@ interface PlantManagementService {
     fun getForgottenPlants(): Flow<List<PlantWaterLogPair>>
     fun getPlant(plantId: String): Flow<Plant?>
     fun getPlantWaterLogPair(plantId: String, logId: String): Flow<PlantWaterLogPair?>
-    suspend fun generateUpcomingWaterLogs()
     suspend fun upsertPlant(plant: Plant)
     suspend fun deletePlant(plantId: String)
     suspend fun toggleWater(logId: String)

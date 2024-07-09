@@ -1,5 +1,7 @@
 package com.example.myplants.android.plant.presentation.editplantscreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,13 +16,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import com.example.myplants.android.core.presentation.util.rememberPhotoPickerLauncher
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenEvent
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenViewModel
 import kotlinx.datetime.DayOfWeek
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditPlantScreen(
     navController: NavController,
@@ -28,6 +33,7 @@ fun EditPlantScreen(
     viewModel: EditPlantScreenViewModel = getViewModel { parametersOf(plantId) }
 ) {
     val plant = viewModel.state.collectAsState().value.plant
+    val context = LocalContext.current
 
     @Composable
     fun DayOfWeekSelector(dayOfWeek: DayOfWeek) {
@@ -87,6 +93,14 @@ fun EditPlantScreen(
                     },
                     label = { Text("Water Amount") },
                     placeholder = { Text("Enter water amount") }
+                )
+                val photoPickerLauncher = rememberPhotoPickerLauncher { photo ->
+                    photo?.let { viewModel.onEvent(EditPlantScreenEvent.UpdatePhoto(it)) }
+                }
+
+                Button(
+                    onClick = { photoPickerLauncher() },
+                    content = { Text(text = "Select Photo") }
                 )
                 DayOfWeekSelector(DayOfWeek.MONDAY)
                 DayOfWeekSelector(DayOfWeek.TUESDAY)

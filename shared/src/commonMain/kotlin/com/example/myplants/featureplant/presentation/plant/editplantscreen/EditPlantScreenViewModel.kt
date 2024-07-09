@@ -44,6 +44,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdateName -> {
                 _state.update { state ->
                     state.copy(
@@ -53,6 +54,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdatePlantSize -> {
                 _state.update { state ->
                     state.copy(
@@ -62,6 +64,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdateTime -> {
                 _state.update { state ->
                     state.copy(
@@ -71,6 +74,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdateWaterAmount -> {
                 _state.update { state ->
                     state.copy(
@@ -80,6 +84,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.SavePlant -> {
                 if (state.value.plant.waterDays.isEmpty()) {
                     // TODO: Tell user to add at least one water day
@@ -89,6 +94,7 @@ class EditPlantScreenViewModel(
                     }
                 }
             }
+
             is EditPlantScreenEvent.AddWaterDay -> {
                 _state.update { state ->
                     state.copy(
@@ -98,11 +104,22 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.RemoveWaterDay -> {
                 _state.update { state ->
                     state.copy(
                         plant = state.plant.copy(
                             waterDays = state.plant.waterDays.minus(event.waterDay)
+                        )
+                    )
+                }
+            }
+
+            is EditPlantScreenEvent.UpdatePhoto -> {
+                _state.update { state ->
+                    state.copy(
+                        plant = state.plant.copy(
+                            photo = event.photo
                         )
                     )
                 }
