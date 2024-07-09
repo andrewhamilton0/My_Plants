@@ -5,10 +5,9 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.example.myplants.featureplant.domain.plant.Photo
 
 @Composable
-fun rememberPhotoPickerLauncher(onSelectedPhoto: (Photo?) -> Unit): () -> Unit {
+fun rememberPhotoPickerLauncher(onSelectedPhoto: (ByteArray?) -> Unit): () -> Unit {
     val context = LocalContext.current
     val pickMedia = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -17,7 +16,7 @@ fun rememberPhotoPickerLauncher(onSelectedPhoto: (Photo?) -> Unit): () -> Unit {
                 val inputStream = context.contentResolver?.openInputStream(uri)
                 val byteArray = inputStream?.readBytes()
                 inputStream?.close()
-                onSelectedPhoto(byteArray?.let { Photo(byteArray = it) })
+                onSelectedPhoto(byteArray)
             } else {
                 onSelectedPhoto(null)
             }

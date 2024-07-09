@@ -74,8 +74,8 @@ class PlantManagementServiceImpl(
         generateUpcomingWaterLogs()
     }
 
-    override suspend fun deletePlant(plantId: String) {
-        plantRepository.deletePlant(plantId)
+    override suspend fun deletePlant(plantId: String, photoKey: String?) {
+        plantRepository.deletePlant(plantId, photoKey)
     }
 
     override suspend fun toggleWater(logId: String) {

@@ -22,8 +22,8 @@ class WaterLogDataSourceImpl(
         return queries.getWaterLogById(logId).asFlow().mapToOneOrNull()
     }
 
-    override suspend fun insertWaterLog(waterLog: WaterLogEntity) {
-        queries.insertWaterLog(
+    override suspend fun upsertWaterLog(waterLog: WaterLogEntity) {
+        queries.upsertWaterLog(
             id = waterLog.id,
             plantId = waterLog.plantId,
             date = waterLog.date,

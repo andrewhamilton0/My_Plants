@@ -24,7 +24,7 @@ class WaterLogRepositoryImpl(
     }
 
     override suspend fun upsertWaterLog(waterLog: WaterLog) {
-        waterLogDataSource.insertWaterLog(waterLog.toWaterLogEntity())
+        waterLogDataSource.upsertWaterLog(waterLog.toWaterLogEntity())
     }
 
     override suspend fun deleteWaterLog(waterLogId: String) {

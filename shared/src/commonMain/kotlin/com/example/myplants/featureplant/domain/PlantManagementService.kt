@@ -10,6 +10,6 @@ interface PlantManagementService {
     fun getPlant(plantId: String): Flow<Plant?>
     fun getPlantWaterLogPair(plantId: String, logId: String): Flow<PlantWaterLogPair?>
     suspend fun upsertPlant(plant: Plant)
-    suspend fun deletePlant(plantId: String)
+    suspend fun deletePlant(plantId: String, photoKey: String?)
     suspend fun toggleWater(logId: String)
 }

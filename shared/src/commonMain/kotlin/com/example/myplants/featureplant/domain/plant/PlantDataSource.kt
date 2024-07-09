@@ -11,5 +11,5 @@ interface PlantDataSource {
 
     suspend fun deletePlant(id: String)
 
-    suspend fun insertPlant(plantEntity: PlantEntity)
+    suspend fun upsertPlant(plantEntity: PlantEntity)
 }

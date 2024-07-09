@@ -1,6 +1,7 @@
 package com.example.myplants.featureplant.presentation.plant.editplantscreen
 
 import com.example.myplants.featureplant.domain.PlantManagementService
+import com.example.myplants.featureplant.domain.plant.Photo
 import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -117,11 +118,21 @@ class EditPlantScreenViewModel(
 
             is EditPlantScreenEvent.UpdatePhoto -> {
                 _state.update { state ->
-                    state.copy(
-                        plant = state.plant.copy(
-                            photo = event.photo
+                    if (state.plant.photo == null) {
+                        state.copy(
+                            plant = state.plant.copy(
+                                photo = Photo(byteArray = event.byteArray)
+                            )
                         )
-                    )
+                    } else {
+                        state.copy(
+                            plant = state.plant.copy(
+                                photo = state.plant.photo.copy(
+                                    byteArray = event.byteArray
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }

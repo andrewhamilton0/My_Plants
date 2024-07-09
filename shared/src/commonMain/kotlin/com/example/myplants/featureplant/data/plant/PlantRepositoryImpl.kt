@@ -13,9 +13,9 @@ class PlantRepositoryImpl(
     private val photoStorageManager: PhotoStorageManager
 ) : PlantRepository {
     override suspend fun upsertPlant(plant: Plant) {
-        plantDataSource.insertPlant(plant.toPlantEntity())
+        plantDataSource.upsertPlant(plant.toPlantEntity())
         plant.photo?.let { photo ->
-            savePhoto(photo.key, photo.byteArray)
+            upsertPhoto(photo.key, photo.byteArray)
         }
     }
 
@@ -37,15 +37,20 @@ class PlantRepositoryImpl(
         }
     }
 
-    override suspend fun deletePlant(plantId: String) {
+    override suspend fun deletePlant(plantId: String, photoKey: String?) {
         plantDataSource.deletePlant(plantId)
+        photoKey?.let { deletePhoto(it) }
     }
 
     private suspend fun getPhoto(photoKey: String): ByteArray? {
         return photoStorageManager.retrieveByteArrayFromInternalStorage("$photoKey.jpg")
     }
 
-    private suspend fun savePhoto(photoKey: String, byteArray: ByteArray) {
-        photoStorageManager.saveByteArrayToInternalStorage("$photoKey.jpg", byteArray)
+    private suspend fun upsertPhoto(photoKey: String, byteArray: ByteArray) {
+        photoStorageManager.upsertByteArrayToInternalStorage("$photoKey.jpg", byteArray)
+    }
+
+    private suspend fun deletePhoto(photoKey: String) {
+        photoStorageManager.deleteByteArrayFromInternalStorage("$photoKey.jpg")
     }
 }

@@ -24,7 +24,7 @@ SELECT *
 FROM plantEntity
 WHERE id = ?;
 
-insertPlant:
+upsertPlant:
 INSERT OR REPLACE
 INTO plantEntity
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);

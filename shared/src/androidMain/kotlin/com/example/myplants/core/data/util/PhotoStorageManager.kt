@@ -10,7 +10,34 @@ actual class PhotoStorageManager(
     private val dispatcher: CoroutineDispatcher
 ) {
 
-    actual suspend fun saveByteArrayToInternalStorage(
+    actual suspend fun upsertByteArrayToInternalStorage(
+        fileName: String,
+        byteArray: ByteArray
+    ) {
+        withContext(dispatcher) {
+            deleteByteArrayFromInternalStorage(fileName)
+            saveByteArrayToInternalStorage(fileName, byteArray)
+        }
+    }
+
+    actual suspend fun retrieveByteArrayFromInternalStorage(fileName: String): ByteArray? {
+        return withContext(dispatcher) {
+            val file = File(context.filesDir, fileName)
+            return@withContext if (file.exists()) {
+                file.readBytes()
+            } else {
+                null
+            }
+        }
+    }
+    actual suspend fun deleteByteArrayFromInternalStorage(fileName: String) {
+        withContext(dispatcher) {
+            val file = File(context.filesDir, fileName)
+            if (file.exists()) file.delete()
+        }
+    }
+
+    private suspend fun saveByteArrayToInternalStorage(
         fileName: String,
         byteArray: ByteArray
     ) {
@@ -18,15 +45,6 @@ actual class PhotoStorageManager(
             context.openFileOutput(fileName, Context.MODE_PRIVATE).use { outputStream ->
                 outputStream.write(byteArray)
             }
-        }
-    }
-
-    actual suspend fun retrieveByteArrayFromInternalStorage(fileName: String): ByteArray? {
-        val file = File(context.filesDir, fileName)
-        return if (file.exists()) {
-            file.readBytes()
-        } else {
-            null
         }
     }
 }
