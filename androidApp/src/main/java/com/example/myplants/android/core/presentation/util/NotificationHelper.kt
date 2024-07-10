@@ -1,6 +1,5 @@
 package com.example.myplants.android.core.presentation.util
 
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,6 +8,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.example.myplants.android.MainActivity
 import com.example.myplants.android.R
 
 class NotificationHelper(private val context: Context) {
@@ -32,7 +32,6 @@ class NotificationHelper(private val context: Context) {
 
     fun showNotification(
         channelId: String,
-        activityClass: Class<out Activity>,
         title: String,
         message: String? = null,
         notificationId: Int,
@@ -40,7 +39,7 @@ class NotificationHelper(private val context: Context) {
         priority: Int = NotificationCompat.PRIORITY_DEFAULT,
         autoCancel: Boolean = true
     ) {
-        val intent = Intent(context, activityClass)
+        val intent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,

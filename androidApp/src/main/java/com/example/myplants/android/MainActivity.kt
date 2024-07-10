@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import com.example.myplants.android.core.presentation.AppNavigation
-import com.example.myplants.android.plant.presentation.PlantNotification
+import com.example.myplants.android.plant.presentation.notification.PlantNotification
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
             navigationBarColor = Color.TRANSPARENT
         }
 
-        val plantNotification = PlantNotification(this, this::class.java)
+        val plantNotification = PlantNotification(this)
         plantNotification.createNotificationChannels()
 
         setContent {

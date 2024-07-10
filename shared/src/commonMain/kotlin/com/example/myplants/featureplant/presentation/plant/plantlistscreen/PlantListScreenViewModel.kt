@@ -1,6 +1,6 @@
 package com.example.myplants.featureplant.presentation.plant.plantlistscreen
 
-import com.example.myplants.core.domain.DateUtil
+import com.example.myplants.core.domain.util.DateUtil
 import com.example.myplants.featureplant.domain.PlantManagementService
 import com.example.myplants.featureplant.presentation.plant.plantlistscreen.util.toUiPlant
 import dev.icerock.moko.mvvm.flow.cStateFlow

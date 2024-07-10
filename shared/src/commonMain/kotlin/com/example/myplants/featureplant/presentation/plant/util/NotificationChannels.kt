@@ -1,4 +1,4 @@
-package com.example.myplants.android.core.presentation.util
+package com.example.myplants.featureplant.presentation.plant.util
 
 object NotificationChannels {
     const val WATER_CHANNEL_ID = "water_channel_id"

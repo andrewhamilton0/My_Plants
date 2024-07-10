@@ -1,12 +1,14 @@
 package com.example.myplants.featureplant.data
 
-import com.example.myplants.core.domain.DateUtil
+import com.example.myplants.core.domain.util.AlarmScheduler
+import com.example.myplants.core.domain.util.DateUtil
 import com.example.myplants.featureplant.domain.PlantManagementService
 import com.example.myplants.featureplant.domain.PlantWaterLogPair
 import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantRepository
 import com.example.myplants.featureplant.domain.waterlog.WaterLog
 import com.example.myplants.featureplant.domain.waterlog.WaterLogRepository
+import com.example.myplants.featureplant.presentation.plant.util.NotificationChannels
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -14,10 +16,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 
 class PlantManagementServiceImpl(
     private val plantRepository: PlantRepository,
     private val waterLogRepository: WaterLogRepository,
+    private val alarmScheduler: AlarmScheduler,
     private val currentDate: Flow<LocalDate> = DateUtil.getCurrentDateTime().map { it.date }
 ) : PlantManagementService {
 
@@ -72,6 +78,12 @@ class PlantManagementServiceImpl(
         plantRepository.upsertPlant(plant)
         deleteUpcomingWaterLog(plant.id)
         generateUpcomingWaterLogs()
+        val waterLogs = waterLogRepository.getAllWaterLogs().first().filter { it.plantId == plant.id && it.date >= currentDate.first() }
+        waterLogs.forEach { log ->
+            val dateTime = LocalDateTime(log.date, plant.waterTime)
+            val epoch = dateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+            addWaterAlarm(plant.id, log.id, epoch, NotificationChannels.WATER_CHANNEL_ID)
+        }
     }
 
     override suspend fun deletePlant(plantId: String, photoKey: String?) {
@@ -114,5 +126,22 @@ class PlantManagementServiceImpl(
                 }
             }
         }
+    }
+
+    private fun addWaterAlarm(plantId: String, waterLogId: String, epoch: Long, notificationChannel: String) {
+        val extras = getPlantAlarmExtras(plantId, waterLogId, notificationChannel)
+        alarmScheduler.setAlarm(epoch, waterLogId.hashCode(), *extras)
+    }
+
+    private fun removeWaterAlarm(plantId: String, waterLogId: String, notificationChannel: String) {
+        val extras = getPlantAlarmExtras(plantId, waterLogId, notificationChannel)
+        alarmScheduler.cancelAlarm(waterLogId.hashCode(), *extras)
+    }
+
+    private fun getPlantAlarmExtras(plantId: String, waterLogId: String, notificationChannel: String): Array<Pair<String, Any>> {
+        val plantPair = Pair("plant_id", plantId)
+        val waterLogPair = Pair("water_log_id", waterLogId)
+        val notificationChannelPair = Pair("notification_channel", notificationChannel)
+        return arrayOf(plantPair, waterLogPair, notificationChannelPair)
     }
 }
