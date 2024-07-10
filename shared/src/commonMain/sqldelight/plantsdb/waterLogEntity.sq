@@ -17,7 +17,7 @@ SELECT *
 FROM waterLogEntity
 WHERE id = ?;
 
-insertWaterLog:
+upsertWaterLog:
 INSERT OR REPLACE
 INTO waterLogEntity
 VALUES (?,?,?,?);

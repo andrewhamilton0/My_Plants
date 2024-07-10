@@ -10,12 +10,15 @@ import com.example.myplants.featureplant.domain.waterlog.WaterLogRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.LocalDate
 
 class PlantManagementServiceImpl(
     private val plantRepository: PlantRepository,
     private val waterLogRepository: WaterLogRepository,
-    private val currentDate: Flow<LocalDate>
+    private val currentDate: Flow<LocalDate> = DateUtil.getCurrentDateTime().map { it.date }
 ) : PlantManagementService {
 
     private val waterLogs = waterLogRepository.getAllWaterLogs()
@@ -26,7 +29,7 @@ class PlantManagementServiceImpl(
             generateUpcomingWaterLogs()
             waterLogs.filter { it.date >= currentDate }
                 .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
-                .sortedWith(compareBy({ it.waterLog.date }, { it.plant.name }))
+                .sortedWith(compareBy({ it.waterLog.date }, { it.plant.name.lowercase() }))
         }
     }
 
@@ -35,17 +38,21 @@ class PlantManagementServiceImpl(
             generateUpcomingWaterLogs()
             logs.filter { it.date < currentDate }
                 .map { log -> PlantWaterLogPair(plants.first { log.plantId == it.id }, log) }
-                .sortedWith(compareByDescending<PlantWaterLogPair> { it.waterLog.date }.thenBy { it.plant.name })
+                .sortedWith(compareByDescending<PlantWaterLogPair> { it.waterLog.date }.thenBy { it.plant.name.lowercase() })
         }
     }
 
     override fun getForgottenPlants(): Flow<List<PlantWaterLogPair>> {
-        return combine(waterLogs, plants, currentDate) { logs, plants, _ ->
+        return combine(waterLogs, plants, currentDate) { logs, plants, currentDate ->
             generateUpcomingWaterLogs()
             plants.flatMap { plant ->
-                logs.filter { it.plantId == plant.id && !it.isWatered }
+                val lastWaterDate = DateUtil.previousOccurrenceOfDay(currentDate, plant.waterDays)
+                logs.filter { it.plantId == plant.id && !it.isWatered && it.date == lastWaterDate }
                     .map { PlantWaterLogPair(plant, it) }
-            }
+            }.sortedWith(
+                compareByDescending<PlantWaterLogPair> { it.waterLog.date }
+                    .thenBy { it.plant.name.lowercase() }
+            )
         }
     }
 
@@ -61,38 +68,14 @@ class PlantManagementServiceImpl(
         }
     }
 
-    // TODO Make private maybe
-    // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
-    override suspend fun generateUpcomingWaterLogs() {
-        val plants = plantRepository.getPlants().first()
-        val logs = waterLogRepository.getAllWaterLogs().first()
-        plants.forEach { plant ->
-            val nextWaterDate = DateUtil.nextOccurrenceOfDay(currentDate.first(), plant.waterDays)
-            nextWaterDate?.let { waterDate ->
-                if (logs.none { it.plantId == plant.id && it.date == waterDate }) {
-                    waterLogRepository.upsertWaterLog(
-                        WaterLog(
-                            plantId = plant.id,
-                            date = waterDate,
-                            isWatered = false
-                        )
-                    )
-                }
-            } ?: run {
-                println("Error generating water logs in Plant Management Service")
-                println("No water days for ${plant.name}")
-            }
-        }
-    }
-
     override suspend fun upsertPlant(plant: Plant) {
         plantRepository.upsertPlant(plant)
         deleteUpcomingWaterLog(plant.id)
         generateUpcomingWaterLogs()
     }
 
-    override suspend fun deletePlant(plantId: String) {
-        plantRepository.deletePlant(plantId)
+    override suspend fun deletePlant(plantId: String, photoKey: String?) {
+        plantRepository.deletePlant(plantId, photoKey)
     }
 
     override suspend fun toggleWater(logId: String) {
@@ -103,5 +86,33 @@ class PlantManagementServiceImpl(
         getUpcomingPlants().first().filter {
             it.plant.id == plantId && it.waterLog.date >= currentDate.first()
         }.forEach { waterLogRepository.deleteWaterLog(it.waterLog.id) }
+    }
+
+    // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
+    private val mutex = Mutex()
+    private suspend fun generateUpcomingWaterLogs() {
+        mutex.withLock {
+            val plants = plantRepository.getPlants().first()
+            val logs = waterLogRepository.getAllWaterLogs().first()
+            val currentDate = currentDate.first()
+
+            plants.forEach { plant ->
+                val nextWaterDate = DateUtil.nextOccurrenceOfDay(currentDate, plant.waterDays)
+                nextWaterDate?.let { waterDate ->
+                    if (logs.none { it.plantId == plant.id && it.date == waterDate }) {
+                        waterLogRepository.upsertWaterLog(
+                            WaterLog(
+                                plantId = plant.id,
+                                date = waterDate,
+                                isWatered = false
+                            )
+                        )
+                    }
+                } ?: run {
+                    println("Error generating water logs in Plant Management Service")
+                    println("No water days for ${plant.name}")
+                }
+            }
+        }
     }
 }

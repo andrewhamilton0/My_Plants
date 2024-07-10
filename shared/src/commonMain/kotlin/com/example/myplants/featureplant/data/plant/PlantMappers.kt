@@ -1,5 +1,6 @@
 package com.example.myplants.featureplant.data.plant
 
+import com.example.myplants.featureplant.domain.plant.Photo
 import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import kotlinx.datetime.LocalTime
@@ -14,11 +15,11 @@ fun Plant.toPlantEntity(): PlantEntity {
         waterDays = waterDays,
         waterTime = waterTime.toNanosecondOfDay(),
         plantSize = plantSize.name,
-        photoKey = null // TODO() LATER ADD PHOTO TO PLANT
+        photoKey = photo?.key
     )
 }
 
-fun PlantEntity.toPlant(): Plant {
+fun PlantEntity.toPlant(photo: Photo?): Plant {
     return Plant(
         id = id,
         name = name,
@@ -27,6 +28,6 @@ fun PlantEntity.toPlant(): Plant {
         waterDays = waterDays,
         waterTime = LocalTime.fromNanosecondOfDay(waterTime),
         plantSize = PlantSize.valueOf(plantSize),
-        photo = null // TODO LATER ADD PHOTO TO PLANT
+        photo = photo
     )
 }

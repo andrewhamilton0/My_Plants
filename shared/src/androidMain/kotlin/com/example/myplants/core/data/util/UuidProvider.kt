@@ -1,4 +1,4 @@
-package com.example.myplants.core.data
+package com.example.myplants.core.data.util
 
 import java.util.UUID
 

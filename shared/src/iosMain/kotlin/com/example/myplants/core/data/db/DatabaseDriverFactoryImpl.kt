@@ -1,4 +1,4 @@
-package com.example.myplants.core.data
+package com.example.myplants.core.data.db
 
 import com.example.myplants.PlantDatabase
 import com.squareup.sqldelight.db.SqlDriver

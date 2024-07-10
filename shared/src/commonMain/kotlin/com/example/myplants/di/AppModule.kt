@@ -1,7 +1,7 @@
 package com.example.myplants.di
 
 import com.example.myplants.PlantDatabase
-import com.example.myplants.core.data.setOfDaysOfWeekAdapter
+import com.example.myplants.core.data.db.setOfDaysOfWeekAdapter
 import com.example.myplants.featureplant.data.PlantManagementServiceImpl
 import com.example.myplants.featureplant.data.plant.PlantDataSourceImpl
 import com.example.myplants.featureplant.data.plant.PlantRepositoryImpl
@@ -35,7 +35,12 @@ private val commonCoreModule = module {
     }
     singleOf(::PlantRepositoryImpl) bind PlantRepository::class
     singleOf(::WaterLogRepositoryImpl) bind WaterLogRepository::class
-    singleOf(::PlantManagementServiceImpl) bind PlantManagementService::class
+    single<PlantManagementService> {
+        PlantManagementServiceImpl(
+            plantRepository = get(),
+            waterLogRepository = get()
+        )
+    }
 }
 
 val coreModule: Module = module {

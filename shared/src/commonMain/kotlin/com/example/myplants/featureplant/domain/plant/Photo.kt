@@ -1,7 +1,9 @@
 package com.example.myplants.featureplant.domain.plant
 
+import com.example.myplants.core.data.util.UuidProvider
+
 data class Photo(
-    val key: String,
+    val key: String = UuidProvider.getUuid(),
     val byteArray: ByteArray
 ) {
     override fun equals(other: Any?): Boolean {

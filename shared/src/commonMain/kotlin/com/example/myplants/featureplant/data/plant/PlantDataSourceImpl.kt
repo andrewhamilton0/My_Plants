@@ -30,9 +30,9 @@ class PlantDataSourceImpl(
         }
     }
 
-    override suspend fun insertPlant(plantEntity: PlantEntity) {
+    override suspend fun upsertPlant(plantEntity: PlantEntity) {
         withContext(Dispatchers.IO) {
-            queries.insertPlant(
+            queries.upsertPlant(
                 id = plantEntity.id,
                 name = plantEntity.name,
                 description = plantEntity.description,

@@ -1,4 +1,4 @@
-package com.example.myplants.core.data
+package com.example.myplants.core.data.db
 
 import android.content.Context
 import com.example.myplants.PlantDatabase

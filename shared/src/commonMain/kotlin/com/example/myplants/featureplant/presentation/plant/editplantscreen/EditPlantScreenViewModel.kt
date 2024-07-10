@@ -1,6 +1,7 @@
 package com.example.myplants.featureplant.presentation.plant.editplantscreen
 
 import com.example.myplants.featureplant.domain.PlantManagementService
+import com.example.myplants.featureplant.domain.plant.Photo
 import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -44,6 +45,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdateName -> {
                 _state.update { state ->
                     state.copy(
@@ -53,6 +55,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdatePlantSize -> {
                 _state.update { state ->
                     state.copy(
@@ -62,6 +65,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdateTime -> {
                 _state.update { state ->
                     state.copy(
@@ -71,6 +75,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.UpdateWaterAmount -> {
                 _state.update { state ->
                     state.copy(
@@ -80,6 +85,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.SavePlant -> {
                 if (state.value.plant.waterDays.isEmpty()) {
                     // TODO: Tell user to add at least one water day
@@ -89,6 +95,7 @@ class EditPlantScreenViewModel(
                     }
                 }
             }
+
             is EditPlantScreenEvent.AddWaterDay -> {
                 _state.update { state ->
                     state.copy(
@@ -98,6 +105,7 @@ class EditPlantScreenViewModel(
                     )
                 }
             }
+
             is EditPlantScreenEvent.RemoveWaterDay -> {
                 _state.update { state ->
                     state.copy(
@@ -105,6 +113,26 @@ class EditPlantScreenViewModel(
                             waterDays = state.plant.waterDays.minus(event.waterDay)
                         )
                     )
+                }
+            }
+
+            is EditPlantScreenEvent.UpdatePhoto -> {
+                _state.update { state ->
+                    if (state.plant.photo == null) {
+                        state.copy(
+                            plant = state.plant.copy(
+                                photo = Photo(byteArray = event.byteArray)
+                            )
+                        )
+                    } else {
+                        state.copy(
+                            plant = state.plant.copy(
+                                photo = state.plant.photo.copy(
+                                    byteArray = event.byteArray
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }
