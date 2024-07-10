@@ -6,8 +6,15 @@
     <string name="view_notifications">Ver notificaciones</string>
     <string name="plant_photo">%1$s foto</string>
     <string name="lets_care">¡Cuidando</string>
-    <string name="my_plants">Mis Plantas!</string>
+    <string name="my_plants">¡Mis Plantas!</string>
     <string name="upcoming">Próximas</string>
     <string name="forgot_to_water">Olvidaste regar</string>
     <string name="history">Historia</string>
+    <string name="forgot_to_water_channel">Canal de plantas olvidadas</string>
+    <string name="forgot_to_water_channel_description">Notificaciones para plantas que se han olvidado de regar</string>"
+    <string name="water_channel">Canal de regar</string>
+    <string name="water_channel_description">Notificaciones para plantas que necesitan regar ahora</string>
+    <string name="needs_water_notification">¡%1$s necesita regar!</string>
+    <string name="forgot_to_water_notification">¡Olvidaste regar %1$s!</string>
+    <string name="click_here_for_more_information">Haz un clic aquí para más información</string>
 </resources>

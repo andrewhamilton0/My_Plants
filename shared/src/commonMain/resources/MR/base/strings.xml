@@ -10,4 +10,11 @@
     <string name="upcoming">Upcoming</string>
     <string name="forgot_to_water">Forgot to water</string>
     <string name="history">History</string>
+    <string name="forgot_to_water_channel">Forgot to water channel</string>
+    <string name="forgot_to_water_channel_description">Notifications for plants that have been forgotten to be watered</string>"
+    <string name="water_channel">Water channel</string>
+    <string name="water_channel_description">Notifications for plants that currently need to be watered</string>
+    <string name="needs_water_notification">%1$s needs water!</string>
+    <string name="forgot_to_water_notification">You forgot to water %1$s!</string>
+    <string name="click_here_for_more_information">Click here for more information</string>
 </resources>
