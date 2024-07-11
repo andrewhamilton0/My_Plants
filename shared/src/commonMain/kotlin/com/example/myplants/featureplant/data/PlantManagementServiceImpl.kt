@@ -15,9 +15,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 
 class PlantManagementServiceImpl(
@@ -76,17 +78,14 @@ class PlantManagementServiceImpl(
 
     override suspend fun upsertPlant(plant: Plant) {
         plantRepository.upsertPlant(plant)
+        deleteAllAlarmsOfPlant(plant.id)
         deleteUpcomingWaterLog(plant.id)
         generateUpcomingWaterLogs()
-        val waterLogs = waterLogRepository.getAllWaterLogs().first().filter { it.plantId == plant.id && it.date >= currentDate.first() }
-        waterLogs.forEach { log ->
-            val dateTime = LocalDateTime(log.date, plant.waterTime)
-            val epoch = dateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
-            addWaterAlarm(plant.id, log.id, epoch, NotificationChannels.WATER_CHANNEL_ID)
-        }
+        syncWaterAlarms()
     }
 
     override suspend fun deletePlant(plantId: String, photoKey: String?) {
+        deleteAllAlarmsOfPlant(plantId)
         plantRepository.deletePlant(plantId, photoKey)
     }
 
@@ -101,9 +100,9 @@ class PlantManagementServiceImpl(
     }
 
     // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
-    private val mutex = Mutex()
+    private val generateUpcomingMutex = Mutex()
     private suspend fun generateUpcomingWaterLogs() {
-        mutex.withLock {
+        generateUpcomingMutex.withLock {
             val plants = plantRepository.getPlants().first()
             val logs = waterLogRepository.getAllWaterLogs().first()
             val currentDate = currentDate.first()
@@ -127,18 +126,53 @@ class PlantManagementServiceImpl(
             }
         }
     }
+    private val syncWaterLogMutex = Mutex()
+    override suspend fun syncWaterAlarms() {
+        syncWaterLogMutex.withLock {
+            getUpcomingPlants().first().forEach {
+                val dateTime = LocalDateTime(it.waterLog.date, it.plant.waterTime)
+                val epoch = dateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+                addAlarm(it.plant.id, it.waterLog.id, epoch, NotificationChannels.WATER_CHANNEL_ID)
+            }
+        }
+    }
 
-    private fun addWaterAlarm(plantId: String, waterLogId: String, epoch: Long, notificationChannel: String) {
-        val extras = getPlantAlarmExtras(plantId, waterLogId, notificationChannel)
+    override suspend fun sendDailyForgottenAlarms() {
+        getForgottenPlants().first().forEach {
+            if (it.waterLog.date.minus(DatePeriod(days = 1)) == currentDate.first()) {
+                val dateTime = LocalDateTime(currentDate.first(), it.plant.waterTime)
+                val epoch = dateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+                addAlarm(it.plant.id, it.waterLog.id, epoch, NotificationChannels.FORGOT_WATER_CHANNEL_ID)
+            }
+        }
+    }
+
+    private suspend fun deleteAllAlarmsOfPlant(plantId: String) {
+        waterLogRepository.getAllWaterLogs().first().filter {
+            it.plantId == plantId && it.date >= currentDate.first().minus(DatePeriod(days = 1))
+        }.forEach {
+            when (it.date) {
+                currentDate.first().minus(DatePeriod(days = 1)) -> {
+                    removeAlarm(plantId, it.id, NotificationChannels.FORGOT_WATER_CHANNEL_ID)
+                }
+                else -> {
+                    removeAlarm(plantId, it.id, NotificationChannels.WATER_CHANNEL_ID)
+                }
+            }
+        }
+    }
+
+    private fun addAlarm(plantId: String, waterLogId: String, epoch: Long, notificationChannel: String) {
+        val extras = createPlantAlarmExtras(plantId, waterLogId, notificationChannel)
         alarmScheduler.setAlarm(epoch, waterLogId.hashCode(), *extras)
     }
 
-    private fun removeWaterAlarm(plantId: String, waterLogId: String, notificationChannel: String) {
-        val extras = getPlantAlarmExtras(plantId, waterLogId, notificationChannel)
+    private fun removeAlarm(plantId: String, waterLogId: String, notificationChannel: String) {
+        val extras = createPlantAlarmExtras(plantId, waterLogId, notificationChannel)
         alarmScheduler.cancelAlarm(waterLogId.hashCode(), *extras)
     }
 
-    private fun getPlantAlarmExtras(plantId: String, waterLogId: String, notificationChannel: String): Array<Pair<String, Any>> {
+    private fun createPlantAlarmExtras(plantId: String, waterLogId: String, notificationChannel: String): Array<Pair<String, Any>> {
         val plantPair = Pair("plant_id", plantId)
         val waterLogPair = Pair("water_log_id", waterLogId)
         val notificationChannelPair = Pair("notification_channel", notificationChannel)
