@@ -12,6 +12,7 @@ interface PlantManagementService {
     suspend fun upsertPlant(plant: Plant)
     suspend fun deletePlant(plantId: String, photoKey: String?)
     suspend fun toggleWater(logId: String)
+    suspend fun generateUpcomingWaterLogs()
     suspend fun syncWaterAlarms()
     suspend fun sendDailyForgottenAlarms()
 }

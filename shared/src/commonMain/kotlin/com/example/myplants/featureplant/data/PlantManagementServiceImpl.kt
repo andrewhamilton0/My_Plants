@@ -101,7 +101,7 @@ class PlantManagementServiceImpl(
 
     // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
     private val generateUpcomingMutex = Mutex()
-    private suspend fun generateUpcomingWaterLogs() {
+    override suspend fun generateUpcomingWaterLogs() {
         generateUpcomingMutex.withLock {
             val plants = plantRepository.getPlants().first()
             val logs = waterLogRepository.getAllWaterLogs().first()
