@@ -29,7 +29,7 @@ class FakePlantRepositoryImpl : PlantRepository {
         }
     }
 
-    override suspend fun deletePlant(plantId: String) {
+    override suspend fun deletePlant(plantId: String, photoKey: String?) {
         val currentList = _plants.value.toMutableList()
         currentList.removeAll { it.id == plantId }
         _plants.value = currentList

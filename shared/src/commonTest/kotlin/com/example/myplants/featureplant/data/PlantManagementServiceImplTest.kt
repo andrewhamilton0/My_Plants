@@ -1,5 +1,7 @@
 package com.example.myplants.featureplant.data
 
+import com.example.myplants.core.data.FakeAlarmSchedulerImpl
+import com.example.myplants.core.domain.util.AlarmScheduler
 import com.example.myplants.featureplant.data.plant.FakePlantRepositoryImpl
 import com.example.myplants.featureplant.data.waterlog.FakeWaterLogRepositoryImpl
 import com.example.myplants.featureplant.domain.PlantWaterLogPair
@@ -30,8 +32,9 @@ class PlantManagementServiceImplTest() {
     fun `test get upcoming plants`() = runBlocking {
         val plantRepository: PlantRepository = FakePlantRepositoryImpl()
         val waterLogRepository: WaterLogRepository = FakeWaterLogRepositoryImpl()
+        val alarmScheduler: AlarmScheduler = FakeAlarmSchedulerImpl()
         val date = MutableStateFlow(LocalDate(2024, 1, 1))
-        val service = PlantManagementServiceImpl(plantRepository, waterLogRepository, date)
+        val service = PlantManagementServiceImpl(plantRepository, waterLogRepository, alarmScheduler, date)
         val upcoming = service.getUpcomingPlants()
         val job = launch { upcoming.collect { } }
 
@@ -72,8 +75,9 @@ class PlantManagementServiceImplTest() {
     fun `test get history`() = runBlocking {
         val plantRepository: PlantRepository = FakePlantRepositoryImpl()
         val waterLogRepository: WaterLogRepository = FakeWaterLogRepositoryImpl()
+        val alarmScheduler: AlarmScheduler = FakeAlarmSchedulerImpl()
         val date = MutableStateFlow(LocalDate(2024, 1, 1))
-        val service = PlantManagementServiceImpl(plantRepository, waterLogRepository, date)
+        val service = PlantManagementServiceImpl(plantRepository, waterLogRepository, alarmScheduler, date)
         val history = service.getHistory()
         val job = launch { history.collect { } }
 
@@ -116,7 +120,8 @@ class PlantManagementServiceImplTest() {
         val plantRepository: PlantRepository = FakePlantRepositoryImpl()
         val waterLogRepository: WaterLogRepository = FakeWaterLogRepositoryImpl()
         val date = MutableStateFlow(LocalDate(2024, 1, 1))
-        val service = PlantManagementServiceImpl(plantRepository, waterLogRepository, date)
+        val alarmScheduler: AlarmScheduler = FakeAlarmSchedulerImpl()
+        val service = PlantManagementServiceImpl(plantRepository, waterLogRepository, alarmScheduler, date)
         val forgotten = service.getForgottenPlants()
         val history = service.getHistory()
         val job = launch { forgotten.collect { } }

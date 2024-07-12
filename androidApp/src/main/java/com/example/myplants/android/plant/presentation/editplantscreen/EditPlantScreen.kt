@@ -22,6 +22,7 @@ import com.example.myplants.android.core.presentation.util.rememberPhotoPickerLa
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenEvent
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenViewModel
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalTime
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -101,6 +102,10 @@ fun EditPlantScreen(
                 Button(
                     onClick = { photoPickerLauncher() },
                     content = { Text(text = "Select Photo") }
+                )
+                Button(
+                    onClick = { viewModel.onEvent(EditPlantScreenEvent.UpdateTime(LocalTime(14, 16))) },
+                    content = { Text(text = "Change Time ${plant.waterTime}") }
                 )
                 DayOfWeekSelector(DayOfWeek.MONDAY)
                 DayOfWeekSelector(DayOfWeek.TUESDAY)

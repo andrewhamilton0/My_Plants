@@ -75,6 +75,7 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
                 implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
+                implementation("androidx.work:work-runtime-ktx:2.9.0")
                 with(Deps.Koin) {
                     implementation(androidXCompose)
                 }

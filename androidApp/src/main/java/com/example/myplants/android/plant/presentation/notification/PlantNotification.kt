@@ -1,15 +1,11 @@
-package com.example.myplants.android.plant.presentation
+package com.example.myplants.android.plant.presentation.notification
 
-import android.app.Activity
 import android.content.Context
-import com.example.myplants.android.core.presentation.util.NotificationChannels
 import com.example.myplants.android.core.presentation.util.NotificationHelper
 import com.example.myplants.featureplant.domain.plant.Plant
+import com.example.myplants.featureplant.presentation.plant.util.NotificationChannels
 
-class PlantNotification(
-    private val context: Context,
-    private val activity: Class<out Activity>
-) {
+class PlantNotification(private val context: Context) {
     private val notificationHelper = NotificationHelper(context)
 
     fun createNotificationChannels() {
@@ -20,7 +16,6 @@ class PlantNotification(
     fun showWaterNotification(plant: Plant, notificationId: Int) {
         notificationHelper.showNotification(
             channelId = NotificationChannels.WATER_CHANNEL_ID,
-            activityClass = activity,
             title = context.getString(com.example.myplants.R.string.needs_water_notification, plant.name),
             message = context.getString(com.example.myplants.R.string.click_here_for_more_information),
             notificationId = notificationId
@@ -29,7 +24,6 @@ class PlantNotification(
     fun showForgotToWaterNotification(plant: Plant, notificationId: Int) {
         notificationHelper.showNotification(
             channelId = NotificationChannels.WATER_CHANNEL_ID,
-            activityClass = activity,
             title = context.getString(com.example.myplants.R.string.forgot_to_water_notification, plant.name),
             message = context.getString(com.example.myplants.R.string.click_here_for_more_information),
             notificationId = notificationId

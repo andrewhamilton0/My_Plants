@@ -1,4 +1,4 @@
-package com.example.myplants.core.domain
+package com.example.myplants.core.domain.util
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

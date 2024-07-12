@@ -14,6 +14,7 @@ import com.example.myplants.featureplant.domain.waterlog.WaterLogDataSource
 import com.example.myplants.featureplant.domain.waterlog.WaterLogRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import plantsdb.PlantEntity
@@ -38,7 +39,8 @@ private val commonCoreModule = module {
     single<PlantManagementService> {
         PlantManagementServiceImpl(
             plantRepository = get(),
-            waterLogRepository = get()
+            waterLogRepository = get(),
+            alarmScheduler = get(named("plant_alarm_scheduler"))
         )
     }
 }

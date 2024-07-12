@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.compose.material:material:1.6.8")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.navigation:navigation-compose:2.8.0-beta03")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     with(Deps.Koin) {
