@@ -5,7 +5,7 @@ import com.example.myplants.android.core.presentation.util.NotificationHelper
 import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.presentation.plant.util.NotificationChannels
 
-class PlantNotification(private val context: Context) {
+class PlantNotificationManager(private val context: Context) {
     private val notificationHelper = NotificationHelper(context)
 
     fun createNotificationChannels() {

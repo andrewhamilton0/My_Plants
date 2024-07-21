@@ -22,17 +22,17 @@ class PlantNotificationAlarmReceiver() : BroadcastReceiver() {
         val plantId = intent.getStringExtra("plant_id")
         val waterLogId = intent.getStringExtra("water_log_id")
         val notificationChannel = intent.getStringExtra("notification_channel")
-        val plantNotification = PlantNotification(context)
+        val plantNotificationManager = PlantNotificationManager(context)
 
         coroutineScope.launch {
             val plant = plantId?.let { plantRepository.getPlant(it) }?.first()
             if (plant != null && waterLogId != null) {
                 when (notificationChannel) {
                     NotificationChannels.WATER_CHANNEL_ID -> {
-                        plantNotification.showWaterNotification(plant, waterLogId.hashCode())
+                        plantNotificationManager.showWaterNotification(plant, waterLogId.hashCode())
                     }
                     NotificationChannels.FORGOT_WATER_CHANNEL_ID -> {
-                        plantNotification.showForgotToWaterNotification(plant, waterLogId.hashCode())
+                        plantNotificationManager.showForgotToWaterNotification(plant, waterLogId.hashCode())
                     }
                     else -> Unit
                 }

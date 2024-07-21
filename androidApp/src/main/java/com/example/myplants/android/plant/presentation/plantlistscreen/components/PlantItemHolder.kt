@@ -2,7 +2,6 @@ package com.example.myplants.android.plant.presentation.plantlistscreen.componen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,18 +18,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.myplants.SharedRes
 import com.example.myplants.android.R
-import com.example.myplants.android.core.presentation.rememberBitmapFromBytes
 import com.example.myplants.android.core.presentation.theme.GrayishBlack
 import com.example.myplants.android.core.presentation.theme.Neutrals0
 import com.example.myplants.android.core.presentation.theme.Neutrals100
@@ -51,6 +53,23 @@ fun PlantItemHolder(
     onCardClick: () -> Unit
 ) {
     val locale = Locale.getDefault()
+    /*
+    val today = stringResource(id = SharedRes.strings.today.resourceId)
+    val tomorrow = stringResource(id = SharedRes.strings.tomorrow.resourceId)
+
+    val nextWaterDate by remember(plant.dateDescriptor, locale, today, tomorrow) {
+        derivedStateOf {
+            when (val dateDescriptor = plant.dateDescriptor) {
+                is DateDescriptor.Date -> {
+                    val formatter = DateTimeFormatter.ofPattern("MMM dd").withLocale(locale)
+                    dateDescriptor.date.toJavaLocalDate().format(formatter)
+                }
+                DateDescriptor.Today -> today
+                DateDescriptor.Tomorrow -> tomorrow
+            }
+        }
+    }
+     */
     val nextWaterDate = when (val dateDescriptor = plant.dateDescriptor) {
         is DateDescriptor.Date -> {
             val formatter = DateTimeFormatter.ofPattern("MMM dd").withLocale(locale)
@@ -114,11 +133,11 @@ fun PlantImageBox(
     plantName: String,
     byteArray: ByteArray?
 ) {
-    val imageBitmap = rememberBitmapFromBytes(byteArray = byteArray)
     val imageContentDescription = stringResource(
         id = SharedRes.strings.plant_photo.resourceId,
         plantName
     )
+    val context = LocalContext.current
 
     Box(
         Modifier
@@ -132,17 +151,19 @@ fun PlantImageBox(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            if (imageBitmap != null) {
-                Image(
-                    bitmap = imageBitmap,
-                    contentDescription = imageContentDescription
-                )
-            } else {
-                Image(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_single_plant),
-                    contentDescription = imageContentDescription
-                )
+            val model = remember(byteArray) {
+                byteArray?.let {
+                    ImageRequest.Builder(context)
+                        .placeholder(R.drawable.ic_single_plant)
+                        .data(byteArray)
+                        .build()
+                } ?: R.drawable.ic_single_plant
             }
+            AsyncImage(
+                model = model,
+                contentDescription = imageContentDescription,
+                contentScale = ContentScale.Fit
+            )
         }
         Box(
             modifier = Modifier
