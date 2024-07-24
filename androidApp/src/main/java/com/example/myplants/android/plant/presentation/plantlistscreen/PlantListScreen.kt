@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -26,17 +28,23 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.PlantListScreenTopBar
 import com.example.myplants.android.plant.presentation.util.Screens
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListFilter
 import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListScreenEvent
 import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListScreenViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.mapLatest
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PlantListScreen(
     viewModel: PlantListScreenViewModel = getViewModel(),
     navController: NavController
 ) {
-    val state = viewModel.state.collectAsState().value
+    val plants by viewModel.state.mapLatest { it.plants }.collectAsState(initial = emptyList())
+    val isNotificationBellNotifying by viewModel.state.mapLatest { it.isNotificationBellNotifying }.collectAsState(initial = false)
+    val selectedFilter by viewModel.state.mapLatest { it.selectedPlantListFilter }.collectAsState(initial = PlantListFilter.UPCOMING)
 
     Scaffold(
         floatingActionButton = {
@@ -56,7 +64,7 @@ fun PlantListScreen(
             Column(Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
                 PlantListScreenTopBar(
-                    isNotificationBellNotifying = state.isNotificationBellNotifying,
+                    isNotificationBellNotifying = isNotificationBellNotifying,
                     onNotificationBellClick = {
                         navController.navigate(Screens.Notification)
                     }
@@ -64,7 +72,7 @@ fun PlantListScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 PlantListFilterBar(
                     onClick = { viewModel.onEvent(PlantListScreenEvent.TogglePlantListFilter(it)) },
-                    currentlySelected = state.selectedPlantListFilter
+                    currentlySelected = selectedFilter
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 LazyVerticalGrid(
@@ -72,7 +80,8 @@ fun PlantListScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(state.plants) { plant ->
+                    items(plants, key = { it.logId }) { _plant ->
+                        val plant by rememberUpdatedState(_plant)
                         PlantItemHolder(
                             plant = plant,
                             onCardClick = {

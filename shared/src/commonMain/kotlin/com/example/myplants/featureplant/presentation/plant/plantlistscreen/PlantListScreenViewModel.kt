@@ -59,7 +59,6 @@ class PlantListScreenViewModel(
                 _state.update { state ->
                     state.copy(selectedPlantListFilter = event.plantListFilter)
                 }
-                println(event.plantListFilter.name)
             }
             is PlantListScreenEvent.ToggleWater -> {
                 viewModelScope.launch(NonCancellable) {

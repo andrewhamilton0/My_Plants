@@ -1,8 +1,13 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("plugin.serialization") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+}
+
+composeCompiler {
+    enableStrongSkippingMode = true
 }
 
 android {
@@ -68,6 +73,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.0-beta03")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     with(Deps.Koin) {
         implementation(core)

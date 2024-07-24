@@ -2,7 +2,7 @@ package com.example.myplants.android.core
 
 import android.app.Application
 import com.example.myplants.android.plant.data.workmanager.PlantWorkerManager
-import com.example.myplants.android.plant.presentation.notification.PlantNotification
+import com.example.myplants.android.plant.presentation.notification.PlantNotificationManager
 import com.example.myplants.di.coreModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -17,8 +17,8 @@ class BaseApplication : Application() {
             modules(coreModule)
         }
         val plantWorkerManager = PlantWorkerManager(this)
-        val plantNotification = PlantNotification(this)
-        plantNotification.createNotificationChannels()
+        val plantNotificationManager = PlantNotificationManager(this)
+        plantNotificationManager.createNotificationChannels()
         plantWorkerManager.start()
     }
 }
