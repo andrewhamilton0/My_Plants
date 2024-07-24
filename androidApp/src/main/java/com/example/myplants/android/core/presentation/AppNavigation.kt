@@ -3,6 +3,10 @@ package com.example.myplants.android.core.presentation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -13,11 +17,19 @@ import com.example.myplants.android.plant.presentation.plantdetailscreen.PlantDe
 import com.example.myplants.android.plant.presentation.plantlistscreen.PlantListScreen
 import com.example.myplants.android.plant.presentation.util.Screens
 
+@OptIn(ExperimentalComposeUiApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screens.PlantList) {
+    NavHost(
+        navController = navController,
+        startDestination = Screens.PlantList,
+        modifier = Modifier
+            .semantics {
+                testTagsAsResourceId = true
+            }
+    ) {
         composable<Screens.PlantList> { PlantListScreen(navController = navController) }
         composable<Screens.Notification> { NotificationScreen() }
         composable<Screens.PlantDetail> {
