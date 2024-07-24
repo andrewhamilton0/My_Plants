@@ -4,6 +4,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.0"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    id("androidx.baselineprofile")
 }
 
 composeCompiler {
@@ -34,6 +35,12 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+        }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
     compileOptions {
@@ -74,6 +81,10 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
+    "baselineProfile"(project(":baselineprofile"))
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
 
     with(Deps.Koin) {
         implementation(core)

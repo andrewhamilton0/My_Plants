@@ -18,12 +18,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,7 +55,7 @@ fun PlantItemHolder(
     onCardClick: () -> Unit
 ) {
     val locale = Locale.getDefault()
-    /*
+
     val today = stringResource(id = SharedRes.strings.today.resourceId)
     val tomorrow = stringResource(id = SharedRes.strings.tomorrow.resourceId)
 
@@ -69,18 +71,10 @@ fun PlantItemHolder(
             }
         }
     }
-     */
-    val nextWaterDate = when (val dateDescriptor = plant.dateDescriptor) {
-        is DateDescriptor.Date -> {
-            val formatter = DateTimeFormatter.ofPattern("MMM dd").withLocale(locale)
-            dateDescriptor.date.toJavaLocalDate().format(formatter)
-        }
-        DateDescriptor.Today -> stringResource(id = SharedRes.strings.today.resourceId)
-        DateDescriptor.Tomorrow -> stringResource(id = SharedRes.strings.tomorrow.resourceId)
-    }
     Card(
         modifier = Modifier
             .clickable { onCardClick() }
+            .testTag("plant_card")
     ) {
         Column(
             modifier = Modifier.width(167.dp)

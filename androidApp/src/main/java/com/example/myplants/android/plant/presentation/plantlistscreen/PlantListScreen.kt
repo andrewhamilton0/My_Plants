@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.myplants.android.core.presentation.theme.Neutrals0
@@ -51,7 +52,8 @@ fun PlantListScreen(
             AddFab(
                 onClick = {
                     navController.navigate(Screens.EditPlant())
-                }
+                },
+                modifier = Modifier.testTag("add_button")
             )
         },
         backgroundColor = Neutrals0
@@ -78,7 +80,8 @@ fun PlantListScreen(
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.testTag("plant_list")
                 ) {
                     items(plants, key = { it.logId }) { _plant ->
                         val plant by rememberUpdatedState(_plant)

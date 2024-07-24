@@ -8,6 +8,8 @@ plugins {
     kotlin("multiplatform").version("2.0.0").apply(false)
     kotlin("plugin.serialization") version "2.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    id("com.android.test") version "8.5.1" apply false
+    id("androidx.baselineprofile") version "1.2.4" apply false
 }
 
 tasks.register("clean", Delete::class) {
