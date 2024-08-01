@@ -17,4 +17,6 @@
     <string name="needs_water_notification">%1$s needs water!</string>
     <string name="forgot_to_water_notification">You forgot to water %1$s!</string>
     <string name="click_here_for_more_information">Click here for more information</string>
+    <string name="mark_plant_watered_button">Mark plant as watered button</string>
+    <string name="mark_plant_not_watered_button">Mark plant as not watered button</string>
 </resources>
