@@ -30,8 +30,14 @@ fun PlantsGrid(
         val gridPadding = screenWidth * 0.02f
         val itemPadding = screenWidth * 0.01f
 
+        val cellSize = when {
+            screenWidth < 600.dp -> 167.dp
+            screenWidth < 840.dp -> 200.dp
+            else -> 240.dp
+        }
+
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(167.dp),
+            columns = GridCells.Adaptive(cellSize),
             modifier = Modifier
                 .fillMaxSize()
                 .testTag("plant_list"),
