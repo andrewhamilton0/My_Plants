@@ -1,7 +1,7 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,9 +14,13 @@ import com.example.myplants.featureplant.presentation.plant.plantlistscreen.Plan
 @Composable
 fun PlantListFilterBar(
     onClick: (PlantListFilter) -> Unit,
-    currentlySelected: PlantListFilter
+    currentlySelected: PlantListFilter,
+    modifier: Modifier = Modifier
 ) {
-    Row {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+    ) {
         TextWithBarUnderneath(
             text = stringResource(id = SharedRes.strings.upcoming.resourceId),
             isSelected = currentlySelected == PlantListFilter.UPCOMING,
@@ -24,7 +28,6 @@ fun PlantListFilterBar(
                 onClick(PlantListFilter.UPCOMING)
             }
         )
-        Spacer(modifier = Modifier.width(24.dp))
         TextWithBarUnderneath(
             text = stringResource(id = SharedRes.strings.forgot_to_water.resourceId),
             isSelected = currentlySelected == PlantListFilter.FORGOT_TO_WATER,
@@ -32,7 +35,6 @@ fun PlantListFilterBar(
                 onClick(PlantListFilter.FORGOT_TO_WATER)
             }
         )
-        Spacer(modifier = Modifier.width(24.dp))
         TextWithBarUnderneath(
             text = stringResource(id = SharedRes.strings.history.resourceId),
             isSelected = currentlySelected == PlantListFilter.HISTORY,
@@ -48,6 +50,7 @@ fun PlantListFilterBar(
 fun PlantListFilterBarPrev() {
     PlantListFilterBar(
         currentlySelected = PlantListFilter.UPCOMING,
-        onClick = { Unit }
+        onClick = { },
+        modifier = Modifier.width(150.dp)
     )
 }

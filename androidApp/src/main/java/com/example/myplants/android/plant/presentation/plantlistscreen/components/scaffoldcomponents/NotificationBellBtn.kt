@@ -1,7 +1,8 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Badge
@@ -25,28 +26,32 @@ import com.example.myplants.android.core.presentation.theme.NotificationRed
 @Composable
 fun NotificationBellBtn(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    isNotifying: Boolean
+    isNotifying: Boolean,
+    modifier: Modifier = Modifier
 ) {
-    Box(
-        contentAlignment = Alignment.TopEnd
+    BoxWithConstraints(
+        contentAlignment = Alignment.TopEnd,
+        modifier = modifier
     ) {
+        val height = maxHeight
         IconButton(
             onClick = onClick,
-            modifier = modifier
+            modifier = Modifier
                 .clip(CircleShape)
+                .fillMaxSize()
                 .background(color = Neutrals100)
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_notification_bell),
                 contentDescription = stringResource(SharedRes.strings.view_notifications.resourceId),
-                tint = Neutrals500
+                tint = Neutrals500,
+                modifier = Modifier.size(height * 0.4f)
             )
         }
         if (isNotifying) {
             Badge(
                 modifier = Modifier
-                    .size(12.dp)
+                    .size(height * 0.25f)
                     .clip(CircleShape),
                 backgroundColor = NotificationRed
             )
@@ -57,5 +62,9 @@ fun NotificationBellBtn(
 @Preview
 @Composable
 fun NotificationBellBtnPrev() {
-    NotificationBellBtn(onClick = { }, isNotifying = true)
+    NotificationBellBtn(
+        onClick = { },
+        isNotifying = true,
+        modifier = Modifier.size(40.dp)
+    )
 }

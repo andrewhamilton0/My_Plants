@@ -1,8 +1,9 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,23 +32,28 @@ fun TextWithBarUnderneath(
     val fontWeightInt = if (isSelected) 600 else 500
     val color = if (isSelected) Accent500 else Neutrals300
 
-    Column(modifier = Modifier.width(IntrinsicSize.Max)) {
-        Text(
-            modifier = Modifier.clickable { onClick() },
-            text = text,
-            fontWeight = FontWeight(fontWeightInt),
-            fontSize = 14.sp,
-            fontStyle = FontStyle(R.font.poppins_regular),
-            color = color
-        )
-        if (isSelected) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.52f)
-                    .background(color = color, shape = RoundedCornerShape(10.dp))
-                    .height(1.dp)
-                    .clip(RoundedCornerShape(10.dp))
+    BoxWithConstraints() {
+        val height = maxHeight
+        val scaleFactor = (height.value / 24f).coerceIn(0.5f, 1.5f)
+        val fontSize = 14.sp * scaleFactor
+        Column(modifier = Modifier.width(IntrinsicSize.Max)) {
+            Text(
+                modifier = Modifier.clickable { onClick() },
+                text = text,
+                fontWeight = FontWeight(fontWeightInt),
+                fontSize = fontSize,
+                fontStyle = FontStyle(R.font.poppins_regular),
+                color = color
             )
+            if (isSelected) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.52f)
+                        .background(color = color, shape = RoundedCornerShape(10.dp))
+                        .height(2.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                )
+            }
         }
     }
 }
@@ -58,6 +64,6 @@ fun TextWithBarUnderneathPrev() {
     TextWithBarUnderneath(
         text = "Example Text",
         isSelected = true,
-        onClick = { Unit }
+        onClick = { }
     )
 }

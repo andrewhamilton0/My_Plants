@@ -1,4 +1,4 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components.plantitemholdercomponents
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.plantitemholdercomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +45,8 @@ fun PlantImageBox(
     ) {
         val padding = maxWidth * 0.05f
         val greyCardHeight = maxHeight * 0.10f
-        val maxGreyCardWidth = maxWidth * 0.26f
+        val maxGreyCardWidth = maxWidth * 0.45f
+        val greyCardsPadding = maxHeight * 0.02f
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -69,7 +70,7 @@ fun PlantImageBox(
             contentAlignment = Alignment.TopStart
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(padding * 0.02f)
+                verticalArrangement = Arrangement.spacedBy(greyCardsPadding)
             ) {
                 val greyCardModifier = Modifier
                     .height(greyCardHeight)

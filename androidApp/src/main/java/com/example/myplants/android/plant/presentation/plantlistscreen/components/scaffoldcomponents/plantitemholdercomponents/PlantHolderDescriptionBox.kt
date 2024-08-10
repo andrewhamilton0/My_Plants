@@ -1,4 +1,4 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components.plantitemholdercomponents
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.plantitemholdercomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.myplants.android.R
 import com.example.myplants.android.core.presentation.theme.Neutrals100
@@ -33,7 +34,8 @@ fun PlantHolderDescriptionBox(
             .background(color = Neutrals100)
     ) {
         val boxHeight = maxHeight
-        val padding = maxWidth * 0.2f
+        val padding = maxWidth * 0.07f
+        val textPadding = maxWidth * 0.14f
         val scaleFactor = (boxHeight.value / 60f).coerceIn(0.5f, 1.5f)
         val nameFontSize = 14.sp * scaleFactor
         val descriptionFontSize = 12.sp * scaleFactor
@@ -42,10 +44,15 @@ fun PlantHolderDescriptionBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = padding),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                Modifier
+                    .padding(end = textPadding)
+                    .weight(1f),
+                verticalArrangement = Arrangement.Center
+
+            ) {
                 Text(
                     text = name,
                     color = Neutrals900,
@@ -54,7 +61,8 @@ fun PlantHolderDescriptionBox(
                     fontStyle = FontStyle(R.font.poppins_semibold),
                     fontSize = nameFontSize,
                     lineHeight = nameFontSize * 1.4f,
-                    fontWeight = FontWeight(600)
+                    fontWeight = FontWeight(600),
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = description,
@@ -64,13 +72,14 @@ fun PlantHolderDescriptionBox(
                     fontStyle = FontStyle(R.font.poppins_regular),
                     fontSize = descriptionFontSize,
                     lineHeight = descriptionFontSize * 1.4f,
-                    fontWeight = FontWeight(400)
+                    fontWeight = FontWeight(400),
+                    overflow = TextOverflow.Ellipsis
                 )
             }
             WaterButton(
                 isWatered = isWatered,
                 onClick = onWaterButtonClick,
-                modifier = Modifier.size(boxHeight * 1f)
+                modifier = Modifier.size(boxHeight * 0.4f)
             )
         }
     }
