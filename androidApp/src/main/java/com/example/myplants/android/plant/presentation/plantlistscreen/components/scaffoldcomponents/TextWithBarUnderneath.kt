@@ -1,4 +1,4 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,9 +32,9 @@ fun TextWithBarUnderneath(
     val fontWeightInt = if (isSelected) 600 else 500
     val color = if (isSelected) Accent500 else Neutrals300
 
-    BoxWithConstraints {
+    BoxWithConstraints() {
         val height = maxHeight
-        val scaleFactor = (height.value / 650f).coerceIn(0.5f, 1.5f)
+        val scaleFactor = (height.value / 24f).coerceIn(0.5f, 1.5f)
         val fontSize = 14.sp * scaleFactor
         Column(modifier = Modifier.width(IntrinsicSize.Max)) {
             Text(

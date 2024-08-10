@@ -1,4 +1,4 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components.plantitemholdercomponents
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.plantitemholdercomponents
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints

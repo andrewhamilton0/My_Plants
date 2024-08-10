@@ -1,7 +1,5 @@
-package com.example.myplants.android.plant.presentation.plantlistscreen.components
+package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,15 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.example.myplants.SharedRes
-import com.example.myplants.android.plant.presentation.plantlistscreen.components.plantitemholdercomponents.PlantHolderDescriptionBox
-import com.example.myplants.android.plant.presentation.plantlistscreen.components.plantitemholdercomponents.PlantImageBox
+import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.plantitemholdercomponents.PlantHolderDescriptionBox
+import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.plantitemholdercomponents.PlantImageBox
 import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantItem
 import com.example.myplants.featureplant.presentation.plant.util.DateDescriptor
 import kotlinx.datetime.toJavaLocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PlantItemHolder(
     plant: UiPlantItem,
