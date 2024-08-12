@@ -22,7 +22,7 @@ fun PlantsGrid(
     plants: List<UiPlantItem>,
     onCardClick: (String, String) -> Unit,
     onWaterButtonClick: (String) -> Unit,
-    onScrollStateChange: (Boolean) -> Unit,
+    onIsScrollingDownStateChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
@@ -38,13 +38,10 @@ fun PlantsGrid(
         val lazyGridState = rememberLazyGridState()
         val isScrollingDown = remember {
             derivedStateOf {
-                lazyGridState.firstVisibleItemIndex > 0 || lazyGridState.firstVisibleItemScrollOffset > 0
+                lazyGridState.lastScrolledForward
             }
         }
-
-        if (isScrollingDown.value) {
-            onScrollStateChange(isScrollingDown.value)
-        }
+        onIsScrollingDownStateChange(isScrollingDown.value)
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(cellSize),

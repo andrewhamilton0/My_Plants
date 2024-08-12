@@ -27,7 +27,7 @@ fun PlantListScreen(
         isNotifying = isNotificationBellNotifying,
         plants = plants,
         selectedPlantFilter = selectedFilter,
-        onFabClick = { navController.navigate(Screens.EditPlant()) },
+        onAddPlantClick = { navController.navigate(Screens.EditPlant()) },
         onBellClick = { navController.navigate(Screens.Notification) },
         onPlantFilterClick = { viewModel.onEvent(PlantListScreenEvent.TogglePlantListFilter(it)) },
         onPlantCardClick = { plantId, logId ->
