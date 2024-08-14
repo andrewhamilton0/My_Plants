@@ -15,14 +15,14 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantItem
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantListItem
 
 @Composable
 fun PlantsGrid(
-    plants: List<UiPlantItem>,
+    plants: List<UiPlantListItem>,
     onCardClick: (String, String) -> Unit,
     onWaterButtonClick: (String) -> Unit,
-    onScrollStateChange: (Boolean) -> Unit,
+    onIsScrollingDownStateChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
@@ -38,13 +38,10 @@ fun PlantsGrid(
         val lazyGridState = rememberLazyGridState()
         val isScrollingDown = remember {
             derivedStateOf {
-                lazyGridState.firstVisibleItemIndex > 0 || lazyGridState.firstVisibleItemScrollOffset > 0
+                lazyGridState.lastScrolledForward
             }
         }
-
-        if (isScrollingDown.value) {
-            onScrollStateChange(isScrollingDown.value)
-        }
+        onIsScrollingDownStateChange(isScrollingDown.value)
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(cellSize),

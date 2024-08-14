@@ -22,12 +22,14 @@ fun PlantListScreen(
     val plants by viewModel.state.mapLatest { it.plants }.collectAsState(initial = emptyList())
     val isNotificationBellNotifying by viewModel.state.mapLatest { it.isNotificationBellNotifying }.collectAsState(initial = false)
     val selectedFilter by viewModel.state.mapLatest { it.selectedPlantListFilter }.collectAsState(initial = PlantListFilter.UPCOMING)
+    val plantDbIsEmpty by viewModel.state.mapLatest { it.plantDbIsEmpty }.collectAsState(initial = true)
 
     PlantListScaffold(
         isNotifying = isNotificationBellNotifying,
         plants = plants,
+        plantDbIsEmpty = plantDbIsEmpty,
         selectedPlantFilter = selectedFilter,
-        onFabClick = { navController.navigate(Screens.EditPlant()) },
+        onAddPlantClick = { navController.navigate(Screens.EditPlant()) },
         onBellClick = { navController.navigate(Screens.Notification) },
         onPlantFilterClick = { viewModel.onEvent(PlantListScreenEvent.TogglePlantListFilter(it)) },
         onPlantCardClick = { plantId, logId ->

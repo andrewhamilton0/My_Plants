@@ -1,7 +1,8 @@
 package com.example.myplants.featureplant.presentation.plant.plantlistscreen
 
 data class PlantListScreenState(
-    val plants: List<UiPlantItem> = emptyList(),
+    val plants: List<UiPlantListItem> = emptyList(),
+    val plantDbIsEmpty: Boolean = true,
     val selectedPlantListFilter: PlantListFilter = PlantListFilter.UPCOMING,
     val isNotificationBellNotifying: Boolean = false
 )

@@ -2,7 +2,7 @@ package com.example.myplants.featureplant.presentation.plant.plantlistscreen
 
 import com.example.myplants.core.domain.util.DateUtil
 import com.example.myplants.featureplant.domain.PlantManagementService
-import com.example.myplants.featureplant.presentation.plant.plantlistscreen.util.toUiPlant
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.util.toUiPlantListItem
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.NonCancellable
@@ -22,23 +22,23 @@ class PlantListScreenViewModel(
     private val plantHistory = plantManagementService.getHistory()
     private val currentDateTime = DateUtil.getCurrentDateTime()
 
-    // TODO FIX DATES SHOWN
     private val _state = MutableStateFlow(PlantListScreenState())
     val state = combine(_state, upcomingPlants, forgottenPlants, plantHistory, currentDateTime) { state, upcomingPlants, forgottenPlants, plantHistory, currentDateTime ->
         val currentDate = currentDateTime.date
         val filteredPlants = when (state.selectedPlantListFilter) {
             PlantListFilter.UPCOMING -> {
-                upcomingPlants.map { it.toUiPlant(currentDate) }
+                upcomingPlants.map { it.toUiPlantListItem(currentDate) }
             }
             PlantListFilter.FORGOT_TO_WATER -> {
-                forgottenPlants.map { it.toUiPlant(currentDate) }
+                forgottenPlants.map { it.toUiPlantListItem(currentDate) }
             }
             PlantListFilter.HISTORY -> {
-                plantHistory.map { it.toUiPlant(currentDate) }
+                plantHistory.map { it.toUiPlantListItem(currentDate) }
             }
         }
+        val plantDbIsEmpty = upcomingPlants.isEmpty()
         if (filteredPlants != state.plants) {
-            state.copy(plants = filteredPlants)
+            state.copy(plants = filteredPlants, plantDbIsEmpty = plantDbIsEmpty)
         } else {
             state
         }
