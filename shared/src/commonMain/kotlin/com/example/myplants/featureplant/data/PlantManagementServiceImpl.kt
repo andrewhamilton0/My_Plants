@@ -126,9 +126,9 @@ class PlantManagementServiceImpl(
             }
         }
     }
-    private val syncWaterLogMutex = Mutex()
+    private val syncWaterAlarmMutex = Mutex()
     override suspend fun syncWaterAlarms() {
-        syncWaterLogMutex.withLock {
+        syncWaterAlarmMutex.withLock {
             getUpcomingPlants().first().forEach {
                 val dateTime = LocalDateTime(it.waterLog.date, it.plant.waterTime)
                 val epoch = dateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()

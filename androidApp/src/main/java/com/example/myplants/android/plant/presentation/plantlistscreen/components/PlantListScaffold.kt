@@ -44,12 +44,13 @@ import com.example.myplants.android.plant.presentation.plantlistscreen.component
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.PlantListScreenTopBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.PlantsGrid
 import com.example.myplants.featureplant.presentation.plant.plantlistscreen.PlantListFilter
-import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantItem
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantListItem
 
 @Composable
 fun PlantListScaffold(
     isNotifying: Boolean,
-    plants: List<UiPlantItem>,
+    plants: List<UiPlantListItem>,
+    plantDbIsEmpty: Boolean,
     selectedPlantFilter: PlantListFilter,
     onAddPlantClick: () -> Unit,
     onBellClick: () -> Unit,
@@ -61,9 +62,8 @@ fun PlantListScaffold(
         val width = maxWidth
         val height = maxHeight
         val isScrollingDown = remember { mutableStateOf(false) }
-        val isPlantsEmpty = remember(plants) { mutableStateOf(plants.isEmpty()) }
-        val fabVisibility = remember(isPlantsEmpty.value, isScrollingDown.value) {
-            derivedStateOf { !isPlantsEmpty.value && !isScrollingDown.value }
+        val fabVisibility = remember(isScrollingDown.value) {
+            derivedStateOf { !plantDbIsEmpty && !isScrollingDown.value }
         }
 
         Scaffold(
@@ -109,7 +109,7 @@ fun PlantListScaffold(
                                 .width(width * 0.71f)
                                 .height(height * 0.03f)
                         )
-                        if (isPlantsEmpty.value) {
+                        if (plantDbIsEmpty) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier.fillMaxWidth()
@@ -195,6 +195,7 @@ fun PlantListScaffoldPreview() {
         onPlantFilterClick = { },
         onPlantCardClick = { _, _ -> },
         onWaterButtonClick = { },
-        onAddPlantClick = { }
+        onAddPlantClick = { },
+        plantDbIsEmpty = true
     )
 }

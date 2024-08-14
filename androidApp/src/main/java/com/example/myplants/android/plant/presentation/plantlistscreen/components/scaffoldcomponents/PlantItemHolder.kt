@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.myplants.SharedRes
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.plantitemholdercomponents.PlantHolderDescriptionBox
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.plantitemholdercomponents.PlantImageBox
-import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantItem
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantListItem
 import com.example.myplants.featureplant.presentation.plant.util.DateDescriptor
 import kotlinx.datetime.toJavaLocalDate
 import java.time.format.DateTimeFormatter
@@ -23,7 +23,7 @@ import java.util.Locale
 
 @Composable
 fun PlantItemHolder(
-    plant: UiPlantItem,
+    plant: UiPlantListItem,
     onWaterButtonClick: () -> Unit,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier

@@ -15,11 +15,11 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantItem
+import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPlantListItem
 
 @Composable
 fun PlantsGrid(
-    plants: List<UiPlantItem>,
+    plants: List<UiPlantListItem>,
     onCardClick: (String, String) -> Unit,
     onWaterButtonClick: (String) -> Unit,
     onIsScrollingDownStateChange: (Boolean) -> Unit,
