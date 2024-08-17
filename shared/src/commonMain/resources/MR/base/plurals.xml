@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <plurals name="times_per_week">
+        <item quantity = "one">%d time/week</item>
+        <item quantity = "other">%d times/week</item>
+    </plurals>
+</resources>

@@ -10,3 +10,4 @@ local.properties
 xcuserdata
 androidApp/release/*
 baselineprofile/build/*
+androidApp/src/release/*
