@@ -22,4 +22,11 @@
     <string name="sorry">Sorry.</string>
     <string name="no_plants_in_list">There are no plants in the list, please add your first plant.</string>
     <string name="add_your_first_plant">Add Your First Plant</string>
+    <string name="size">Size</string>
+    <string name="water">Water</string>
+    <string name="frequency">Frequency</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    <string name="extra_large">Extra Large</string>
 </resources>
