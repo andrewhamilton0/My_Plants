@@ -37,7 +37,7 @@ class PlantListScreenViewModel(
             }
         }
         val plantDbIsEmpty = upcomingPlants.isEmpty()
-        if (filteredPlants != state.plants) {
+        if (filteredPlants != state.plants || plantDbIsEmpty != state.plantDbIsEmpty) {
             state.copy(plants = filteredPlants, plantDbIsEmpty = plantDbIsEmpty)
         } else {
             state

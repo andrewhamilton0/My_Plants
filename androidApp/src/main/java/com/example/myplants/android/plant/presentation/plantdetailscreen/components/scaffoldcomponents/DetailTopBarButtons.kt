@@ -9,16 +9,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myplants.android.R
 import com.example.myplants.android.core.presentation.theme.Neutrals0
+import com.example.myplants.android.core.presentation.theme.Neutrals900
 
 @Composable
 fun DetailTopBarButtons(
+    onEditButtonClick: () -> Unit,
+    onBackButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(
@@ -31,22 +38,36 @@ fun DetailTopBarButtons(
         ) {
             val shape = CircleShape
             val color = Neutrals0
-            // Button 1
             IconButton(
-                onClick = { },
+                onClick = { onBackButtonClick() },
                 modifier = Modifier
                     .clip(shape)
                     .size(height)
                     .background(color = color)
-            ) { }
-            // Button 2
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
+                    contentDescription = "", // TODO WRITE CONTENT DESCRIPTION
+                    tint = Neutrals900,
+                    modifier = Modifier
+                        .size(height * 0.55f)
+                )
+            }
             IconButton(
-                onClick = { },
+                onClick = { onEditButtonClick() },
                 modifier = Modifier
                     .clip(shape)
                     .size(height)
                     .background(color = color)
-            ) { }
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_edit),
+                    contentDescription = "", // TODO WRITE CONTENT DESCRIPTION
+                    tint = Neutrals900,
+                    modifier = Modifier
+                        .size(height * 0.45f)
+                )
+            }
         }
     }
 }
@@ -54,5 +75,9 @@ fun DetailTopBarButtons(
 @Preview
 @Composable
 fun DetailTopBarButtonsPreview() {
-    DetailTopBarButtons(modifier = Modifier.width(300.dp).height(20.dp))
+    DetailTopBarButtons(
+        onBackButtonClick = {},
+        onEditButtonClick = {},
+        modifier = Modifier.width(300.dp).height(20.dp)
+    )
 }

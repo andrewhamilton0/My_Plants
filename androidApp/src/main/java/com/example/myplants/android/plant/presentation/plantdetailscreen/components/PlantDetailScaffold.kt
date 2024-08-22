@@ -30,52 +30,52 @@ fun PlantDetailScaffold(
     onEditPlantButtonPress: () -> Unit,
     onToggleWaterButtonPress: () -> Unit
 ) {
-    @Composable
-    fun PlantDetailScreen() {
-        BoxWithConstraints(
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Neutrals0)
+    ) {
+        val height = maxHeight
+        val width = maxWidth
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Neutrals0)
+                .fillMaxWidth()
+                .height(height * 0.6f)
+                .align(Alignment.TopCenter)
         ) {
-            val height = maxHeight
-            val width = maxWidth
+            val byteArray = plant?.photo?.byteArray
+            if (byteArray == null) {
+                AsyncImage(
+                    model = R.drawable.img_plants_background,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth
+                )
+            } else {
+                AsyncImage(
+                    model = byteArray,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+
+        Scaffold() { innerPadding ->
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(height * 0.6f)
-                    .align(Alignment.TopCenter)
+                    .windowInsetsPadding(WindowInsets.systemBars)
+                    .padding(innerPadding)
             ) {
-                val byteArray = plant?.photo?.byteArray
-                if (byteArray == null) {
-                    AsyncImage(
-                        model = R.drawable.img_plants_background,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth
-                    )
-                } else {
-                    AsyncImage(
-                        model = byteArray,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-
-            Scaffold() { innerPadding ->
-                Box(
+                DetailTopBarButtons(
+                    onEditButtonClick = { onEditPlantButtonPress() },
+                    onBackButtonClick = { onBackButtonPress() },
                     modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.systemBars)
-                        .padding(innerPadding)
-                ) {
-                    DetailTopBarButtons(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = height * 0.015f)
-                            .height(height * 0.05f)
-                            .align(Alignment.TopCenter)
-                    )
-                }
+                        .fillMaxWidth()
+                        .padding(vertical = height * 0.015f)
+                        .height(height * 0.05f)
+                        .align(Alignment.TopCenter)
+                )
             }
+        }
 
             /*
             // Bottom White Box
@@ -135,7 +135,6 @@ fun PlantDetailScaffold(
             }
 
              */
-        }
     }
 }
 
