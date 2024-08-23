@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.myplants.SharedRes
 import com.example.myplants.android.R
@@ -23,7 +24,7 @@ import com.example.myplants.featureplant.presentation.plant.plantdetailsscreen.U
 
 @Composable
 fun WaterDescriptionBox(
-    plant: UiPlantDetailItem
+    plant: UiPlantDetailItem?
 ) {
     BoxWithConstraints() {
         val height = maxHeight
@@ -31,11 +32,12 @@ fun WaterDescriptionBox(
         val context = LocalContext.current
 
         val sizeText = stringResource(
-            when (plant.plantSize) {
+            when (plant?.plantSize) {
                 PlantSize.SMALL -> SharedRes.strings.small.resourceId
                 PlantSize.MEDIUM -> SharedRes.strings.medium.resourceId
                 PlantSize.LARGE -> SharedRes.strings.large.resourceId
                 PlantSize.EXTRA_LARGE -> SharedRes.strings.extra_large.resourceId
+                else -> SharedRes.strings.small.resourceId
             }
         )
         TextBox(
@@ -44,13 +46,13 @@ fun WaterDescriptionBox(
         )
         TextBox(
             topText = stringResource(SharedRes.strings.water.resourceId),
-            bottomText = plant.waterAmount
+            bottomText = plant?.waterAmount ?: ""
         )
         TextBox(
             topText = stringResource(SharedRes.strings.frequency.resourceId),
             bottomText = SharedRes.plurals.times_per_week.getQuantityString(
                 context = context,
-                number = plant.waterFrequencyWeekly
+                number = plant?.waterFrequencyWeekly ?: 0
             )
         )
     }
@@ -91,4 +93,21 @@ private fun TextBox(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun WaterDescriptionBoxPreview() {
+    WaterDescriptionBox(
+        UiPlantDetailItem(
+            plantId = "",
+            waterAmount = "5ML",
+            name = "Aguacate",
+            description = "Deliciouss",
+            plantSize = PlantSize.MEDIUM,
+            isWatered = true,
+            photo = null,
+            waterFrequencyWeekly = 2
+        )
+    )
 }
