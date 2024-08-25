@@ -1,9 +1,11 @@
 package com.example.myplants.android.plant.presentation.plantdetailscreen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -13,7 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,6 +46,7 @@ import com.example.myplants.android.core.presentation.theme.Neutrals500
 import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
 import com.example.myplants.android.plant.presentation.plantdetailscreen.components.scaffoldcomponents.DetailTopBarButtons
+import com.example.myplants.android.plant.presentation.plantdetailscreen.components.scaffoldcomponents.WaterDescriptionBox
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import com.example.myplants.featureplant.presentation.plant.plantdetailsscreen.UiPlantDetailItem
 
@@ -64,7 +69,7 @@ fun PlantDetailScaffold(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            val (topBox, bottomBox) = createRefs()
+            val (topBox, bottomBox, waterDescBox) = createRefs()
 
             BoxWithConstraints(
                 modifier = Modifier
@@ -102,6 +107,22 @@ fun PlantDetailScaffold(
                         contentScale = ContentScale.Crop
                     )
                 }
+            }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .constrainAs(waterDescBox) {
+                        bottom.linkTo(bottomBox.top, margin = screenHeight * 0.06f)
+                    }
+            ) {
+                WaterDescriptionBox(
+                    plant = plant,
+                    modifier = Modifier
+                        .height(screenHeight * 0.07f)
+                        .width(screenWidth * 0.68f)
+                )
             }
 
             Box(
