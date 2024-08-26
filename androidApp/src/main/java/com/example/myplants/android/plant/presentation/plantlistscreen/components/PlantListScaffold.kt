@@ -62,7 +62,7 @@ fun PlantListScaffold(
         val width = maxWidth
         val height = maxHeight
         val isScrollingDown = remember { mutableStateOf(false) }
-        val fabVisibility = remember(isScrollingDown.value) {
+        val fabVisibility = remember(isScrollingDown.value, plantDbIsEmpty) {
             derivedStateOf { !plantDbIsEmpty && !isScrollingDown.value }
         }
 

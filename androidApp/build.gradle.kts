@@ -85,6 +85,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
     "baselineProfile"(project(":baselineprofile"))
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     with(Deps.Koin) {
         implementation(core)
