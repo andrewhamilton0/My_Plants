@@ -2,27 +2,12 @@ package com.example.myplants.android.plant.presentation.editplantscreen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.example.myplants.android.core.presentation.util.rememberPhotoPickerLauncher
+import com.example.myplants.android.plant.presentation.editplantscreen.components.EditPlantScaffold
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenEvent
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenViewModel
-import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.LocalTime
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -34,8 +19,15 @@ fun EditPlantScreen(
     viewModel: EditPlantScreenViewModel = getViewModel { parametersOf(plantId) }
 ) {
     val plant = viewModel.state.collectAsState().value.plant
-    val context = LocalContext.current
 
+    EditPlantScaffold(
+        plant = plant,
+        onTitleChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateName(it)) },
+        onDescriptionChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateDescription(it)) },
+        onSaveClick = { viewModel.onEvent(EditPlantScreenEvent.SavePlant) },
+        onWaterAmountChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateWaterAmount(it)) }
+    )
+    /*
     @Composable
     fun DayOfWeekSelector(dayOfWeek: DayOfWeek) {
         Row() {
@@ -117,4 +109,6 @@ fun EditPlantScreen(
             }
         }
     }
+
+     */
 }

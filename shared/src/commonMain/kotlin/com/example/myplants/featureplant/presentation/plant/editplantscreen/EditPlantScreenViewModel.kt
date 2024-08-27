@@ -6,6 +6,9 @@ import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +19,8 @@ import kotlinx.datetime.LocalTime
 
 class EditPlantScreenViewModel(
     private val plantManagementService: PlantManagementService,
-    private val plantId: String?
+    private val plantId: String?,
+    private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -90,7 +94,7 @@ class EditPlantScreenViewModel(
                 if (state.value.plant.waterDays.isEmpty()) {
                     // TODO: Tell user to add at least one water day
                 } else {
-                    viewModelScope.launch(NonCancellable) {
+                    viewModelScope.launch(dispatcherIO + NonCancellable) {
                         plantManagementService.upsertPlant(state.value.plant)
                     }
                 }
