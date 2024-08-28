@@ -28,9 +28,13 @@ fun EditPlantScreen(
         plant = plant,
         onTitleChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateName(it)) },
         onDescriptionChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateDescription(it)) },
-        onSaveClick = { viewModel.onEvent(EditPlantScreenEvent.SavePlant) },
+        onSaveClick = {
+            viewModel.onEvent(EditPlantScreenEvent.SavePlant)
+            navController.popBackStack()
+        },
         onWaterAmountChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateWaterAmount(it)) },
-        onPhotoButtonClick = { photoPickerLauncher() }
+        onPhotoButtonClick = { photoPickerLauncher() },
+        onBackClick = { navController.popBackStack() }
     )
     /*
     @Composable

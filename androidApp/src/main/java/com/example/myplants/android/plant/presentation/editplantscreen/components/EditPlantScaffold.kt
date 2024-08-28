@@ -1,5 +1,7 @@
 package com.example.myplants.android.plant.presentation.editplantscreen.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +21,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -53,23 +57,26 @@ import com.example.myplants.android.core.presentation.theme.Accent500
 import com.example.myplants.android.core.presentation.theme.Neutrals0
 import com.example.myplants.android.core.presentation.theme.Neutrals100
 import com.example.myplants.android.core.presentation.theme.Neutrals500
+import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
-import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantSize
+import com.example.myplants.featureplant.presentation.plant.editplantscreen.UiEditPlantItem
 import kotlinx.datetime.toJavaLocalTime
 import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditPlantScaffold(
-    plant: Plant?,
+    plant: UiEditPlantItem?,
     onTitleChange: (String) -> Unit,
     onWaterAmountChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onSaveClick: () -> Unit,
-    onPhotoButtonClick: () -> Unit
+    onPhotoButtonClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
-    val dateBoxTextStringId = remember {
+    val dateBoxTextStringId = remember(plant?.waterDays) {
         derivedStateOf {
             when (plant?.waterDays?.firstOrNull()) {
                 DayOfWeek.MONDAY -> SharedRes.strings.monday
@@ -83,13 +90,13 @@ fun EditPlantScaffold(
             }
         }
     }
-    val timeText = remember {
+    val timeText = remember(plant?.waterTime) {
         derivedStateOf {
             val time = plant?.waterTime?.toJavaLocalTime()
             time?.format(DateTimeFormatter.ISO_TIME) ?: ""
         }
     }
-    val plantSizeTextStringId = remember {
+    val plantSizeTextStringId = remember(plant?.plantSize) {
         derivedStateOf {
             when (plant?.plantSize) {
                 PlantSize.SMALL -> SharedRes.strings.small
@@ -338,6 +345,18 @@ fun EditPlantScaffold(
                 }
             }
         }
+        BackButton(
+            onBackButtonClick = { onBackClick() },
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(
+                    horizontal = screenHorizontalPadding,
+                    vertical = screenHeight * 0.015f
+                )
+                .fillMaxWidth()
+                .height(screenHeight * 0.05f)
+                .align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -481,6 +500,40 @@ private fun GreyBox(
                         )
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BackButton(
+    onBackButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    BoxWithConstraints(
+        modifier = modifier
+    ) {
+        val height = maxHeight
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            val shape = CircleShape
+            val color = Neutrals0
+            IconButton(
+                onClick = { onBackButtonClick() },
+                modifier = Modifier
+                    .clip(shape)
+                    .size(height)
+                    .background(color = color)
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
+                    contentDescription = "", // TODO WRITE CONTENT DESCRIPTION
+                    tint = Neutrals900,
+                    modifier = Modifier
+                        .size(height * 0.55f)
+                )
             }
         }
     }

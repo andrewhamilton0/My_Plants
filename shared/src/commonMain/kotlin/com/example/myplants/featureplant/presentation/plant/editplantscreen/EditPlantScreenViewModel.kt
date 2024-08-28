@@ -2,7 +2,6 @@ package com.example.myplants.featureplant.presentation.plant.editplantscreen
 
 import com.example.myplants.featureplant.domain.PlantManagementService
 import com.example.myplants.featureplant.domain.plant.Photo
-import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
@@ -25,7 +24,8 @@ class EditPlantScreenViewModel(
 
     private val _state = MutableStateFlow(
         EditPlantScreenState(
-            plant = Plant(
+            plant = UiEditPlantItem(
+                id = null,
                 name = "",
                 description = "",
                 waterAmount = "",
@@ -95,7 +95,7 @@ class EditPlantScreenViewModel(
                     // TODO: Tell user to add at least one water day
                 } else {
                     viewModelScope.launch(dispatcherIO + NonCancellable) {
-                        plantManagementService.upsertPlant(state.value.plant)
+                        plantManagementService.upsertPlant(state.value.plant.toPlant())
                     }
                 }
             }
@@ -148,7 +148,7 @@ class EditPlantScreenViewModel(
             plant?.let {
                 _state.update { state ->
                     state.copy(
-                        plant = plant
+                        plant = plant.toUiEditPlant()
                     )
                 }
             }
