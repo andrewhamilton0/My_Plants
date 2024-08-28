@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -105,6 +107,7 @@ fun EditPlantScaffold(
         val screenHeight = maxHeight
         val screenWidth = maxWidth
         val screenHorizontalPadding = screenWidth * 0.07f
+        val scaleFactor = (screenHeight.value / 792f).coerceIn(0.5f, 1.5f)
 
         ConstraintLayout(
             modifier = Modifier
@@ -177,117 +180,127 @@ fun EditPlantScaffold(
                     .background(color = Neutrals0)
             ) {
                 val bottomInset = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                Column(
-                    horizontalAlignment = Alignment.Start,
+                BoxWithConstraints(
                     modifier = Modifier
                         .padding(horizontal = screenHorizontalPadding)
                         .padding(bottom = bottomInset)
                         .fillMaxWidth()
                 ) {
-                    val scaleFactor = (screenHeight.value / 792f).coerceIn(0.5f, 1.5f)
-                    val fontSize = 14 * scaleFactor
-                    val horizontalTextPadding = screenWidth * 0.04f
-
-                    Spacer(modifier = Modifier.height(screenHeight * 0.025f))
-                    PlantDetailEditBox(
-                        detailTypeText = stringResource(SharedRes.strings.plant_name.resourceId),
-                        greyBoxText = plant?.name ?: "",
-                        fontSize = fontSize,
-                        hasArrow = false,
-                        horizontalTextPadding = horizontalTextPadding,
-                        onOpenDialogPress = { },
-                        onTextValueChange = { onTitleChange(it) }
-                    )
-                    Spacer(modifier = Modifier.height(screenHeight * 0.015f))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                    val boxWidth = maxWidth
+                    Column(
+                        horizontalAlignment = Alignment.Start,
                         modifier = Modifier.fillMaxWidth().wrapContentHeight()
                     ) {
+                        Spacer(modifier = Modifier.height(screenHeight * 0.025f))
                         PlantDetailEditBox(
-                            detailTypeText = stringResource(SharedRes.strings.dates.resourceId),
-                            greyBoxText = dateBoxTextStringId.value?.let { stringResource(it.resourceId) } ?: "",
-                            fontSize = fontSize,
-                            hasArrow = true,
-                            horizontalTextPadding = horizontalTextPadding,
-                            onOpenDialogPress = { Unit }, // TODO
-                            onTextValueChange = { }
-                        )
-                        PlantDetailEditBox(
-                            detailTypeText = stringResource(SharedRes.strings.time.resourceId),
-                            greyBoxText = timeText.value,
-                            fontSize = fontSize,
-                            hasArrow = true,
-                            horizontalTextPadding = horizontalTextPadding,
-                            onOpenDialogPress = { Unit }, // TODO
-                            onTextValueChange = { }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(screenHeight * 0.015f))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth().wrapContentHeight()
-                    ) {
-                        PlantDetailEditBox(
-                            detailTypeText = stringResource(SharedRes.strings.water_amount.resourceId),
-                            greyBoxText = plant?.waterAmount ?: "",
-                            fontSize = fontSize,
-                            hasArrow = true,
-                            horizontalTextPadding = horizontalTextPadding,
-                            onOpenDialogPress = { },
-                            onTextValueChange = { onWaterAmountChange(it) }
-                        )
-                        PlantDetailEditBox(
-                            detailTypeText = stringResource(SharedRes.strings.plant_size.resourceId),
-                            greyBoxText = plantSizeTextStringId.value?.let { stringResource(it.resourceId) } ?: "",
-                            fontSize = fontSize,
-                            hasArrow = true,
-                            horizontalTextPadding = horizontalTextPadding,
-                            onOpenDialogPress = { Unit }, // TODO
-                            onTextValueChange = { }
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = screenHeight * 0.25f) // Adjust max height as needed
-                            .verticalScroll(rememberScrollState()) // Make this box scrollable
-                    ) {
-                        PlantDetailEditBox(
-                            detailTypeText = stringResource(SharedRes.strings.description.resourceId),
-                            greyBoxText = plant?.description ?: "",
-                            fontSize = fontSize,
+                            detailTypeText = stringResource(SharedRes.strings.plant_name.resourceId),
+                            greyBoxText = plant?.name ?: "",
                             hasArrow = false,
-                            isSingleLine = false,
-                            horizontalTextPadding = horizontalTextPadding,
+                            screenHeight = screenHeight,
+                            screenWidth = screenWidth,
                             onOpenDialogPress = { },
-                            onTextValueChange = { onDescriptionChange(it) }
+                            onTextValueChange = { onTitleChange(it) },
+                            modifier = Modifier
+                                .height(screenHeight * 0.1f)
+                                .fillMaxWidth()
                         )
-                    }
-                    Spacer(modifier = Modifier.height(screenHeight * 0.01f))
+                        Spacer(modifier = Modifier.height(screenHeight * 0.015f))
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth().height(screenHeight * 0.1f)
+                        ) {
+                            PlantDetailEditBox(
+                                detailTypeText = stringResource(SharedRes.strings.dates.resourceId),
+                                greyBoxText = dateBoxTextStringId.value?.let { stringResource(it.resourceId) }
+                                    ?: "",
+                                hasArrow = true,
+                                screenHeight = screenHeight,
+                                screenWidth = screenWidth,
+                                onOpenDialogPress = { Unit }, // TODO
+                                onTextValueChange = { },
+                                modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
+                            )
+                            PlantDetailEditBox(
+                                detailTypeText = stringResource(SharedRes.strings.time.resourceId),
+                                greyBoxText = timeText.value,
+                                hasArrow = true,
+                                screenHeight = screenHeight,
+                                screenWidth = screenWidth,
+                                onOpenDialogPress = { Unit }, // TODO
+                                onTextValueChange = { },
+                                modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(screenHeight * 0.015f))
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth().height(screenHeight * 0.1f)
+                        ) {
+                            PlantDetailEditBox(
+                                detailTypeText = stringResource(SharedRes.strings.water_amount.resourceId),
+                                greyBoxText = plant?.waterAmount ?: "",
+                                hasArrow = true,
+                                screenHeight = screenHeight,
+                                screenWidth = screenWidth,
+                                onOpenDialogPress = { },
+                                onTextValueChange = { onWaterAmountChange(it) },
+                                modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
+                            )
+                            PlantDetailEditBox(
+                                detailTypeText = stringResource(SharedRes.strings.plant_size.resourceId),
+                                greyBoxText = plantSizeTextStringId.value?.let { stringResource(it.resourceId) }
+                                    ?: "",
+                                hasArrow = true,
+                                screenHeight = screenHeight,
+                                screenWidth = screenWidth,
+                                onOpenDialogPress = { Unit }, // TODO
+                                onTextValueChange = { },
+                                modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(screenHeight * 0.015f))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = screenHeight * 0.25f) // Adjust max height as needed
+                                .verticalScroll(rememberScrollState()) // Make this box scrollable
+                        ) {
+                            PlantDetailEditBox(
+                                detailTypeText = stringResource(SharedRes.strings.description.resourceId),
+                                greyBoxText = plant?.description ?: "",
+                                hasArrow = false,
+                                isSingleLine = false,
+                                screenHeight = screenHeight,
+                                screenWidth = screenWidth,
+                                onOpenDialogPress = { },
+                                onTextValueChange = { onDescriptionChange(it) }
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
-                    val buttonText = if (plant?.id == null) {
-                        stringResource(SharedRes.strings.create_plant.resourceId)
-                    } else {
-                        stringResource(SharedRes.strings.save_changes.resourceId)
+                        val buttonText = if (plant?.id == null) {
+                            stringResource(SharedRes.strings.create_plant.resourceId)
+                        } else {
+                            stringResource(SharedRes.strings.save_changes.resourceId)
+                        }
+                        IconButton(
+                            onClick = { onSaveClick() },
+                            Modifier
+                                .clip(RoundedCornerShape(screenHeight * 0.012f))
+                                .fillMaxWidth()
+                                .height(screenHeight * 0.06f)
+                                .background(color = Accent500)
+                        ) {
+                            Text(
+                                text = buttonText,
+                                color = Neutrals0,
+                                fontWeight = FontWeight(500),
+                                fontSize = 16.sp * scaleFactor,
+                                fontStyle = FontStyle(R.font.poppins_medium)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(screenHeight * 0.01f))
                     }
-                    IconButton(
-                        onClick = { onSaveClick() },
-                        Modifier
-                            // .clip(RoundedCornerShape(screenHeight * 0.012f))
-                            .fillMaxWidth()
-                            .height(screenHeight * 0.06f)
-                            .background(color = Accent500)
-                    ) {
-                        Text(
-                            text = buttonText,
-                            color = Neutrals0,
-                            fontWeight = FontWeight(500),
-                            fontSize = 16.sp * scaleFactor,
-                            fontStyle = FontStyle(R.font.poppins_medium)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(screenHeight * 0.01f))
                 }
             }
         }
@@ -298,9 +311,9 @@ fun EditPlantScaffold(
 private fun PlantDetailEditBox(
     greyBoxText: String,
     detailTypeText: String,
-    horizontalTextPadding: Dp,
     hasArrow: Boolean,
-    fontSize: Float,
+    screenHeight: Dp,
+    screenWidth: Dp,
     modifier: Modifier = Modifier,
     isSingleLine: Boolean = true,
     onTextValueChange: (String) -> Unit,
@@ -310,6 +323,10 @@ private fun PlantDetailEditBox(
         modifier = modifier
     ) {
         val height = maxHeight
+        val horizontalTextPadding = screenWidth * 0.04f
+        val roundedCornerShape = RoundedCornerShape(screenHeight * 0.012f)
+        val scaleFactor = (screenHeight.value / 792f).coerceIn(0.5f, 1.5f)
+        val fontSize = 14 * scaleFactor
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
@@ -322,12 +339,14 @@ private fun PlantDetailEditBox(
                 fontWeight = FontWeight(500),
                 fontStyle = FontStyle(R.font.poppins_medium)
             )
+            Spacer(Modifier.height(screenHeight * 0.01f))
             GreyBox(
                 text = greyBoxText,
                 horizontalTextPadding = horizontalTextPadding,
                 hasArrow = hasArrow,
                 fontSize = fontSize,
                 isSingleLine = isSingleLine,
+                roundedCornerShape = roundedCornerShape,
                 onTextValueChange = onTextValueChange,
                 onOpenDialogPress = onOpenDialogPress,
                 modifier = Modifier.fillMaxWidth().heightIn(min = height * 0.63f)
@@ -342,6 +361,7 @@ private fun GreyBox(
     horizontalTextPadding: Dp,
     hasArrow: Boolean,
     fontSize: Float,
+    roundedCornerShape: RoundedCornerShape,
     modifier: Modifier = Modifier,
     isSingleLine: Boolean = true,
     onTextValueChange: (String) -> Unit,
@@ -355,7 +375,7 @@ private fun GreyBox(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                // .clip(RoundedCornerShape(height * 0.25f))
+                .clip(roundedCornerShape)
                 .background(color = Neutrals100)
         ) {
             val arrangement = if (hasArrow)Arrangement.SpaceBetween else Arrangement.Start
@@ -364,6 +384,7 @@ private fun GreyBox(
                 horizontalArrangement = arrangement,
                 modifier = Modifier
                     .height(rowHeight)
+                    .fillMaxWidth()
                     .padding(horizontal = horizontalTextPadding)
                     .clickable {
                         if (hasArrow) { onOpenDialogPress() }
