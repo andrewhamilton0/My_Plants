@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
+import com.example.myplants.android.core.presentation.util.rememberPhotoPickerLauncher
 import com.example.myplants.android.plant.presentation.editplantscreen.components.EditPlantScaffold
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenEvent
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenViewModel
@@ -19,13 +20,17 @@ fun EditPlantScreen(
     viewModel: EditPlantScreenViewModel = getViewModel { parametersOf(plantId) }
 ) {
     val plant = viewModel.state.collectAsState().value.plant
+    val photoPickerLauncher = rememberPhotoPickerLauncher { photo ->
+        photo?.let { viewModel.onEvent(EditPlantScreenEvent.UpdatePhoto(it)) }
+    }
 
     EditPlantScaffold(
         plant = plant,
         onTitleChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateName(it)) },
         onDescriptionChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateDescription(it)) },
         onSaveClick = { viewModel.onEvent(EditPlantScreenEvent.SavePlant) },
-        onWaterAmountChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateWaterAmount(it)) }
+        onWaterAmountChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateWaterAmount(it)) },
+        onPhotoButtonClick = { photoPickerLauncher() }
     )
     /*
     @Composable
