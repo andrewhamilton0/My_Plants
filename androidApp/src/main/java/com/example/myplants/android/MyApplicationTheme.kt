@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myplants.android.core.presentation.theme.Accent500
 
 @Composable
 fun MyApplicationTheme(
@@ -22,13 +23,13 @@ fun MyApplicationTheme(
 ) {
     val colors = if (darkTheme) {
         darkColors(
-            primary = Color(0xFFBB86FC),
+            primary = Accent500,
             primaryVariant = Color(0xFF3700B3),
             secondary = Color(0xFF03DAC5)
         )
     } else {
         lightColors(
-            primary = Color(0xFF6200EE),
+            primary = Accent500,
             primaryVariant = Color(0xFF3700B3),
             secondary = Color(0xFF03DAC5)
         )

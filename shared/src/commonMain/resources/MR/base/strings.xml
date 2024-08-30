@@ -31,4 +31,20 @@
     <string name="medium">Medium</string>
     <string name="large">Large</string>
     <string name="extra_large">Extra Large</string>
+    <string name="create_plant">Create a Plant</string>
+    <string name="save_changes">Save changes</string>
+    <string name="plant_name">Plant name</string>
+    <string name="dates">Dates</string>
+    <string name="add_image">Add Image</string>
+    <string name="time">Time</string>
+    <string name="water_amount">Water amount</string>
+    <string name="description">Description</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="plant_size">Plant Size</string>
 </resources>

@@ -2,10 +2,12 @@ package com.example.myplants.featureplant.presentation.plant.editplantscreen
 
 import com.example.myplants.featureplant.domain.PlantManagementService
 import com.example.myplants.featureplant.domain.plant.Photo
-import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,12 +18,14 @@ import kotlinx.datetime.LocalTime
 
 class EditPlantScreenViewModel(
     private val plantManagementService: PlantManagementService,
-    private val plantId: String?
+    private val plantId: String?,
+    private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
         EditPlantScreenState(
-            plant = Plant(
+            plant = UiEditPlantItem(
+                id = null,
                 name = "",
                 description = "",
                 waterAmount = "",
@@ -90,8 +94,8 @@ class EditPlantScreenViewModel(
                 if (state.value.plant.waterDays.isEmpty()) {
                     // TODO: Tell user to add at least one water day
                 } else {
-                    viewModelScope.launch(NonCancellable) {
-                        plantManagementService.upsertPlant(state.value.plant)
+                    viewModelScope.launch(dispatcherIO + NonCancellable) {
+                        plantManagementService.upsertPlant(state.value.plant.toPlant())
                     }
                 }
             }
@@ -144,7 +148,7 @@ class EditPlantScreenViewModel(
             plant?.let {
                 _state.update { state ->
                     state.copy(
-                        plant = plant
+                        plant = plant.toUiEditPlant()
                     )
                 }
             }

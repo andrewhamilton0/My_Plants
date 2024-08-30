@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -56,11 +55,14 @@ fun PlantListScreenTopBar(
                     fontStyle = FontStyle(R.font.poppins_semibold)
                 )
             }
+            //For when notification screen is setup
+            /*
             NotificationBellBtn(
                 onClick = onNotificationBellClick,
                 isNotifying = isNotificationBellNotifying,
                 modifier = Modifier.size(height * 0.63f)
             )
+             */
         }
     }
 }
