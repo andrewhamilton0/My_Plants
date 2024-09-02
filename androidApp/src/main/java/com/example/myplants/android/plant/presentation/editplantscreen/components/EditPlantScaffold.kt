@@ -1,7 +1,5 @@
 package com.example.myplants.android.plant.presentation.editplantscreen.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +32,9 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,11 +61,10 @@ import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.UiEditPlantItem
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.toJavaLocalTime
-import java.time.DayOfWeek
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditPlantScaffold(
     plant: UiEditPlantItem?,
@@ -74,7 +73,9 @@ fun EditPlantScaffold(
     onDescriptionChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     onPhotoButtonClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onPlantSizeChange: (PlantSize) -> Unit,
+    onDateChange: (Set<DayOfWeek>) -> Unit
 ) {
     val dateBoxTextStringId = remember(plant?.waterDays) {
         derivedStateOf {
@@ -107,9 +108,13 @@ fun EditPlantScaffold(
             }
         }
     }
+    // TODO Put in domain layer
     val titleMaxChar = 25
     val waterMaxChar = 7
     val descMaxChar = 250
+
+    val plantSizeDialogState = remember { mutableStateOf(PlantSizeDialogState(false)) }
+    val datesDialogState = remember { mutableStateOf(DatesDialogState(false)) }
 
     BoxWithConstraints(
         modifier = Modifier
@@ -257,7 +262,7 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { Unit }, // TODO
+                                onOpenDialogPress = { datesDialogState.value = DatesDialogState(true) },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -295,7 +300,7 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { Unit }, // TODO
+                                onOpenDialogPress = { plantSizeDialogState.value = PlantSizeDialogState(true) },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -357,6 +362,27 @@ fun EditPlantScaffold(
                 .height(screenHeight * 0.05f)
                 .align(Alignment.TopCenter)
         )
+
+        if (plantSizeDialogState.value.isVisible) {
+            PlantSizeDialog(
+                plantSize = plant?.plantSize,
+                onDismiss = { plantSizeDialogState.value = PlantSizeDialogState(false) },
+                onConfirm = {
+                    onPlantSizeChange(it)
+                    plantSizeDialogState.value = PlantSizeDialogState(false)
+                }
+            )
+        }
+        if (datesDialogState.value.isVisible) {
+            DatesDialog(
+                daysOfWeek = plant?.waterDays,
+                onDismiss = { datesDialogState.value = DatesDialogState(false) },
+                onConfirm = {
+                    onDateChange(it)
+                    datesDialogState.value = DatesDialogState(false)
+                }
+            )
+        }
     }
 }
 

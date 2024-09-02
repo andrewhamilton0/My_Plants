@@ -40,6 +40,8 @@ import com.example.myplants.android.core.presentation.theme.Neutrals0
 import com.example.myplants.android.core.presentation.theme.Neutrals500
 import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.AddFab
+import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.DeletePlantDialog
+import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.DeletePlantDialogState
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.PlantListFilterBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.PlantListScreenTopBar
 import com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents.PlantsGrid
@@ -56,7 +58,8 @@ fun PlantListScaffold(
     onBellClick: () -> Unit,
     onPlantFilterClick: (PlantListFilter) -> Unit,
     onPlantCardClick: (String, String) -> Unit,
-    onWaterButtonClick: (String) -> Unit
+    onWaterButtonClick: (String) -> Unit,
+    onDeletePlant: (String) -> Unit
 ) {
     BoxWithConstraints() {
         val width = maxWidth
@@ -64,6 +67,9 @@ fun PlantListScaffold(
         val isScrollingDown = remember { mutableStateOf(false) }
         val fabVisibility = remember(isScrollingDown.value, plantDbIsEmpty) {
             derivedStateOf { !plantDbIsEmpty && !isScrollingDown.value }
+        }
+        val deleteDialogState = remember {
+            mutableStateOf(DeletePlantDialogState(false, null, null))
         }
 
         Scaffold(
@@ -174,10 +180,23 @@ fun PlantListScaffold(
                                     onPlantCardClick(plantId, logId)
                                 },
                                 onWaterButtonClick = { onWaterButtonClick(it) },
-                                onIsScrollingDownStateChange = { isScrollingDown.value = it }
+                                onIsScrollingDownStateChange = { isScrollingDown.value = it },
+                                onCardLongClick = { id, name ->
+                                    deleteDialogState.value = DeletePlantDialogState(true, id, name)
+                                }
                             )
                         }
                     }
+                }
+                if (deleteDialogState.value.isVisible) {
+                    DeletePlantDialog(
+                        onDismiss = { deleteDialogState.value = DeletePlantDialogState(false, null, null) },
+                        onConfirm = {
+                            deleteDialogState.value.id?.let { onDeletePlant(it) }
+                            deleteDialogState.value = DeletePlantDialogState(false, null, null)
+                        },
+                        plantName = deleteDialogState.value.plantName ?: ""
+                    )
                 }
             }
         }
@@ -196,6 +215,7 @@ fun PlantListScaffoldPreview() {
         onPlantCardClick = { _, _ -> },
         onWaterButtonClick = { },
         onAddPlantClick = { },
-        plantDbIsEmpty = true
+        plantDbIsEmpty = true,
+        onDeletePlant = { }
     )
 }

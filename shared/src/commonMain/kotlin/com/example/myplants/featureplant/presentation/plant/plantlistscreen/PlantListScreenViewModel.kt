@@ -52,7 +52,7 @@ class PlantListScreenViewModel(
         when (event) {
             is PlantListScreenEvent.DeletePlant -> {
                 viewModelScope.launch(NonCancellable) {
-                    plantManagementService.deletePlant(event.plantId, event.photoKey)
+                    plantManagementService.deletePlant(event.plantId)
                 }
             }
             is PlantListScreenEvent.TogglePlantListFilter -> {

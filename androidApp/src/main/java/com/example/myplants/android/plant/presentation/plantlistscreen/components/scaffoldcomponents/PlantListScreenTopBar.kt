@@ -55,7 +55,7 @@ fun PlantListScreenTopBar(
                     fontStyle = FontStyle(R.font.poppins_semibold)
                 )
             }
-            //For when notification screen is setup
+            // For when notification screen is setup
             /*
             NotificationBellBtn(
                 onClick = onNotificationBellClick,

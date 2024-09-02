@@ -21,6 +21,7 @@ import com.example.myplants.featureplant.presentation.plant.plantlistscreen.UiPl
 fun PlantsGrid(
     plants: List<UiPlantListItem>,
     onCardClick: (String, String) -> Unit,
+    onCardLongClick: (String, String) -> Unit,
     onWaterButtonClick: (String) -> Unit,
     onIsScrollingDownStateChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -57,7 +58,8 @@ fun PlantsGrid(
                 PlantItemHolder(
                     plant = plant,
                     onCardClick = { onCardClick(plant.plantId, plant.logId) },
-                    onWaterButtonClick = { onWaterButtonClick(plant.logId) }
+                    onWaterButtonClick = { onWaterButtonClick(plant.logId) },
+                    onCardLongClick = { onCardLongClick(plant.plantId, plant.name) }
                 )
             }
         }

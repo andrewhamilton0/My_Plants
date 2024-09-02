@@ -6,5 +6,5 @@ interface PlantRepository {
     suspend fun upsertPlant(plant: Plant)
     fun getPlants(): Flow<List<Plant>>
     fun getPlant(plantId: String): Flow<Plant?>
-    suspend fun deletePlant(plantId: String, photoKey: String?)
+    suspend fun deletePlant(plantId: String)
 }
