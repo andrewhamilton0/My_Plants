@@ -33,6 +33,7 @@ fun EditPlantScreen(
         onPhotoButtonClick = { photoPickerLauncher() },
         onBackClick = { navController.popBackStack() },
         onPlantSizeChange = { viewModel.onEvent(EditPlantScreenEvent.UpdatePlantSize(it)) },
-        onDateChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateWaterDays(it)) }
+        onDateChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateWaterDays(it)) },
+        onTimeChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateTime(it)) }
     )
 }

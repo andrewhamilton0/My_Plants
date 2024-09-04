@@ -32,6 +32,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,8 +62,11 @@ import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.UiEditPlantItem
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.toJavaLocalTime
+import kotlinx.datetime.toKotlinLocalTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -75,7 +79,8 @@ fun EditPlantScaffold(
     onPhotoButtonClick: () -> Unit,
     onBackClick: () -> Unit,
     onPlantSizeChange: (PlantSize) -> Unit,
-    onDateChange: (Set<DayOfWeek>) -> Unit
+    onDateChange: (Set<DayOfWeek>) -> Unit,
+    onTimeChange: (kotlinx.datetime.LocalTime) -> Unit
 ) {
     val dateBoxTextStringId = remember(plant?.waterDays) {
         derivedStateOf {
@@ -113,8 +118,9 @@ fun EditPlantScaffold(
     val waterMaxChar = 7
     val descMaxChar = 250
 
-    val plantSizeDialogState = remember { mutableStateOf(PlantSizeDialogState(false)) }
-    val datesDialogState = remember { mutableStateOf(DatesDialogState(false)) }
+    var plantSizeDialogState by remember { mutableStateOf(PlantSizeDialogState(false)) }
+    var datesDialogState by remember { mutableStateOf(DatesDialogState(false)) }
+    val timeDialogState = rememberMaterialDialogState()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -262,7 +268,7 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { datesDialogState.value = DatesDialogState(true) },
+                                onOpenDialogPress = { datesDialogState = DatesDialogState(true) },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -272,7 +278,9 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { Unit }, // TODO
+                                onOpenDialogPress = {
+
+                                },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -300,7 +308,7 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { plantSizeDialogState.value = PlantSizeDialogState(true) },
+                                onOpenDialogPress = { plantSizeDialogState= PlantSizeDialogState(true) },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -363,26 +371,33 @@ fun EditPlantScaffold(
                 .align(Alignment.TopCenter)
         )
 
-        if (plantSizeDialogState.value.isVisible) {
+        if (plantSizeDialogState.isVisible) {
             PlantSizeDialog(
                 plantSize = plant?.plantSize,
-                onDismiss = { plantSizeDialogState.value = PlantSizeDialogState(false) },
+                onDismiss = { plantSizeDialogState = PlantSizeDialogState(false) },
                 onConfirm = {
                     onPlantSizeChange(it)
-                    plantSizeDialogState.value = PlantSizeDialogState(false)
+                    plantSizeDialogState = PlantSizeDialogState(false)
                 }
             )
         }
-        if (datesDialogState.value.isVisible) {
+        if (datesDialogState.isVisible) {
             DatesDialog(
                 daysOfWeek = plant?.waterDays,
-                onDismiss = { datesDialogState.value = DatesDialogState(false) },
+                onDismiss = { datesDialogState = DatesDialogState(false) },
                 onConfirm = {
                     onDateChange(it)
-                    datesDialogState.value = DatesDialogState(false)
+                    datesDialogState = DatesDialogState(false)
                 }
             )
         }
+        TimePicker(
+            initialTime = plant?.waterTime?.toJavaLocalTime() ?: LocalTime.NOON,
+            timeDialogState = timeDialogState,
+            onTimePicked = {
+                onTimeChange(it.toKotlinLocalTime())
+            }
+        )
     }
 }
 
@@ -393,8 +408,8 @@ private fun PlantDetailEditBox(
     hasArrow: Boolean,
     screenHeight: Dp,
     screenWidth: Dp,
-    maxChars: Int = 100,
     modifier: Modifier = Modifier,
+    maxChars: Int = 100,
     isSingleLine: Boolean = true,
     onTextValueChange: (String) -> Unit,
     onOpenDialogPress: () -> Unit
@@ -452,10 +467,9 @@ private fun GreyBox(
     onTextValueChange: (String) -> Unit,
     onOpenDialogPress: () -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = modifier
     ) {
-        val height = maxHeight
         val horizontalTextPadding = if (hasArrow) screenWidth * 0.04f else screenWidth * 0.01f
         val scrollState = rememberScrollState()
         val boxModifier = if (isSingleLine) {

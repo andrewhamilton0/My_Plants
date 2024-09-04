@@ -79,6 +79,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.navigation:navigation-compose:2.8.0-beta03")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.profileinstaller:profileinstaller:1.3.1")
