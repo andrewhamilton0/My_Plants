@@ -8,6 +8,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,8 +31,13 @@ fun AddFab(
         modifier = modifier
     ) {
         val height = maxHeight
+        var enabled by remember { mutableStateOf(true) }
         IconButton(
-            onClick = onClick,
+            enabled = enabled,
+            onClick = {
+                enabled = false
+                onClick()
+            },
             modifier = modifier
                 .clip(RoundedCornerShape(height * 0.31f))
                 .background(color = Accent500)

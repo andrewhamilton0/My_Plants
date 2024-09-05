@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import com.example.myplants.android.core.presentation.util.rememberPhotoPickerLauncher
 import com.example.myplants.android.plant.presentation.editplantscreen.components.EditPlantScaffold
+import com.example.myplants.android.plant.presentation.util.Screens
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenEvent
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.EditPlantScreenViewModel
 import org.koin.androidx.compose.getViewModel
@@ -27,7 +28,7 @@ fun EditPlantScreen(
         onDescriptionChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateDescription(it)) },
         onSaveClick = {
             viewModel.onEvent(EditPlantScreenEvent.SavePlant)
-            navController.popBackStack()
+            navController.popBackStack(Screens.PlantList, false)
         },
         onWaterAmountChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateWaterAmount(it)) },
         onPhotoButtonClick = { photoPickerLauncher() },

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +34,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,6 +50,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -98,8 +101,8 @@ fun EditPlantScaffold(
     }
     val timeText = remember(plant?.waterTime) {
         derivedStateOf {
-            val time = plant?.waterTime?.toJavaLocalTime()
-            time?.format(DateTimeFormatter.ISO_TIME) ?: ""
+            val time = plant?.waterTime?.toJavaLocalTime() ?: LocalTime.NOON
+            DateTimeFormatter.ofPattern("hh:mm a").format(time)
         }
     }
     val plantSizeTextStringId = remember(plant?.plantSize) {
@@ -177,8 +180,8 @@ fun EditPlantScaffold(
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
+                    .height(screenHeight * 0.05f)
                     .fillMaxWidth()
-                    .wrapContentHeight()
                     .constrainAs(changeImageBox) {
                         bottom.linkTo(bottomBox.top, margin = screenHeight * 0.02f)
                     }
@@ -188,23 +191,29 @@ fun EditPlantScaffold(
                     modifier = Modifier
                         .clip(RoundedCornerShape(screenHeight * 0.01f))
                         .background(color = Accent500)
-                        .width(screenWidth * 0.33f)
-                        .height(screenHeight * 0.05f)
-                        .padding(horizontal = screenWidth * 0.03f, vertical = screenHeight * 0.01f)
+                        .wrapContentWidth()
+                        .fillMaxHeight()
+                        .padding(horizontal = 13.dp, vertical = screenHeight * 0.01f)
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceAround,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxHeight().wrapContentWidth()
                     ) {
+                        val imageTextId by remember(plant?.photo) {
+                            val photoAdded = plant?.photo != null
+                            val textResource = if (photoAdded) SharedRes.strings.change_image else SharedRes.strings.add_image
+                            mutableIntStateOf(textResource.resourceId)
+                        }
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_upload),
-                            contentDescription = null, // TODO
+                            contentDescription = stringResource(imageTextId),
                             tint = Neutrals0,
                             modifier = Modifier.size(screenHeight * 0.025f)
                         )
+                        Spacer(Modifier.width(5.dp))
                         Text(
-                            text = stringResource(SharedRes.strings.add_image.resourceId),
+                            text = stringResource(imageTextId),
                             color = Neutrals0,
                             fontWeight = FontWeight(500),
                             fontStyle = FontStyle(R.font.poppins_medium),
@@ -279,7 +288,7 @@ fun EditPlantScaffold(
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
                                 onOpenDialogPress = {
-
+                                    timeDialogState.show()
                                 },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
@@ -308,7 +317,7 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { plantSizeDialogState= PlantSizeDialogState(true) },
+                                onOpenDialogPress = { plantSizeDialogState = PlantSizeDialogState(true) },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -414,10 +423,9 @@ private fun PlantDetailEditBox(
     onTextValueChange: (String) -> Unit,
     onOpenDialogPress: () -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = modifier
     ) {
-        val height = maxHeight
         val roundedCornerShape = RoundedCornerShape(screenHeight * 0.012f)
         val scaleFactor = (screenHeight.value / 792f).coerceIn(0.5f, 1.5f)
         val fontSize = 14 * scaleFactor
@@ -536,7 +544,8 @@ private fun GreyBox(
                         colors = TextFieldDefaults.textFieldColors(
                             cursorColor = Accent500,
                             focusedIndicatorColor = Color.Transparent,
-                            unfocusedLabelColor = Color.Transparent
+                            unfocusedLabelColor = Color.Transparent,
+                            backgroundColor = Color.Transparent
                         )
                     )
                 }
@@ -560,8 +569,13 @@ private fun BackButton(
         ) {
             val shape = CircleShape
             val color = Neutrals0
+            var enabled by remember { mutableStateOf(true) }
             IconButton(
-                onClick = { onBackButtonClick() },
+                enabled = enabled,
+                onClick = {
+                    enabled = false
+                    onBackButtonClick()
+                },
                 modifier = Modifier
                     .clip(shape)
                     .size(height)
