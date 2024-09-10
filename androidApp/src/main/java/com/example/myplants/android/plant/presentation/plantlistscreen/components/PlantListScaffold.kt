@@ -20,8 +20,10 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,6 +66,7 @@ fun PlantListScaffold(
     BoxWithConstraints() {
         val width = maxWidth
         val height = maxHeight
+        var buttonsEnabled by remember { mutableStateOf(true) }
         val isScrollingDown = remember { mutableStateOf(false) }
         val fabVisibility = remember(isScrollingDown.value, plantDbIsEmpty) {
             derivedStateOf { !plantDbIsEmpty && !isScrollingDown.value }
@@ -154,7 +157,11 @@ fun PlantListScaffold(
                                     )
                                     Spacer(modifier = Modifier.height(height * 0.03f))
                                     IconButton(
-                                        onClick = { onAddPlantClick() },
+                                        enabled = buttonsEnabled,
+                                        onClick = {
+                                            buttonsEnabled = false
+                                            onAddPlantClick()
+                                        },
                                         modifier = Modifier
                                             .clip(RoundedCornerShape(height * 0.015f))
                                             .background(color = Accent500)

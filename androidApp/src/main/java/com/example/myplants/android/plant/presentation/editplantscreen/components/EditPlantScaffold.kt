@@ -85,6 +85,7 @@ fun EditPlantScaffold(
     onDateChange: (Set<DayOfWeek>) -> Unit,
     onTimeChange: (kotlinx.datetime.LocalTime) -> Unit
 ) {
+    var buttonsEnabled by remember { mutableStateOf(true) }
     val dateBoxTextStringId = remember(plant?.waterDays) {
         derivedStateOf {
             when (plant?.waterDays?.firstOrNull()) {
@@ -347,8 +348,12 @@ fun EditPlantScaffold(
                             stringResource(SharedRes.strings.save_changes.resourceId)
                         }
                         IconButton(
-                            onClick = { onSaveClick() },
-                            Modifier
+                            enabled = buttonsEnabled,
+                            onClick = {
+                                buttonsEnabled = false
+                                onSaveClick()
+                            },
+                            modifier = Modifier
                                 .clip(RoundedCornerShape(screenHeight * 0.012f))
                                 .fillMaxWidth()
                                 .height(screenHeight * 0.06f)
@@ -368,7 +373,10 @@ fun EditPlantScaffold(
             }
         }
         BackButton(
-            onBackButtonClick = { onBackClick() },
+            onBackButtonClick = {
+                buttonsEnabled = false
+                onBackClick()
+            },
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.systemBars)
                 .padding(

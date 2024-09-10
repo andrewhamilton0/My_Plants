@@ -86,6 +86,7 @@ class PlantManagementServiceImpl(
 
     override suspend fun deletePlant(plantId: String) {
         deleteAllAlarmsOfPlant(plantId)
+        waterLogRepository.deleteAllWaterLogOfPlant(plantId)
         plantRepository.deletePlant(plantId)
     }
 
