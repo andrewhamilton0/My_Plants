@@ -1,6 +1,7 @@
 package com.example.myplants.android.plant.presentation.plantlistscreen.components.scaffoldcomponents
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,11 +22,13 @@ import kotlinx.datetime.toJavaLocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlantItemHolder(
     plant: UiPlantListItem,
     onWaterButtonClick: () -> Unit,
     onCardClick: () -> Unit,
+    onCardLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val locale = Locale.getDefault()
@@ -47,8 +50,11 @@ fun PlantItemHolder(
     }
     Card(
         modifier = modifier
-            .clickable { onCardClick() }
             .testTag("plant_card")
+            .combinedClickable(
+                onClick = { onCardClick() },
+                onLongClick = { onCardLongClick() }
+            )
     ) {
         Column {
             PlantImageBox(

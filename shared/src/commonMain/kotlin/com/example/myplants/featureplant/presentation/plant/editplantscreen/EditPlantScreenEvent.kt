@@ -6,8 +6,7 @@ import kotlinx.datetime.LocalTime
 
 sealed class EditPlantScreenEvent {
     data class UpdateName(val name: String) : EditPlantScreenEvent()
-    data class AddWaterDay(val waterDay: DayOfWeek) : EditPlantScreenEvent()
-    data class RemoveWaterDay(val waterDay: DayOfWeek) : EditPlantScreenEvent()
+    data class UpdateWaterDays(val waterDays: Set<DayOfWeek>) : EditPlantScreenEvent()
     data class UpdateTime(val time: LocalTime) : EditPlantScreenEvent()
     data class UpdateWaterAmount(val waterAmount: String) : EditPlantScreenEvent()
     data class UpdatePlantSize(val plantSize: PlantSize) : EditPlantScreenEvent()

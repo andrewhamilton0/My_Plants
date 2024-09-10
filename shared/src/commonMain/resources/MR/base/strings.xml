@@ -47,4 +47,11 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
     <string name="plant_size">Plant Size</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="delete_dialog">Do you really want to delete "%1$s"? This process cannot be undone. </string>
+    <string name="cancel">Cancel</string>
+    <string name="got_it">Got it</string>
+    <string name="everyday">Everyday</string>
+    <string name="change_image">Change Image</string>
+    <string name="pick_a_time">Pick A Time</string>
 </resources>

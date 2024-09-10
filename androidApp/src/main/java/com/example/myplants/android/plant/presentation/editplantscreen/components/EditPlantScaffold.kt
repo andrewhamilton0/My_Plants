@@ -1,7 +1,5 @@
 package com.example.myplants.android.plant.presentation.editplantscreen.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +21,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +33,11 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +50,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -61,11 +65,13 @@ import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.UiEditPlantItem
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.toJavaLocalTime
-import java.time.DayOfWeek
+import kotlinx.datetime.toKotlinLocalTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditPlantScaffold(
     plant: UiEditPlantItem?,
@@ -74,7 +80,10 @@ fun EditPlantScaffold(
     onDescriptionChange: (String) -> Unit,
     onSaveClick: () -> Unit,
     onPhotoButtonClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onPlantSizeChange: (PlantSize) -> Unit,
+    onDateChange: (Set<DayOfWeek>) -> Unit,
+    onTimeChange: (kotlinx.datetime.LocalTime) -> Unit
 ) {
     val dateBoxTextStringId = remember(plant?.waterDays) {
         derivedStateOf {
@@ -92,8 +101,8 @@ fun EditPlantScaffold(
     }
     val timeText = remember(plant?.waterTime) {
         derivedStateOf {
-            val time = plant?.waterTime?.toJavaLocalTime()
-            time?.format(DateTimeFormatter.ISO_TIME) ?: ""
+            val time = plant?.waterTime?.toJavaLocalTime() ?: LocalTime.NOON
+            DateTimeFormatter.ofPattern("hh:mm a").format(time)
         }
     }
     val plantSizeTextStringId = remember(plant?.plantSize) {
@@ -107,9 +116,14 @@ fun EditPlantScaffold(
             }
         }
     }
+    // TODO Put in domain layer
     val titleMaxChar = 25
     val waterMaxChar = 7
     val descMaxChar = 250
+
+    var plantSizeDialogState by remember { mutableStateOf(PlantSizeDialogState(false)) }
+    var datesDialogState by remember { mutableStateOf(DatesDialogState(false)) }
+    val timeDialogState = rememberMaterialDialogState()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -166,8 +180,8 @@ fun EditPlantScaffold(
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
+                    .height(screenHeight * 0.05f)
                     .fillMaxWidth()
-                    .wrapContentHeight()
                     .constrainAs(changeImageBox) {
                         bottom.linkTo(bottomBox.top, margin = screenHeight * 0.02f)
                     }
@@ -177,23 +191,29 @@ fun EditPlantScaffold(
                     modifier = Modifier
                         .clip(RoundedCornerShape(screenHeight * 0.01f))
                         .background(color = Accent500)
-                        .width(screenWidth * 0.33f)
-                        .height(screenHeight * 0.05f)
-                        .padding(horizontal = screenWidth * 0.03f, vertical = screenHeight * 0.01f)
+                        .wrapContentWidth()
+                        .fillMaxHeight()
+                        .padding(horizontal = 13.dp, vertical = screenHeight * 0.01f)
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceAround,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxHeight().wrapContentWidth()
                     ) {
+                        val imageTextId by remember(plant?.photo) {
+                            val photoAdded = plant?.photo != null
+                            val textResource = if (photoAdded) SharedRes.strings.change_image else SharedRes.strings.add_image
+                            mutableIntStateOf(textResource.resourceId)
+                        }
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_upload),
-                            contentDescription = null, // TODO
+                            contentDescription = stringResource(imageTextId),
                             tint = Neutrals0,
                             modifier = Modifier.size(screenHeight * 0.025f)
                         )
+                        Spacer(Modifier.width(5.dp))
                         Text(
-                            text = stringResource(SharedRes.strings.add_image.resourceId),
+                            text = stringResource(imageTextId),
                             color = Neutrals0,
                             fontWeight = FontWeight(500),
                             fontStyle = FontStyle(R.font.poppins_medium),
@@ -257,7 +277,7 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { Unit }, // TODO
+                                onOpenDialogPress = { datesDialogState = DatesDialogState(true) },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -267,7 +287,9 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { Unit }, // TODO
+                                onOpenDialogPress = {
+                                    timeDialogState.show()
+                                },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -295,7 +317,7 @@ fun EditPlantScaffold(
                                 hasArrow = true,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                onOpenDialogPress = { Unit }, // TODO
+                                onOpenDialogPress = { plantSizeDialogState = PlantSizeDialogState(true) },
                                 onTextValueChange = { },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
                             )
@@ -357,6 +379,34 @@ fun EditPlantScaffold(
                 .height(screenHeight * 0.05f)
                 .align(Alignment.TopCenter)
         )
+
+        if (plantSizeDialogState.isVisible) {
+            PlantSizeDialog(
+                plantSize = plant?.plantSize,
+                onDismiss = { plantSizeDialogState = PlantSizeDialogState(false) },
+                onConfirm = {
+                    onPlantSizeChange(it)
+                    plantSizeDialogState = PlantSizeDialogState(false)
+                }
+            )
+        }
+        if (datesDialogState.isVisible) {
+            DatesDialog(
+                daysOfWeek = plant?.waterDays,
+                onDismiss = { datesDialogState = DatesDialogState(false) },
+                onConfirm = {
+                    onDateChange(it)
+                    datesDialogState = DatesDialogState(false)
+                }
+            )
+        }
+        TimePicker(
+            initialTime = plant?.waterTime?.toJavaLocalTime() ?: LocalTime.NOON,
+            timeDialogState = timeDialogState,
+            onTimePicked = {
+                onTimeChange(it.toKotlinLocalTime())
+            }
+        )
     }
 }
 
@@ -367,16 +417,15 @@ private fun PlantDetailEditBox(
     hasArrow: Boolean,
     screenHeight: Dp,
     screenWidth: Dp,
-    maxChars: Int = 100,
     modifier: Modifier = Modifier,
+    maxChars: Int = 100,
     isSingleLine: Boolean = true,
     onTextValueChange: (String) -> Unit,
     onOpenDialogPress: () -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = modifier
     ) {
-        val height = maxHeight
         val roundedCornerShape = RoundedCornerShape(screenHeight * 0.012f)
         val scaleFactor = (screenHeight.value / 792f).coerceIn(0.5f, 1.5f)
         val fontSize = 14 * scaleFactor
@@ -426,10 +475,9 @@ private fun GreyBox(
     onTextValueChange: (String) -> Unit,
     onOpenDialogPress: () -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = modifier
     ) {
-        val height = maxHeight
         val horizontalTextPadding = if (hasArrow) screenWidth * 0.04f else screenWidth * 0.01f
         val scrollState = rememberScrollState()
         val boxModifier = if (isSingleLine) {
@@ -496,7 +544,8 @@ private fun GreyBox(
                         colors = TextFieldDefaults.textFieldColors(
                             cursorColor = Accent500,
                             focusedIndicatorColor = Color.Transparent,
-                            unfocusedLabelColor = Color.Transparent
+                            unfocusedLabelColor = Color.Transparent,
+                            backgroundColor = Color.Transparent
                         )
                     )
                 }
@@ -520,8 +569,13 @@ private fun BackButton(
         ) {
             val shape = CircleShape
             val color = Neutrals0
+            var enabled by remember { mutableStateOf(true) }
             IconButton(
-                onClick = { onBackButtonClick() },
+                enabled = enabled,
+                onClick = {
+                    enabled = false
+                    onBackButtonClick()
+                },
                 modifier = Modifier
                     .clip(shape)
                     .size(height)

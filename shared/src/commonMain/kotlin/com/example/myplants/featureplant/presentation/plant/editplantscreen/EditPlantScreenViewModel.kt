@@ -100,26 +100,6 @@ class EditPlantScreenViewModel(
                 }
             }
 
-            is EditPlantScreenEvent.AddWaterDay -> {
-                _state.update { state ->
-                    state.copy(
-                        plant = state.plant.copy(
-                            waterDays = state.plant.waterDays.plus(event.waterDay)
-                        )
-                    )
-                }
-            }
-
-            is EditPlantScreenEvent.RemoveWaterDay -> {
-                _state.update { state ->
-                    state.copy(
-                        plant = state.plant.copy(
-                            waterDays = state.plant.waterDays.minus(event.waterDay)
-                        )
-                    )
-                }
-            }
-
             is EditPlantScreenEvent.UpdatePhoto -> {
                 _state.update { state ->
                     if (state.plant.photo == null) {
@@ -137,6 +117,16 @@ class EditPlantScreenViewModel(
                             )
                         )
                     }
+                }
+            }
+
+            is EditPlantScreenEvent.UpdateWaterDays -> {
+                _state.update { state ->
+                    state.copy(
+                        plant = state.plant.copy(
+                            waterDays = event.waterDays
+                        )
+                    )
                 }
             }
         }

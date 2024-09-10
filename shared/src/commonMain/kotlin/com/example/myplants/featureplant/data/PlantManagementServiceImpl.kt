@@ -84,9 +84,9 @@ class PlantManagementServiceImpl(
         syncWaterAlarms()
     }
 
-    override suspend fun deletePlant(plantId: String, photoKey: String?) {
+    override suspend fun deletePlant(plantId: String) {
         deleteAllAlarmsOfPlant(plantId)
-        plantRepository.deletePlant(plantId, photoKey)
+        plantRepository.deletePlant(plantId)
     }
 
     override suspend fun toggleWater(logId: String) {

@@ -6,6 +6,7 @@ import com.example.myplants.featureplant.domain.plant.Plant
 import com.example.myplants.featureplant.domain.plant.PlantDataSource
 import com.example.myplants.featureplant.domain.plant.PlantRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapLatest
 
 class PlantRepositoryImpl(
@@ -37,7 +38,8 @@ class PlantRepositoryImpl(
         }
     }
 
-    override suspend fun deletePlant(plantId: String, photoKey: String?) {
+    override suspend fun deletePlant(plantId: String) {
+        val photoKey = getPlant(plantId).firstOrNull()?.photo?.key
         plantDataSource.deletePlant(plantId)
         photoKey?.let { deletePhoto(it) }
     }
