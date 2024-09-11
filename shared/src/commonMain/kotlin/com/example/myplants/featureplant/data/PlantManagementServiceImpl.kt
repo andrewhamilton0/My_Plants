@@ -85,9 +85,11 @@ class PlantManagementServiceImpl(
     }
 
     override suspend fun deletePlant(plantId: String) {
-        deleteAllAlarmsOfPlant(plantId)
-        waterLogRepository.deleteAllWaterLogOfPlant(plantId)
-        plantRepository.deletePlant(plantId)
+        manipulateWaterLogsMutex.withLock {
+            deleteAllAlarmsOfPlant(plantId)
+            waterLogRepository.deleteAllWaterLogOfPlant(plantId)
+            plantRepository.deletePlant(plantId)
+        }
     }
 
     override suspend fun toggleWater(logId: String) {
@@ -101,9 +103,8 @@ class PlantManagementServiceImpl(
     }
 
     // TODO IMPLEMENT THIS TO GENERATE AT THE START OF EVERYDAY
-    private val generateUpcomingMutex = Mutex()
     override suspend fun generateUpcomingWaterLogs() {
-        generateUpcomingMutex.withLock {
+        manipulateWaterLogsMutex.withLock {
             val plants = plantRepository.getPlants().first()
             val logs = waterLogRepository.getAllWaterLogs().first()
             val currentDate = currentDate.first()
@@ -127,7 +128,6 @@ class PlantManagementServiceImpl(
             }
         }
     }
-    private val syncWaterAlarmMutex = Mutex()
     override suspend fun syncWaterAlarms() {
         syncWaterAlarmMutex.withLock {
             getUpcomingPlants().first().forEach {
@@ -179,4 +179,7 @@ class PlantManagementServiceImpl(
         val notificationChannelPair = Pair("notification_channel", notificationChannel)
         return arrayOf(plantPair, waterLogPair, notificationChannelPair)
     }
+
+    private val syncWaterAlarmMutex = Mutex()
+    private val manipulateWaterLogsMutex = Mutex()
 }
