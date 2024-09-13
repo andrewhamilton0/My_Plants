@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.myplants.android.MainActivity
 import com.example.myplants.android.R
@@ -22,12 +21,10 @@ class NotificationHelper(private val context: Context) {
         descriptionText: String? = null,
         importance: Int = NotificationManager.IMPORTANCE_DEFAULT
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, name, importance).apply {
-                descriptionText?.let { description = it }
-            }
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel(channelId, name, importance).apply {
+            descriptionText?.let { description = it }
         }
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun showNotification(

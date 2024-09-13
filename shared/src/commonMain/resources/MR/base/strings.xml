@@ -54,4 +54,6 @@
     <string name="everyday">Everyday</string>
     <string name="change_image">Change Image</string>
     <string name="pick_a_time">Pick A Time</string>
+    <string name="fill_out_fields">Please fill out all available fields</string>
+    <string name="app_name">My Plants</string>
 </resources>
