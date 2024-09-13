@@ -1,5 +1,11 @@
 package com.example.myplants.android.plant.presentation.editplantscreen.components
 
+import android.Manifest
+import android.content.Context
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +50,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -63,6 +71,7 @@ import com.example.myplants.android.core.presentation.theme.Neutrals100
 import com.example.myplants.android.core.presentation.theme.Neutrals500
 import com.example.myplants.android.core.presentation.theme.Neutrals900
 import com.example.myplants.android.core.presentation.theme.OtherG100
+import com.example.myplants.featureplant.domain.plant.PlantDetailsMaxCharacters
 import com.example.myplants.featureplant.domain.plant.PlantSize
 import com.example.myplants.featureplant.presentation.plant.editplantscreen.UiEditPlantItem
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -75,6 +84,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun EditPlantScaffold(
     plant: UiEditPlantItem?,
+    allRequiredFieldsFilled: Boolean,
     onTitleChange: (String) -> Unit,
     onWaterAmountChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -85,6 +95,8 @@ fun EditPlantScaffold(
     onDateChange: (Set<DayOfWeek>) -> Unit,
     onTimeChange: (kotlinx.datetime.LocalTime) -> Unit
 ) {
+    var buttonsEnabled by remember { mutableStateOf(true) }
+    val focusManager = LocalFocusManager.current
     val dateBoxTextStringId = remember(plant?.waterDays) {
         derivedStateOf {
             when (plant?.waterDays?.firstOrNull()) {
@@ -116,23 +128,26 @@ fun EditPlantScaffold(
             }
         }
     }
-    // TODO Put in domain layer
-    val titleMaxChar = 25
-    val waterMaxChar = 7
-    val descMaxChar = 250
 
     var plantSizeDialogState by remember { mutableStateOf(PlantSizeDialogState(false)) }
     var datesDialogState by remember { mutableStateOf(DatesDialogState(false)) }
     val timeDialogState = rememberMaterialDialogState()
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) {
+        Unit
+    }
 
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
+            .clickable { focusManager.clearFocus() }
     ) {
         val screenHeight = maxHeight
         val screenWidth = maxWidth
         val screenHorizontalPadding = screenWidth * 0.07f
         val scaleFactor = (screenHeight.value / 792f).coerceIn(0.5f, 1.5f)
+        val context = LocalContext.current
 
         ConstraintLayout(
             modifier = Modifier
@@ -187,7 +202,10 @@ fun EditPlantScaffold(
                     }
             ) {
                 IconButton(
-                    onClick = { onPhotoButtonClick() },
+                    onClick = {
+                        focusManager.clearFocus()
+                        onPhotoButtonClick()
+                    },
                     modifier = Modifier
                         .clip(RoundedCornerShape(screenHeight * 0.01f))
                         .background(color = Accent500)
@@ -258,7 +276,7 @@ fun EditPlantScaffold(
                             hasArrow = false,
                             screenHeight = screenHeight,
                             screenWidth = screenWidth,
-                            maxChars = titleMaxChar,
+                            maxChars = PlantDetailsMaxCharacters.NAME_MAX_CHARS,
                             onOpenDialogPress = { },
                             onTextValueChange = { onTitleChange(it) },
                             modifier = Modifier
@@ -305,7 +323,7 @@ fun EditPlantScaffold(
                                 hasArrow = false,
                                 screenHeight = screenHeight,
                                 screenWidth = screenWidth,
-                                maxChars = waterMaxChar,
+                                maxChars = PlantDetailsMaxCharacters.WATER_AMT_MAX_CHARS,
                                 onOpenDialogPress = { },
                                 onTextValueChange = { onWaterAmountChange(it) },
                                 modifier = Modifier.width(boxWidth * 0.48f).fillMaxHeight()
@@ -331,7 +349,7 @@ fun EditPlantScaffold(
                             isSingleLine = false,
                             screenHeight = screenHeight,
                             screenWidth = screenWidth,
-                            maxChars = descMaxChar,
+                            maxChars = PlantDetailsMaxCharacters.DESCRIPTION_MAX_CHARS,
                             onOpenDialogPress = { },
                             onTextValueChange = { onDescriptionChange(it) },
                             modifier = Modifier
@@ -347,8 +365,19 @@ fun EditPlantScaffold(
                             stringResource(SharedRes.strings.save_changes.resourceId)
                         }
                         IconButton(
-                            onClick = { onSaveClick() },
-                            Modifier
+                            enabled = buttonsEnabled,
+                            onClick = {
+                                if (allRequiredFieldsFilled) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    }
+                                    buttonsEnabled = false
+                                    onSaveClick()
+                                } else {
+                                    showToast(SharedRes.strings.fill_out_fields.getString(context), context)
+                                }
+                            },
+                            modifier = Modifier
                                 .clip(RoundedCornerShape(screenHeight * 0.012f))
                                 .fillMaxWidth()
                                 .height(screenHeight * 0.06f)
@@ -368,7 +397,10 @@ fun EditPlantScaffold(
             }
         }
         BackButton(
-            onBackButtonClick = { onBackClick() },
+            onBackButtonClick = {
+                buttonsEnabled = false
+                onBackClick()
+            },
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.systemBars)
                 .padding(
@@ -475,6 +507,7 @@ private fun GreyBox(
     onTextValueChange: (String) -> Unit,
     onOpenDialogPress: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Box(
         modifier = modifier
     ) {
@@ -506,7 +539,10 @@ private fun GreyBox(
                     .fillMaxWidth()
                     .padding(horizontal = horizontalTextPadding)
                     .clickable {
-                        if (hasArrow) { onOpenDialogPress() }
+                        if (hasArrow) {
+                            focusManager.clearFocus()
+                            onOpenDialogPress()
+                        }
                     }
             ) {
                 if (hasArrow) {
@@ -591,4 +627,8 @@ private fun BackButton(
             }
         }
     }
+}
+
+fun showToast(message: String, context: Context) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }

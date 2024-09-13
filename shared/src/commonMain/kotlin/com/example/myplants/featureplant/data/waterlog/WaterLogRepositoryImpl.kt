@@ -31,6 +31,10 @@ class WaterLogRepositoryImpl(
         waterLogDataSource.deleteWaterLog(waterLogId)
     }
 
+    override suspend fun deleteAllWaterLogOfPlant(plantId: String) {
+        waterLogDataSource.deleteWaterLogsOfPlantId(plantId)
+    }
+
     override suspend fun toggleWater(waterLogId: String) {
         val log = getWaterLog(waterLogId).first()
         log?.let {

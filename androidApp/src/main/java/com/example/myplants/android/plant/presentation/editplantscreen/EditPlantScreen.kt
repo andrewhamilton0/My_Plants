@@ -18,12 +18,14 @@ fun EditPlantScreen(
     viewModel: EditPlantScreenViewModel = getViewModel { parametersOf(plantId) }
 ) {
     val plant = viewModel.state.collectAsState().value.plant
+    val allFieldsRequiredFilled = viewModel.state.collectAsState().value.allFieldsRequiredFilled
     val photoPickerLauncher = rememberPhotoPickerLauncher { photo ->
         photo?.let { viewModel.onEvent(EditPlantScreenEvent.UpdatePhoto(it)) }
     }
 
     EditPlantScaffold(
         plant = plant,
+        allRequiredFieldsFilled = allFieldsRequiredFilled,
         onTitleChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateName(it)) },
         onDescriptionChange = { viewModel.onEvent(EditPlantScreenEvent.UpdateDescription(it)) },
         onSaveClick = {

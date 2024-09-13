@@ -25,3 +25,7 @@ VALUES (?,?,?,?);
 deleteWaterLogById:
 DELETE FROM waterLogEntity
 WHERE id = ?;
+
+deleteWaterLogByPlantId:
+DELETE FROM waterLogEntity
+WHERE plantId = ?;

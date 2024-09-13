@@ -40,8 +40,8 @@ class PlantRepositoryImpl(
 
     override suspend fun deletePlant(plantId: String) {
         val photoKey = getPlant(plantId).firstOrNull()?.photo?.key
-        plantDataSource.deletePlant(plantId)
         photoKey?.let { deletePhoto(it) }
+        plantDataSource.deletePlant(plantId)
     }
 
     private suspend fun getPhoto(photoKey: String): ByteArray? {

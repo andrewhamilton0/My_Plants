@@ -7,5 +7,6 @@ interface WaterLogRepository {
     fun getWaterLog(waterLogId: String): Flow<WaterLog?>
     suspend fun upsertWaterLog(waterLog: WaterLog)
     suspend fun deleteWaterLog(waterLogId: String)
+    suspend fun deleteAllWaterLogOfPlant(plantId: String)
     suspend fun toggleWater(waterLogId: String)
 }
