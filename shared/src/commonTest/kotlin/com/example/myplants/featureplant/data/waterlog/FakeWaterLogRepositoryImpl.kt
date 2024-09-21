@@ -35,6 +35,10 @@ class FakeWaterLogRepositoryImpl : WaterLogRepository {
         _waterLogs.value = currentLogs
     }
 
+    override suspend fun deleteAllWaterLogOfPlant(plantId: String) {
+        Unit
+    }
+
     override suspend fun toggleWater(waterLogId: String) {
         val currentLogs = _waterLogs.value.toMutableList()
         val waterLog = currentLogs.find { it.id == waterLogId }
