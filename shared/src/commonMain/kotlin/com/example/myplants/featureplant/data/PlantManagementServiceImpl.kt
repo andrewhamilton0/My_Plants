@@ -54,8 +54,7 @@ class PlantManagementServiceImpl(
         return combine(waterLogs, plants, currentDate) { logs, plants, currentDate ->
             generateUpcomingWaterLogs()
             plants.flatMap { plant ->
-                val lastWaterDate = DateUtil.previousOccurrenceOfDay(currentDate, plant.waterDays)
-                logs.filter { it.plantId == plant.id && !it.isWatered && it.date == lastWaterDate }
+                logs.filter { it.plantId == plant.id && !it.isWatered && it.date < currentDate }
                     .map { PlantWaterLogPair(plant, it) }
             }.sortedWith(
                 compareByDescending<PlantWaterLogPair> { it.waterLog.date }
